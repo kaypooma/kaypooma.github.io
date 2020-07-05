@@ -399,3 +399,126 @@ for (const f of files) {
 
 // just to focus the first file automatically
 files[0].click()
+
+// music stuff
+const greek = 'αβγδεζηθικλμνξοπρςτυφχψω'.split('')
+const ztochei = {
+    dualtone: {
+        date: '2016-08-23',
+        color: 'f44236',
+    },
+    succession: {
+        date: '2016-08-23',
+        color: 'ea1e63',
+    },
+    sequence: {
+        date: '2016-08-24',
+        color: '9c28b1',
+    },
+    decimal: {
+        date: '2016-08-24',
+        color: '2196f3',
+    },
+    mean: {
+        date: '2016-08-25',
+        color: '00bcd5',
+    },
+    times: {
+        date: '2016-08-25',
+        color: '009688',
+    },
+    lift: {
+        date: '2017-01-07',
+        color: '4cb050',
+    },
+    theta: {
+        date: '2017-01-23',
+        color: 'ccbd30',
+    },
+    remember: {
+        date: '2017-04-27',
+        color: 'fe9700',
+    },
+    today: {
+        date: '2018-03-02',
+        color: '92b7bf',
+    },
+    dim: {
+        date: '2018-06-25',
+        color: '44cf6c',
+    },
+    reminisce: {
+        date: '2018-08-08',
+        color: '918c6e',
+    },
+    return: {
+        date: '2018-08-08',
+        color: '01394a',
+    },
+    nightshade: {
+        date: '2018-09-06',
+        color: '592941',
+    },
+    fade: {
+        date: '2018-09-28',
+        color: '388597',
+    },
+    abnormality: {
+        date: '2018-10-19',
+        color: 'ff4747',
+    },
+    sanity: {
+        date: '2018-10-22',
+        color: '8b4512',
+    },
+    abstract: {
+        date: '2018-11-26',
+        color: 'fe7e50',
+    },
+    augmenting: {
+        date: '2019-01-14',
+        color: '870080',
+    },
+    fidelity: {
+        date: '2019-05-09',
+        color: '651806',
+    },
+    outsider: {
+        date: '2020-04-07',
+        color: 'f1f1f1',
+    },
+}
+
+const zlist = document.getElementById('ztochei_list')
+let curz = 0
+for (const z in ztochei) {
+    const song = ztochei[z]
+
+    // why is javascript
+    const litag = document.createElement('li')
+
+    const zctag = document.createElement('div')
+    zctag.setAttribute('class', 'ztochei_cover')
+    zctag.setAttribute('style', z === 'outsider' ? `background: #${song.color}; color: rgba(0,0,0,0.75)` : `background: #${song.color}`)
+    zctag.innerHTML = greek[curz]
+    litag.appendChild(zctag)
+
+    const ptag = document.createElement('p')
+    ptag.innerHTML = z.charAt(0).toUpperCase() + z.slice(1)
+    litag.appendChild(ptag)
+
+    const dtag = document.createElement('span')
+    dtag.innerHTML = song.date
+    litag.appendChild(dtag)
+
+    const atag = document.createElement('a')
+    atag.setAttribute('href', `https://soundcloud.com/kaypooma/${z}`)
+    atag.setAttribute('target', '_blank')
+    atag.setAttribute('rel', 'noopener noreferrer')
+
+    atag.appendChild(litag)
+
+    zlist.appendChild(atag)
+    
+    curz+=1
+}

@@ -516,7 +516,7 @@ p {
 
     z-index: -1;
 
-    filter: blur(32px) brightness(0.5);
+    filter: blur(32px) brightness(0.4);
 
     background-image: url('img/file_img/frobenioid.png');
     background-position: center;
@@ -579,4 +579,128 @@ p {
     font-size: 12px;
 
     text-shadow: none;
+}
+
+/* mu sic */
+#music_box {
+    width: 400px;
+    height: 500px;
+
+    position: absolute;
+    margin: auto;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    padding: 10px;
+
+    border: 1px solid rgba(0,0,0,0.5);
+    background: rgba(17, 17, 17, 0.75);
+    box-shadow: 0 5px 0 rgba(0,0,0,0.5);
+    
+    border-radius: 5px;
+
+    overflow-x: hidden;
+    overflow-y: scroll;
+
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.5) rgba(0,0,0,0);
+}
+#music_box::-webkit-scrollbar-track {
+    background-color: rgba(0,0,0,0);
+}
+#music_box::-webkit-scrollbar {
+    width: 6px;
+    background-color: rgba(0,0,0,0);
+}
+#music_box::-webkit-scrollbar-thumb {
+    background-color: rgba(255,255,255,0.5);
+    border-radius: 20px;
+}
+
+#music_box h2 {
+    margin: 0;
+}
+
+#music_box .desc {
+    color: rgba(255,255,255,0.5);
+
+    font-family: 'Roboto Condensed', sans-serif;
+    font-size: 13px;
+
+    text-shadow: none;
+}
+
+#ztochei_list {
+    margin: 0;
+    padding: 0;
+}
+
+#ztochei_list a {
+    color: #eee;
+    text-decoration: none;
+    margin: 0;
+}
+
+#ztochei_list li {
+    list-style-type: none;
+    padding: 10px;
+
+    background: rgba(0,0,0,0.5);
+
+    transition: 0.1s all ease-out;
+
+    margin-bottom: 5px;
+
+    position: relative;
+
+    text-indent: 39px;
+    
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+#ztochei_list li:hover {
+    background: #eee;
+    color: #111;
+    text-indent: 44px;
+}
+
+#ztochei_list li p {
+    display: inline;
+}
+
+#ztochei_list li span {
+    color: rgba(255,255,255,0.5);
+    float: right;
+    font-size: 12px;
+
+    position: relative;
+    top: 2px;
+    
+    transition: 0.1s all ease-out;
+}
+#ztochei_list li:hover span {
+    color: #111;
+}
+
+.ztochei_cover {
+    display: inline-block;
+    width: 39px;
+    height: 39px;
+
+    text-indent: 0;
+
+    color: rgba(255,255,255,0.5);
+
+    background: red;
+
+    text-align: center;
+    line-height: 39px;
+
+    position: absolute;
+    top: 0;
+    left: 0;
 }
