@@ -192,7 +192,7 @@ const fileData = {
     viscracked: {
         title: 'VIS::CRACKED',
         artist: 'Frums',
-        difficulty: '<span class="normal">16</span> <span class="old">(old 7)</span> / <span class="slumpage">17</span> <span class="old">(old 8)</span>',
+        difficulty: '<span class="normal">15</span> <span class="old">(old 7)</span> / <span class="slumpage">16</span> <span class="old">(old 8)</span>',
         description: 'tried to create a hard file and probably forgot to make it fair',
 
         date: '2019-03-29',
