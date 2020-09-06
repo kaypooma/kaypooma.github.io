@@ -55,8 +55,40 @@ for (const b of backButtons) {
 }
 
 // simf ile
-const files = document.getElementById('files_list').children
 const fileData = {
+    ecran: {
+        title: 'Écran le Blanc',
+        artist: 'Miho Tsujibayashi',
+        difficulty: '<span class="normal">9</span> / <span class="slumpage">13</span>',
+        description: 'first file with a difficulty under 10',
+
+        date: '2020-08-24',
+
+        youtube: 'https://www.youtube.com/watch?v=hostdOlQtl4',
+        download: 'https://drive.google.com/file/d/1jCnyNt8Fk2-0azOT6RcBBzU97WbcC4YB/view'
+    },
+    hanavision: {
+        title: 'Hanavision',
+        artist: 't+pazolite',
+        difficulty: '<span class="normal">16</span>',
+        description: 'collab with sorae for mod rush couples',
+
+        date: '2020-08-17',
+
+        youtube: 'https://www.youtube.com/watch?v=TPIeurHyEHM',
+        download: 'https://drive.google.com/file/d/1vaaIg2kJo9vKuZ5Jbxmp1i7tGUXDOwqY/view'
+    },
+    finorza: {
+        title: 'Finorza',
+        artist: 'Camellia ft. Nanahira',
+        difficulty: '<span class="normal">17</span> / <span class="slumpage">20</span>',
+        description: 'Finorza Ball ft. Frames Per Second',
+
+        date: '2020-07-12',
+
+        youtube: 'https://www.youtube.com/watch?v=AvjBVpYoAqA',
+        download: 'https://drive.google.com/file/d/1uu5DZHYKxb8Yn-EWSFYQ8fDRmMpePelO/view?usp=sharing'
+    },
     clear: {
         title: 'let me be clear',
         artist: '???',
@@ -112,6 +144,17 @@ const fileData = {
         youtube: 'https://www.youtube.com/watch?v=S-WDrvmfvg4',
         download: 'https://drive.google.com/file/d/14tlGp5mxQHjLOyUJtl8Fh4Rffp5Ulj_n/view?usp=sharing'
     },
+    flamingo: {
+        title: 'Flamingo',
+        artist: 'Kero Kero Bonito',
+        difficulty: '<span class="normal">12</span>',
+        description: 'a normal file to a normal kero kero bonito song',
+
+        date: '2020-04-01',
+
+        youtube: 'none',
+        download: 'https://cdn.discordapp.com/attachments/395978682935803905/729351726829666354/flamingo.zip'
+    },
     senpai: {
         title: 'Ultimate Senpai',
         artist: 'PinocchioP',
@@ -166,6 +209,17 @@ const fileData = {
 
         youtube: 'https://www.youtube.com/watch?v=unRRGoZvVjQ',
         download: 'https://drive.google.com/file/d/1e4oM_qCq1rDcIgx_to_Ra_9ySumJdCAY/view?usp=sharing'
+    },
+    orville: {
+        title: 'orville2',
+        artist: '! ! Today at 6 47 PM',
+        difficulty: '<span class="normal">17</span>',
+        description: '(loud)',
+
+        date: '2019-11-25',
+
+        youtube: 'none',
+        download: 'https://cdn.discordapp.com/attachments/395978682935803905/729346947164536932/orville2.zip'
     },
     veiled: {
         title: 'four veiled stars',
@@ -321,35 +375,24 @@ const fileData = {
         youtube: 'https://www.youtube.com/watch?v=qU4Z0swXbUQ',
         download: 'https://drive.google.com/file/d/1UJveMw-IsEhTpy0zpP_6PihvU5P2ts9O/view'
     },
-    orville: {
-        title: 'orville2',
-        artist: '! ! Today at 6 47 PM',
-        difficulty: '<span class="normal">17</span>',
-        description: '(loud)',
-
-        date: '2019-11-25',
-
-        youtube: 'none',
-        download: 'https://cdn.discordapp.com/attachments/395978682935803905/729346947164536932/orville2.zip'
-    },
-    flamingo: {
-        title: 'Flamingo',
-        artist: 'Kero Kero Bonito',
-        difficulty: '<span class="normal">12</span>',
-        description: 'a normal file to a normal kero kero bonito song',
-
-        date: '2020-04-01',
-
-        youtube: 'none',
-        download: 'https://cdn.discordapp.com/attachments/395978682935803905/729351726829666354/flamingo.zip'
-    },
 }
+
+for (const fl in fileData) {
+    let flap = document.createElement('li')
+    flap.dataset.file = fl
+
+    document.getElementById('files_list').appendChild(flap)
+}
+
 
 let textTimeout
 let removeTimeout
 
+const files = document.getElementById('files_list').children
+
 for (const f of files) {
     f.innerHTML = fileData[f.dataset.file].title
+
     f.addEventListener('click', () => {
         const name = f.dataset.file
         const song = fileData[name]
