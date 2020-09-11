@@ -7,10 +7,40 @@ function focus(a) {
     document.getElementById(a).classList.add('section_active')
 }
 
+function focus_instant(a) {
+    const sections = document.getElementsByClassName('section')
+    for (s of sections) {
+        s.classList.remove('section_active')
+        s.classList.add('section_instant')
+    }
+
+    document.getElementById(a).classList.add('section_active')
+}
+
+let menuActive = false
+window.addEventListener('load', (event) => {
+    let focused = window.location.hash.substring(1) || 'main'
+
+    focus_instant('s_' + focused)
+
+    if (focused !== 'main') {
+        document.getElementById('menu_button').classList.add('mb_active')
+        document.getElementById('menu_divider').classList.add('md_active')
+        document.getElementById('menu_bg_transition').classList.add('mbg_active')
+
+        document.getElementById('favicon_tag').href = 'favicon_light.png'
+
+        for (const m of menuItems) {
+            m.classList.add('mi_active')
+        }
+
+        menuActive = true        
+    }
+})
+
 const menuItems = document.getElementById('menu').children
 
 // handle menu button
-let menuActive = false
 document.getElementById('menu_button').addEventListener('click', () => {
     if (menuActive) {
         document.getElementById('menu_button').classList.remove('mb_active')
@@ -43,6 +73,12 @@ document.getElementById('menu_button').addEventListener('click', () => {
 for (const m of menuItems) {
     m.addEventListener('click', () => {
         focus('s_' + m.dataset.section)
+        window.history.replaceState(null, null, '#'+m.dataset.section);
+
+        const sections = document.getElementsByClassName('section')
+        for (s of sections) {
+            s.classList.remove('section_instant')
+        }
     })
 }
 
@@ -51,6 +87,12 @@ const backButtons = document.getElementsByClassName('back_to_main')
 for (const b of backButtons) {
     b.addEventListener('click', () => {
         focus('s_main')
+        window.history.replaceState(null, null, '#main');
+
+        const sections = document.getElementsByClassName('section')
+        for (s of sections) {
+            s.classList.remove('section_instant')
+        }
     })
 }
 
