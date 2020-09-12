@@ -1,1 +1,215 @@
-<h1>oops</h1>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Are you lost?</title>
+
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+            }
+            
+            .bg {
+              width: 100%;
+              height: 100vh;
+              position: absolute;
+              
+              z-index: -10;
+              background: url('https://kaypooma.neocities.org/img/grid.png');
+            }
+
+            :root {
+                --pixelMult: 2;
+            }
+
+            .ltr {
+                width: calc(18px * var(--pixelMult));
+                height: calc(21px * var(--pixelMult));
+
+                image-rendering: pixelated;
+                image-rendering: -moz-crisp-edges;
+
+                background: url('https://kaypooma.neocities.org/img/charset.png');
+                background-size: auto 100%;
+
+                display: inline-block;
+
+                position: absolute;
+                margin: auto;
+
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+            }
+
+            .ltr.a {
+                background-position: calc(-18px * var(--pixelMult) * 0) 0;
+            }
+            .ltr.b {
+                background-position: calc(-18px * var(--pixelMult) * 1) 0;
+            }
+            .ltr.c {
+                background-position: calc(-18px * var(--pixelMult) * 2) 0;
+            }
+            .ltr.d {
+                background-position: calc(-18px * var(--pixelMult) * 3) 0;
+            }
+            .ltr.e {
+                background-position: calc(-18px * var(--pixelMult) * 4) 0;
+            }
+            .ltr.f {
+                background-position: calc(-18px * var(--pixelMult) * 5) 0;
+            }
+            .ltr.g {
+                background-position: calc(-18px * var(--pixelMult) * 6) 0;
+            }
+            .ltr.h {
+                background-position: calc(-18px * var(--pixelMult) * 7) 0;
+            }
+            .ltr.i {
+                background-position: calc(-18px * var(--pixelMult) * 8) 0;
+            }
+            .ltr.j {
+                background-position: calc(-18px * var(--pixelMult) * 9) 0;
+            }
+            .ltr.k {
+                background-position: calc(-18px * var(--pixelMult) * 10) 0;
+            }
+            .ltr.l {
+                background-position: calc(-18px * var(--pixelMult) * 11) 0;
+            }
+            .ltr.m {
+                background-position: calc(-18px * var(--pixelMult) * 12) 0;
+            }
+            .ltr.n {
+                background-position: calc(-18px * var(--pixelMult) * 13) 0;
+            }
+            .ltr.o {
+                background-position: calc(-18px * var(--pixelMult) * 14) 0;
+            }
+            .ltr.p {
+                background-position: calc(-18px * var(--pixelMult) * 15) 0;
+            }
+            .ltr.q {
+                background-position: calc(-18px * var(--pixelMult) * 16) 0;
+            }
+            .ltr.r {
+                background-position: calc(-18px * var(--pixelMult) * 17) 0;
+            }
+            .ltr.s {
+                background-position: calc(-18px * var(--pixelMult) * 18) 0;
+            }
+            .ltr.t {
+                background-position: calc(-18px * var(--pixelMult) * 19) 0;
+            }
+            .ltr.u {
+                background-position: calc(-18px * var(--pixelMult) * 20) 0;
+            }
+            .ltr.v {
+                background-position: calc(-18px * var(--pixelMult) * 21) 0;
+            }
+            .ltr.w {
+                background-position: calc(-18px * var(--pixelMult) * 22) 0;
+            }
+            .ltr.x {
+                background-position: calc(-18px * var(--pixelMult) * 23) 0;
+            }
+            .ltr.y {
+                background-position: calc(-18px * var(--pixelMult) * 24) 0;
+            }
+            .ltr.z {
+                background-position: calc(-18px * var(--pixelMult) * 25) 0;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="bg"></div>
+        <main id="con"></main>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script>
+          function rand(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive 
+          }
+            function median(values){
+                values.sort(function(a,b){
+                    return a-b;
+                });
+
+                if(values.length ===0) return 0
+
+                var half = Math.floor(values.length / 2);
+
+                if (values.length % 2)
+                    return values[half];
+                else
+                    return (values[half - 1] + values[half]) / 2.0;
+            }
+
+            // set your text here
+            const texts = ['page not found', 'error', 'nothing to see', 'unable to locate', 'unavailable', 'file missing', 'something went wrong', 'nowhere to be found']
+            const text = [...texts[rand(0,texts.length-1)]]
+            
+            // offset array setup
+            var offsets = []
+
+            // making percentages based off of the character number
+            for (let i=0; i<text.length; i++) {
+                offsets.push(i/text.length)
+            }
+
+            // finding median and storing it in a variable to center the offsets
+            const oMedian = median(offsets)
+            for (let i=0; i<offsets.length; i++) {    
+                offsets[i] -= oMedian; 
+
+                // multiply the offsets by this number because idk
+                offsets[i] *= 18*text.length*5;
+            }
+
+            // generate letters
+            for (let i=0; i<text.length; i++) {
+                const el = $(`<div class="ltr ${text[i]}"></div>`)
+
+                // add spaces
+                if (text[i] == ' ') {
+                    el.css('background-image', 'none')
+                }
+                
+                $('main').append(el)
+                
+                // use offsets on letters
+                el.css('left', offsets[i] + 'px')
+            }
+
+            // time variable for animation
+            let time = 0
+
+            function wave() {
+                time++
+                
+                // loop over children of main container (children are each letter)
+                var children = document.getElementById('con').children
+                for (var i = 0; i < children.length; i++) {
+                    var l = children[i]
+
+                    // animate letters
+                    $(l).css('top', Math.sin(time/50 + i) * 30 + 'px')
+                    $(l).css('left', offsets[i] + Math.cos(time/50 + i) * 15 + 'px')
+                }
+
+                $('.bg').css('background-position', `${time/4}px ${time/4}px`)
+
+                window.requestAnimationFrame(wave)
+            }
+
+            window.requestAnimationFrame(wave)
+            
+            $('.bg').css('filter', `hue-rotate(${rand(0,360)}deg)`);
+        </script>
+    </body>
+</html>
