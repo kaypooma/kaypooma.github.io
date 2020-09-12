@@ -761,7 +761,6 @@ p {
     height: 150px;
 
     background: rgba(255,255,255,0.5);
-    background-position: center;
 
     margin: 10px;
 
@@ -771,7 +770,7 @@ p {
 }
 #projects_list li:hover {
     transform: translateY(-5px);
-    box-shadow: 0 5px rgba(0,0,0,0.5);
+    box-shadow: 0 5px rgba(255,255,255,1);
 }
 
 #projects_list li a {
