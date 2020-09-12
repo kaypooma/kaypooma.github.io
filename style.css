@@ -761,6 +761,7 @@ p {
     height: 150px;
 
     background: rgba(255,255,255,0.5);
+    background-position: center;
 
     margin: 10px;
 

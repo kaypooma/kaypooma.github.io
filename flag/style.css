@@ -1,0 +1,122 @@
+.flag {
+    width: 500px;
+    height: 300px;
+
+    position: absolute;
+    margin: auto;
+
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.horizontal,.vertical {
+    display: flex;
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+
+    z-index: -1;
+}
+
+.horizontal {
+    align-items: stretch;
+}
+.horizontal div {
+    flex-grow: 1;
+    width: 10px;
+}
+
+.vertical {
+    flex-direction: column;
+}
+.vertical div {
+    flex-grow: 1;
+}
+
+.triangle {
+    width: 0; 
+    height: 0; 
+    border-top: 150px solid transparent;
+    border-bottom: 150px solid transparent;
+
+    border-left: 300px solid transparent;
+}
+
+
+.star {
+    margin: auto;
+    position: absolute;
+    display: block;
+    color: red;
+    width: 0px;
+    height: 0px;
+    border-right:  100px solid transparent;
+    border-bottom: 70px  solid var(--star-color);
+    border-left:   100px solid transparent;
+    -moz-transform:    rotate(35deg);
+    -webkit-transform: rotate(35deg);
+    -ms-transform:     rotate(35deg);
+    -o-transform:      rotate(35deg);
+
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+.star:before {
+    border-bottom: 80px solid var(--star-color);
+    border-left: 30px solid transparent;
+    border-right: 30px solid transparent;
+    position: absolute;
+    height: 0;
+    width: 0;
+    top: -45px;
+    left: -65px;
+    display: block;
+    content: '';
+    -webkit-transform: rotate(-35deg);
+    -moz-transform:    rotate(-35deg);
+    -ms-transform:     rotate(-35deg);
+    -o-transform:      rotate(-35deg);
+}
+.star:after {
+    position: absolute;
+    display: block;
+    color: red;
+    top: 3px;
+    left: -105px;
+    width: 0px;
+    height: 0px;
+    border-right: 100px solid transparent;
+    border-bottom: 70px solid var(--star-color);
+    border-left: 100px solid transparent;
+    -webkit-transform: rotate(-70deg);
+    -moz-transform:    rotate(-70deg);
+    -ms-transform:     rotate(-70deg);
+    -o-transform:      rotate(-70deg);
+    content: '';
+}				
+
+.generate {
+    width: 100px;
+    height: 40px;
+
+    background: rgba(0,0,0,0.05);
+    border: 1px solid rgba(0,0,0,0.25);
+
+    position: absolute;
+    margin: auto;
+
+    top: 10px;
+    left: 0;
+    right: 0;
+}
+.generate:active {
+    background: rgba(0,0,0,0.1);
+}
+.generate:focus {
+    outline: none;
+}
