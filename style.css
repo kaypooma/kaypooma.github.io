@@ -803,3 +803,18 @@ p {
     position: absolute;
     bottom: 0;
 }
+
+#detailed_link {
+    color: #eee;
+    border-bottom: 1px solid #eee;
+    text-decoration: none;
+
+    padding: 5px;
+
+    transition: all .1s ease-out;
+}
+#detailed_link:hover {
+    background: #eee;
+    color: #111;
+    padding-left: 15px;
+}
