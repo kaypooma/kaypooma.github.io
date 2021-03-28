@@ -98,6 +98,28 @@ for (const b of backButtons) {
 
 // simf ile
 const fileData = {
+    patchwork: {
+        title: 'Patchwork Eden ft. GUMI',
+        artist: 'sasakure.UK',
+        difficulty: '<span class="normal">11</span> / <span class="slumpage">14</span>',
+        description: 'Awesome 3D Graphics',
+
+        date: '2021-02-07',
+
+        youtube: 'https://www.youtube.com/watch?v=c7bSnpObGYM',
+        download: 'https://drive.google.com/file/d/1NZKb1Y5VpZMxnvSZQv0RVsY5Hkq9EXRJ/view'
+    },
+    aibomb: {
+        title: 'Artificial Intelligence Bomb',
+        artist: 'naruto',
+        difficulty: '<span class="normal">12</span> / <span class="slumpage">17</span>',
+        description: 'mod rush 3 file',
+
+        date: '2020-12-03',
+
+        youtube: 'https://www.youtube.com/watch?v=mw1SOX8D4aY',
+        download: 'https://drive.google.com/file/d/1S2MTX_1f0Z38ZSKdIzhNQqcqosgTje86/view'
+    },
     ecran: {
         title: 'Écran le Blanc',
         artist: 'Miho Tsujibayashi',
@@ -460,7 +482,7 @@ for (const f of files) {
                 }
             }
     
-            document.getElementById('file_bg').style.backgroundImage = 'url("img/file_img/' + name + '.png")'
+            document.getElementById('file_bg').style.backgroundImage = 'url("img/file_img/' + name + '.jpg")'
     
             const cSize = 18*song.title.length
             if (cSize >= 380) {
@@ -572,6 +594,16 @@ const ztochei = {
         date: '2020-04-07',
         color: 'f1f1f1',
     },
+    twoequals: {
+        date: '2020-09-23',
+        color: '340b09',
+        title_override: '=+=',
+    },
+    metamorphosis: {
+        date: '2021-03-24',
+        color: '750e53',
+        title_override: 'de Métamorphose',
+    }
 }
 
 const zlist = document.getElementById('ztochei_list')
@@ -589,7 +621,7 @@ for (const z in ztochei) {
     litag.appendChild(zctag)
 
     const ptag = document.createElement('p')
-    ptag.innerHTML = z.charAt(0).toUpperCase() + z.slice(1)
+    ptag.innerHTML = song.title_override || z.charAt(0).toUpperCase() + z.slice(1)
     litag.appendChild(ptag)
 
     const dtag = document.createElement('span')
