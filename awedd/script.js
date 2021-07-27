@@ -8,6 +8,14 @@ const ts = 25
 
 document.getElementById('jackpot').volume = 0.3
 
+// let defaultcolors = {
+//     bg: '#eee',
+//     floor: '#00ff01',
+//     tree: '#006401',
+//     player: '#fed28b',
+//     goal: 'blue',
+// }
+
 let map = [
     [ 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1 ],
     [ 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
@@ -40,8 +48,6 @@ let trees = [
 let win = {c: 0, r: 10}
 
 let finished = false
-
-// --------------------- level loading stuff
 
 //  -------------------- game logic
 function checkTree(c, r) {
@@ -138,11 +144,11 @@ function draw() {
     ctx.clearRect(0, 0, sw, sh)
 
     // background
-    ctx.fillStyle = '#eee'
+    ctx.fillStyle = colors._selected.bg
     ctx.fillRect(0, 0, sw, sh)
 
     // ground tiles
-    ctx.fillStyle = '#00ff01'
+    ctx.fillStyle = colors._selected.floor
     for (c=0; c<map.length; c++) {
         for (r=0; r<map[c].length; r++) {
             if (map[c][r] === 1) {
@@ -152,17 +158,17 @@ function draw() {
     }
 
     // trees
-    ctx.fillStyle = '#006401'
+    ctx.fillStyle = colors._selected.tree
     for (t of trees) {
         ctx.fillRect(t.r*ts+1, t.c*ts+1, ts-2, ts-2)
     }
 
     // goal
-    ctx.fillStyle = 'blue'
+    ctx.fillStyle = colors._selected.goal
     ctx.fillRect(win.r*ts+1, win.c*ts+1, ts-2, ts-2)
     
     // player
-    ctx.fillStyle = '#fed28b'
+    ctx.fillStyle = colors._selected.player
     ctx.fillRect(player.r*ts+1, player.c*ts+1, ts-2, ts-2)
 
     // if won
@@ -278,6 +284,153 @@ document.body.addEventListener('keyup', e => {
 
     if (keymap[e.key]) { keymap[e.key].down = false }
 })
+
+// -------- color
+let colors = {
+    _selected: {
+        bg: '#eeeeee',
+        floor: '#00ff01',
+        tree: '#006401',
+        player: '#fed28b',
+        goal: '#0000ff',
+    },
+
+    default: {
+        bg: '#eeeeee',
+        floor: '#00ff01',
+        tree: '#006401',
+        player: '#fed28b',
+        goal: '#0000ff',
+    },
+
+    dark: {
+        bg: '#303860',
+        floor: '#2C9E2C',
+        tree: '#635F31',
+        player: '#CC9265',
+        goal: '#000087',
+    },
+
+    eyeburn: {
+        bg: '#FFFF00',
+        floor: '#FF00CE',
+        tree: '#FF0000',
+        player: '#00FFB2',
+        goal: '#0000FF',
+    },
+
+    custom: {
+        bg: '#eeeeee',
+        floor: '#00ff01',
+        tree: '#006401',
+        player: '#fed28b',
+        goal: '#0000ff',
+    },
+}
+
+for (c in colors) {
+    if (c !== '_selected') {
+        let selector = document.getElementById('scheme')
+        let option = document.createElement('option')
+
+        option.setAttribute('value', c)
+        option.innerHTML = c
+
+        selector.appendChild(option)
+    }
+}
+
+// set to last used scheme    
+let lastSelected = localStorage.getItem('awedd_scheme') || 'default'
+setcolors(colors[lastSelected])
+document.getElementById('scheme').value = lastSelected
+
+// load custom color scheme if there is one
+let savedCustom = localStorage.getItem('awedd_customscheme') || '#eeeeee,#00ff01,#006401,#fed28b,#0000ff'
+savedCustom = savedCustom.split(',')
+
+colors.custom.bg = savedCustom[0]
+colors.custom.floor = savedCustom[1]
+colors.custom.tree = savedCustom[2]
+colors.custom.player = savedCustom[3]
+colors.custom.goal = savedCustom[4]
+
+let cel = ['bg_color', 'floor_color', 'tree_color', 'player_color', 'goal_color']
+if (document.getElementById('scheme').value === 'custom') {
+    for (i of cel) {
+        document.getElementById(i).removeAttribute('disabled')
+        setcolors(colors.custom)
+    }
+} else {
+    for (i of cel) {
+        document.getElementById(i).setAttribute('disabled', 'true')
+    }
+}
+
+document.getElementById('scheme').addEventListener('change', e => {
+    let selected = document.getElementById('scheme').value
+    let cel = ['bg_color', 'floor_color', 'tree_color', 'player_color', 'goal_color']
+    if (selected === 'custom') {
+        for (i of cel) {
+            document.getElementById(i).removeAttribute('disabled')
+        }
+    } else {
+        for (i of cel) {
+            document.getElementById(i).setAttribute('disabled', 'true')
+        }
+    }
+
+    setcolors(colors[selected])
+    localStorage.setItem('awedd_scheme', selected)
+})
+
+for (i of cel) {
+    let el = document.getElementById(i)
+    el.addEventListener('change', e => {
+        let string = ''
+        for (i=0; i<cel.length; i++) {
+            colors.custom[document.getElementById(cel[i]).getAttribute('name')] = document.getElementById(cel[i]).value
+            string += document.getElementById(cel[i]).value
+            if (i < cel.length-1)
+                string += ','
+        }
+
+        localStorage.setItem('awedd_customscheme', string)
+        setcolors(colors.custom)
+    })
+}
+
+function setcolors(schemeorbg, floor, tree, player, goal) {
+    if (typeof schemeorbg === 'object') {
+        colors._selected.bg = schemeorbg.bg
+        colors._selected.floor = schemeorbg.floor
+        colors._selected.tree = schemeorbg.tree
+        colors._selected.player = schemeorbg.player
+        colors._selected.goal = schemeorbg.goal
+
+        document.getElementById('bg_color').value = schemeorbg.bg
+        document.getElementById('floor_color').value = schemeorbg.floor
+        document.getElementById('tree_color').value = schemeorbg.tree
+        document.getElementById('player_color').value = schemeorbg.player
+        document.getElementById('goal_color').value = schemeorbg.goal
+    } else {    
+        colors._selected.bg = schemeorbg
+        colors._selected.floor = floor
+        colors._selected.tree = tree
+        colors._selected.player = player
+        colors._selected.goal = goal
+
+        document.getElementById('bg_color').value = schemeorbg
+        document.getElementById('floor_color').value = floor
+        document.getElementById('tree_color').value = tree
+        document.getElementById('player_color').value = player
+        document.getElementById('goal_color').value = goal
+    }
+
+    draw()
+}
+
+// -------- level loading
 
 function levelerror(msg) {
     alert(msg)

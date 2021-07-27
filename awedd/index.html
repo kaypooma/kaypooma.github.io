@@ -10,6 +10,10 @@
         <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
 
         <style>
+            body {
+                font-family: 'Courier New', Courier, monospace;
+            }
+
             #canvas {
                 border: 1px solid #aaa;
             }
@@ -55,10 +59,71 @@
                 font-weight: bold;
                 color: #222;
             }
+
+            #colorselect {
+                position: absolute;
+                left: 620px;
+                top: 8px;
+
+                padding: 5px;
+                font-size: 12px;
+                font-weight: bold;
+
+                width: 200px;
+                height: 210px;
+                background: #ddd;
+            }
+            #colorselect select {
+                width: 100%;
+                margin-top: 2px;
+                padding: 5px;
+            }
+
+            hr {
+                border: none;
+                height: 1px;
+                margin: 5px 0 5px 0;
+                background: #000;
+            }
+
+            input[type="color"] {
+                margin-bottom: 5px;
+            }
         </style>
     </head>
     <body>
         <canvas id="canvas" width="600" height="350"></canvas>
+
+        <div id="colorselect">
+            <span>color scheme:</span>
+            <select name="scheme" id="scheme"></select>
+
+            <hr>
+
+            <input type="color" name="bg" id="bg_color">
+            <label for="bg_color">bg</label>
+
+            <br>
+
+            <input type="color" name="floor" id="floor_color">
+            <label for="floor_color">floor</label>
+
+            <br>
+
+            <input type="color" name="tree" id="tree_color">
+            <label for="tree_color">tree</label>
+
+            <br>
+
+            <input type="color" name="player" id="player_color">
+            <label for="player_color">player</label>
+
+            <br>
+
+            <input type="color" name="goal" id="goal_color">
+            <label for="goal_color">goal</label>
+        </div>
+
         <p id="timer">0 s</p>
         <p id="leveldata">default level</p>
         <input type="text" id="import_data"> <button id="import">import level</button>
