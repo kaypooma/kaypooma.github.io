@@ -226,11 +226,11 @@ document.getElementById('export').addEventListener('click', () => {
     mapstr += '|'
     mapstr += document.getElementById('creator').value.replace(/\|/gm, ' ')
 
-    document.getElementById('export_data').value = mapstr
+    document.getElementById('export_data').value = LZString.compressToUTF16(mapstr)
 })
 
 document.getElementById('import').addEventListener('click', () => {
-    const mapstr = document.getElementById('import_data').value
+    const mapstr = LZString.decompressFromUTF16(document.getElementById('import_data').value)
     const sections = mapstr.split('|')
 
     if (sections.length !== 6) 

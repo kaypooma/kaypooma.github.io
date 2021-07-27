@@ -280,6 +280,7 @@ document.body.addEventListener('keyup', e => {
 })
 
 function importlevel(data) {
+    data = LZString.decompressFromUTF16(data)
     const sections = data.split('|')
 
     if (sections.length !== 6) 
