@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>awedditor</title>       
+
+        <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+            }
+
+            body {
+                font-family: 'Courier New', Courier, monospace;
+            }
+
+            #canvas {
+                border: 1px solid #222;
+                margin-left: 5px;
+                margin-top: 5px;
+            }
+
+            #tileselect {
+                margin: 0 5px 5px 5px;
+
+                width: 200px;
+                height: 200px;
+                padding: 5px;
+                background: #ddd;
+            }
+
+            hr {
+                border: none;
+                height: 1px;
+                margin: 5px 0 5px 0;
+                background: #000;
+            }
+
+            #saves {
+                display: inline-block;
+                position: absolute;
+
+                background: #ddd;
+
+                width: 377px;
+                height: 200px;
+
+                top: 362px;
+                left: 220px;
+
+                padding: 5px;
+            }
+
+            button {
+                padding: 5px;
+            }
+            input[type="text"] {
+                padding: 5px;
+                width: 300px;
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="canvas" width="600" height="350"></canvas>
+
+        <div id="tileselect">
+            <p>currently placing:</p>
+            <hr>
+            <div id="selectors">
+                <input type="radio" id="ground" name="selector" value="ground" checked>
+                <label for="ground">ground</label>
+
+                <br>
+
+                <input type="radio" id="tree" name="selector" value="tree">
+                <label for="tree">tree</label>
+
+                <br>
+
+                <input type="radio" id="player" name="selector" value="player">
+                <label for="player">player start</label>
+
+                <br>
+
+                <input type="radio" id="end" name="selector" value="end">
+                <label for="end">level end</label>
+            </div>
+        </div>
+
+        <div id="saves">
+            <p style="font-size: 12px">title</p> <input type="text" id="title">
+            <p style="font-size: 12px">creator</p> <input type="text" id="creator">
+
+            <hr>
+
+            <button id="export">export</button>
+            <input type="text" id="export_data">
+
+            <hr>
+
+            <input type="text" id="import_data">
+            <button id="import">import</button>
+        </div>
+        
+        <p>left click to place, right click to erase</p>
+
+        <script src="editor.js"></script>
+    </body>
+</html>

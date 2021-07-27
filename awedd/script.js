@@ -44,6 +44,16 @@ let finished = false
 // --------------------- level loading stuff
 
 //  -------------------- game logic
+function checkTree(c, r) {
+    for (t of trees) {
+        if (t.c === c && t.r === r) {
+            return t
+            break
+        }
+    }
+    return false
+}
+
 function update(c, r, jump) {
     if (player.c + c < 0 || player.c + c > map.length-1 || player.r + r < 0 || player.r + r > map[0].length-1) {
         return
@@ -66,14 +76,31 @@ function update(c, r, jump) {
             player.c += c
             player.r += r
 
-            for (t of trees) {
-                if (t.c === player.c && t.r === player.r) {
+            // what
+            if (checkTree(player.c, player.r)) {
+                let initTree = checkTree(player.c, player.r)
+
+                let treesToMove = []
+                let treeProgressFrom = { c: initTree.c, r: initTree.r }
+                let treeStopped = false
+
+                treesToMove.push(initTree)
+                while (!treeStopped) {
+                    treeProgressFrom.c += c
+                    treeProgressFrom.r += r
+
+                    if (checkTree(treeProgressFrom.c, treeProgressFrom.r)) {
+                        treesToMove.push(checkTree(treeProgressFrom.c, treeProgressFrom.r))
+                    } else {
+                        treeStopped = true
+                    }
+                }
+
+                for (t of treesToMove) {
                     t.c += c
                     t.r += r
-
-                    break
                 }
-            }
+            }            
         }
     }
 
@@ -250,6 +277,96 @@ document.body.addEventListener('keyup', e => {
     // if (moves[e.key]) { update(moves[e.key].c, moves[e.key].r) }
 
     if (keymap[e.key]) { keymap[e.key].down = false }
+})
+
+function importlevel(data) {
+    const sections = data.split('|')
+
+    if (sections.length !== 6) 
+        return alert('invalid level data')
+
+    // ground
+    let ground = sections[0].split(',')
+
+    if (ground.length !== 14)
+        return alert('invalid ground data')
+
+    for (c=0; c<ground.length; c++) {
+        let data = ground[c].split('')
+        for (i=0; i<data.length; i++) {
+            if (isNaN(parseInt(data[i])))
+                return alert('invalid ground data')
+
+            data[i] = parseInt(data[i])
+        }
+
+        if (data.length !== 24)
+            return alert('invalid ground data')
+
+        map[c] = data
+
+        // console.log(data)
+    }
+    
+    // trees
+    trees = []
+    let treedata = sections[1].split(',')
+
+    if (treedata.length>0 && treedata[0] !== '') {
+        for (i=0; i<treedata.length; i++) {
+            let pos = treedata[i].split('.')
+            if (pos.length !== 2)
+                return alert('invalid tree data')
+
+            for (p of pos) {
+                if (isNaN(parseInt(p)))
+                    return alert('invalid tree data')
+            }
+
+            trees.push({ dc: parseInt(pos[0]), dr: parseInt(pos[1]), c: parseInt(pos[0]), r: parseInt(pos[1]) })
+        }
+    }
+
+    // player start
+    let playerdata = sections[2].split('.')
+
+    if (playerdata.length !== 2)
+        return alert('invalid player data')
+
+    for (p of playerdata) {
+        if (isNaN(parseInt(p)))
+            return alert('invalid player data')
+    }
+
+    player.dc = parseInt(playerdata[0])
+    player.dr = parseInt(playerdata[1])
+    player.c = parseInt(playerdata[0])
+    player.r = parseInt(playerdata[1])
+
+    // level end
+    let enddata = sections[3].split('.')
+
+    if (enddata.length !== 2)
+        return alert('invalid end data')
+    for (p of enddata) {
+        if (isNaN(parseInt(p)))
+            return alert('invalid end data')
+    }
+
+    win.c = parseInt(enddata[0])
+    win.r = parseInt(enddata[1])
+    
+    // title/creator
+    document.getElementById('leveldata').innerHTML = sections[4] + ' by ' + sections[5]
+
+}
+
+document.getElementById('import').addEventListener('click', () => {
+    importlevel(document.getElementById('import_data').value)
+    reset(animationframe)
+
+    draw()
+    update()
 })
 
 draw()

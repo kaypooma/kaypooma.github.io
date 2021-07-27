@@ -32,17 +32,30 @@
                 color: #222;
             }
 
+            #import_data {
+                width: 511px;
+            }
+
             #link {
                 position:absolute;
 
                 bottom: 25px;
                 right: 25px;
             }
+
+            #leveldata {
+                font-family: 'Courier New', Courier, monospace;
+                font-size: 14px;
+                font-weight: bold;
+                color: #222;
+            }
         </style>
     </head>
     <body>
         <canvas id="canvas" width="600" height="350"></canvas>
         <p id="timer">0 s</p>
+        <p id="leveldata">default level</p>
+        <input type="text" id="import_data"> <button id="import">import level</button>
         <p id="reset">press r to reset</p>
 
         <audio src="jackpot.wav" id="jackpot"></audio>
