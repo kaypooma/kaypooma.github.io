@@ -319,6 +319,14 @@ let colors = {
         goal: '#0000FF',
     },
 
+    grayscale: {
+        bg: '#EEEEEE',
+        floor: '#AAAAAA',
+        tree: '#111111',
+        player: '#444444',
+        goal: '#FFFFFF',
+    },
+
     custom: {
         bg: '#eeeeee',
         floor: '#00ff01',
