@@ -41,6 +41,9 @@ let win = {c: 0, r: 10}
 
 let finished = false
 
+// --------------------- level loading stuff
+
+//  -------------------- game logic
 function update(c, r, jump) {
     if (player.c + c < 0 || player.c + c > map.length-1 || player.r + r < 0 || player.r + r > map[0].length-1) {
         return
