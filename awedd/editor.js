@@ -184,7 +184,7 @@ function update(x, y, left, right) {
     } 
 }
 
-document.getElementById('export').addEventListener('click', () => {
+function exportlevel(map, trees, player, end) {
     let mapstr = ''
 
     // ground
@@ -226,33 +226,91 @@ document.getElementById('export').addEventListener('click', () => {
     mapstr += '|'
     mapstr += document.getElementById('creator').value.replace(/\|/gm, ' ')
 
-    document.getElementById('export_data').value = LZString.compressToUTF16(mapstr)
+    return LZString.compressToUTF16(mapstr)
+}
+
+document.getElementById('export').addEventListener('click', () => {
+    // let mapstr = ''
+
+    // // ground
+    // for (c=0; c<map.length; c++) {
+    //     for (r=0; r<map[0].length; r++) {
+    //         mapstr += map[c][r].toString()
+    //     }
+
+    //     if (c<map.length-1)
+    //         mapstr += ',';
+    // }
+
+    // mapstr += '|'
+
+    // // trees
+    // for (i=0; i<trees.length; i++) {
+    //     let t = trees[i]
+    //     mapstr += t.c.toString() + '.' + t.r.toString()
+
+    //     if (i<trees.length-1)
+    //         mapstr += ',';
+    // }
+
+    // mapstr += '|'
+
+    // // player start
+    // mapstr += player.c.toString() + '.' + player.r.toString()
+
+    // mapstr += '|'
+
+    // // level end
+    // mapstr += win.c.toString() + '.' + win.r.toString()
+    
+    // // level title
+    // mapstr += '|'
+    // mapstr += document.getElementById('title').value.replace(/\|/gm, ' ')
+
+    // // level creator
+    // mapstr += '|'
+    // mapstr += document.getElementById('creator').value.replace(/\|/gm, ' ')
+
+    document.getElementById('export_data').value = exportlevel(map, trees, player, end)
 })
 
-document.getElementById('import').addEventListener('click', () => {
-    const mapstr = LZString.decompressFromUTF16(document.getElementById('import_data').value)
-    const sections = mapstr.split('|')
+function levelerror(msg) {
+    alert(msg)
+
+    this.message = msg
+    this.name = 'LevelDataError'
+}
+levelerror.prototype.toString = function() {
+    return `${this.name}: ${this.message}`
+}
+function importlevel(data) {
+    data = LZString.decompressFromUTF16(data)
+
+    if (!data) 
+        throw new levelerror('invalid level data')
+
+    const sections = data.split('|')
 
     if (sections.length !== 6) 
-        return alert('invalid level data')
+        throw new levelerror('invalid level data')
 
     // ground
     let ground = sections[0].split(',')
 
     if (ground.length !== 14)
-        return alert('invalid ground data')
+        throw new levelerror('invalid ground data')
 
     for (c=0; c<ground.length; c++) {
         let data = ground[c].split('')
         for (i=0; i<data.length; i++) {
             if (isNaN(parseInt(data[i])))
-                return alert('invalid ground data')
+                throw new levelerror('invalid ground data')
 
             data[i] = parseInt(data[i])
         }
 
         if (data.length !== 24)
-            return alert('invalid ground data')
+            throw new levelerror('invalid ground data')
 
         map[c] = data
 
@@ -267,14 +325,14 @@ document.getElementById('import').addEventListener('click', () => {
         for (i=0; i<treedata.length; i++) {
             let pos = treedata[i].split('.')
             if (pos.length !== 2)
-                return alert('invalid tree data')
+                throw new levelerror('invalid tree data')
 
             for (p of pos) {
                 if (isNaN(parseInt(p)))
-                    return alert('invalid tree data')
+                    throw new levelerror('invalid tree data')
             }
 
-            trees.push({ c: pos[0], r: pos[1] })
+            trees.push({ c: parseInt(pos[0]), r: parseInt(pos[1]) })
         }
     }
 
@@ -282,34 +340,118 @@ document.getElementById('import').addEventListener('click', () => {
     let playerdata = sections[2].split('.')
 
     if (playerdata.length !== 2)
-        return alert('invalid player data')
+        throw new levelerror('invalid player data')
 
     for (p of playerdata) {
         if (isNaN(parseInt(p)))
-            return alert('invalid player data')
+            throw new levelerror('invalid player data')
     }
 
-    player.c = playerdata[0]
-    player.r = playerdata[1]
+    player.c = parseInt(playerdata[0])
+    player.r = parseInt(playerdata[1])
 
     // level end
     let enddata = sections[3].split('.')
 
     if (enddata.length !== 2)
-        return alert('invalid end data')
+        throw new levelerror('invalid end data')
     for (p of enddata) {
         if (isNaN(parseInt(p)))
-            return alert('invalid end data')
+            throw new levelerror('invalid end data')
     }
 
-    win.c = enddata[0]
-    win.r = enddata[1]
+    win.c = parseInt(enddata[0])
+    win.r = parseInt(enddata[1])
     
     // title/creator
     document.getElementById('title').value = sections[4]
     document.getElementById('creator').value = sections[5]
 
     update(0,0,false,false)
+}
+
+document.getElementById('import').addEventListener('click', () => {
+    // const mapstr = LZString.decompressFromUTF16(document.getElementById('import_data').value)
+    // const sections = mapstr.split('|')
+
+    // if (sections.length !== 6) 
+    //     return alert('invalid level data')
+
+    // // ground
+    // let ground = sections[0].split(',')
+
+    // if (ground.length !== 14)
+    //     return alert('invalid ground data')
+
+    // for (c=0; c<ground.length; c++) {
+    //     let data = ground[c].split('')
+    //     for (i=0; i<data.length; i++) {
+    //         if (isNaN(parseInt(data[i])))
+    //             return alert('invalid ground data')
+
+    //         data[i] = parseInt(data[i])
+    //     }
+
+    //     if (data.length !== 24)
+    //         return alert('invalid ground data')
+
+    //     map[c] = data
+
+    //     // console.log(data)
+    // }
+    
+    // // trees
+    // trees = []
+    // let treedata = sections[1].split(',')
+
+    // if (treedata.length>0 && treedata[0] !== '') {
+    //     for (i=0; i<treedata.length; i++) {
+    //         let pos = treedata[i].split('.')
+    //         if (pos.length !== 2)
+    //             return alert('invalid tree data')
+
+    //         for (p of pos) {
+    //             if (isNaN(parseInt(p)))
+    //                 return alert('invalid tree data')
+    //         }
+
+    //         trees.push({ c: pos[0], r: pos[1] })
+    //     }
+    // }
+
+    // // player start
+    // let playerdata = sections[2].split('.')
+
+    // if (playerdata.length !== 2)
+    //     return alert('invalid player data')
+
+    // for (p of playerdata) {
+    //     if (isNaN(parseInt(p)))
+    //         return alert('invalid player data')
+    // }
+
+    // player.c = playerdata[0]
+    // player.r = playerdata[1]
+
+    // // level end
+    // let enddata = sections[3].split('.')
+
+    // if (enddata.length !== 2)
+    //     return alert('invalid end data')
+    // for (p of enddata) {
+    //     if (isNaN(parseInt(p)))
+    //         return alert('invalid end data')
+    // }
+
+    // win.c = enddata[0]
+    // win.r = enddata[1]
+    
+    // // title/creator
+    // document.getElementById('title').value = sections[4]
+    // document.getElementById('creator').value = sections[5]
+
+    // update(0,0,false,false)
+    importlevel(document.getElementById('import_data').value)
 })
 
 update(0,0,false,false)

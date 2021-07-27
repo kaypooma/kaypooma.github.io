@@ -279,30 +279,43 @@ document.body.addEventListener('keyup', e => {
     if (keymap[e.key]) { keymap[e.key].down = false }
 })
 
+function levelerror(msg) {
+    alert(msg)
+
+    this.message = msg
+    this.name = 'LevelDataError'
+}
+levelerror.prototype.toString = function() {
+    return `${this.name}: ${this.message}`
+}
 function importlevel(data) {
     data = LZString.decompressFromUTF16(data)
+
+    if (!data) 
+        throw new levelerror('invalid level data')
+
     const sections = data.split('|')
 
     if (sections.length !== 6) 
-        return alert('invalid level data')
+        throw new levelerror('invalid level data')
 
     // ground
     let ground = sections[0].split(',')
 
     if (ground.length !== 14)
-        return alert('invalid ground data')
+        throw new levelerror('invalid ground data')
 
     for (c=0; c<ground.length; c++) {
         let data = ground[c].split('')
         for (i=0; i<data.length; i++) {
             if (isNaN(parseInt(data[i])))
-                return alert('invalid ground data')
+                throw new levelerror('invalid ground data')
 
             data[i] = parseInt(data[i])
         }
 
         if (data.length !== 24)
-            return alert('invalid ground data')
+            throw new levelerror('invalid ground data')
 
         map[c] = data
 
@@ -317,11 +330,11 @@ function importlevel(data) {
         for (i=0; i<treedata.length; i++) {
             let pos = treedata[i].split('.')
             if (pos.length !== 2)
-                return alert('invalid tree data')
+                throw new levelerror('invalid tree data')
 
             for (p of pos) {
                 if (isNaN(parseInt(p)))
-                    return alert('invalid tree data')
+                    throw new levelerror('invalid tree data')
             }
 
             trees.push({ dc: parseInt(pos[0]), dr: parseInt(pos[1]), c: parseInt(pos[0]), r: parseInt(pos[1]) })
@@ -332,11 +345,11 @@ function importlevel(data) {
     let playerdata = sections[2].split('.')
 
     if (playerdata.length !== 2)
-        return alert('invalid player data')
+        throw new levelerror('invalid player data')
 
     for (p of playerdata) {
         if (isNaN(parseInt(p)))
-            return alert('invalid player data')
+            throw new levelerror('invalid player data')
     }
 
     player.dc = parseInt(playerdata[0])
@@ -348,10 +361,10 @@ function importlevel(data) {
     let enddata = sections[3].split('.')
 
     if (enddata.length !== 2)
-        return alert('invalid end data')
+        throw new levelerror('invalid end data')
     for (p of enddata) {
         if (isNaN(parseInt(p)))
-            return alert('invalid end data')
+            throw new levelerror('invalid end data')
     }
 
     win.c = parseInt(enddata[0])
