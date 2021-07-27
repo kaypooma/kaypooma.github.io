@@ -371,7 +371,7 @@ function importlevel(data) {
     win.r = parseInt(enddata[1])
     
     // title/creator
-    document.getElementById('leveldata').innerHTML = sections[4] + ' by ' + sections[5]
+    document.getElementById('leveldata').innerHTML = `"${sections[4]}" by "${sections[5]}"`
 
 }
 
