@@ -246,7 +246,7 @@ document.body.addEventListener('keydown', e => {
     if (keymap[e.key]) { 
         keymap[e.key].down = true 
 
-        if (!timerInterval) timerStart();
+        if (!timerInterval && !finished) timerStart();
     }
 
     if (!finished) {    

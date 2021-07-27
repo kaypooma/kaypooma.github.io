@@ -50,7 +50,7 @@
                 width: 377px;
                 height: 200px;
 
-                top: 362px;
+                top: 386px;
                 left: 220px;
 
                 padding: 5px;
@@ -70,10 +70,21 @@
                 bottom: 25px;
                 left: 25px;
             }
+
+            #reset, .controls {
+                font-family: 'Courier New', Courier, monospace;
+                font-size: 12px;
+                font-weight: bold;
+                color: #222;
+
+                margin: 5px;
+            }
         </style>
     </head>
     <body>
         <canvas id="canvas" width="600" height="350"></canvas>
+        
+        <p class="controls">left click to place, right click to erase</p>
 
         <div id="tileselect">
             <p>currently placing:</p>
@@ -113,8 +124,6 @@
             <input type="text" id="import_data">
             <button id="import">import</button>
         </div>
-        
-        <p>left click to place, right click to erase</p>
 
         <a href="index.html" id="gamelink">game</a>
 
