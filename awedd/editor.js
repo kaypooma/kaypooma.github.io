@@ -157,7 +157,7 @@ document.getElementById('level_height').addEventListener('change', () => {
     // remove trees that are out of range
     for (i=0; i<trees.length; i++) {
         let t = trees[i]
-        if (t.c>width-1)
+        if (t.c>height-1)
             trees.splice(i, 1)
     }
 
