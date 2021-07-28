@@ -672,3 +672,52 @@ document.getElementById('import').addEventListener('click', () => {
 })
 
 draw()
+
+// ---- dark mode stuff
+let darkEnabled = parseInt(localStorage.getItem('awedd_dark')) || 0
+if (darkEnabled) {
+    document.body.style.backgroundColor = '#111'
+    document.body.style.color = '#eee'
+
+    let els = document.body.getElementsByTagName('*')
+    for (el of els) {
+        el.classList.add('_darkmode')
+    }
+
+    document.getElementById('dark').checked = true
+} else {
+    document.body.style.backgroundColor = '#fff'
+    document.body.style.color = '#000'
+
+    let els = document.body.getElementsByTagName('*')
+    for (el of els) {
+        el.classList.remove('class', '_darkmode')
+    }
+
+    document.getElementById('dark').checked = false
+}
+
+let dark = document.getElementById('dark')
+dark.addEventListener('click', () => {
+    if (dark.checked) {
+        document.body.style.backgroundColor = '#111'
+        document.body.style.color = '#eee'
+
+        let els = document.body.getElementsByTagName('*')
+        for (el of els) {
+            el.classList.add('_darkmode')
+        }
+
+        localStorage.setItem('awedd_dark', '1')
+    } else {
+        document.body.style.backgroundColor = '#fff'
+        document.body.style.color = '#000'
+
+        let els = document.body.getElementsByTagName('*')
+        for (el of els) {
+            el.classList.remove('class', '_darkmode')
+        }
+
+        localStorage.setItem('awedd_dark', '0')
+    }
+})

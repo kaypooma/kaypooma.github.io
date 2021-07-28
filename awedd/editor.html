@@ -19,6 +19,11 @@
                 font-family: 'Courier New', Courier, monospace;
             }
 
+            p {
+                font-size: 12px;
+                font-weight: bold;
+            }
+
             #canvas {
                 border: 1px solid #222;
                 margin-left: 5px;
@@ -37,12 +42,18 @@
                 top: 5px;
                 right: 5px;
             }
+            #tileselect._darkmode {
+                background: #333;
+            }
 
             hr {
                 border: none;
                 height: 1px;
                 margin: 5px 0 5px 0;
                 background: #000;
+            }
+            hr._darkmode {
+                background: #eee;
             }
 
             #importimage {
@@ -56,6 +67,9 @@
                 position:fixed;
                 top: 220px;
                 right: 5px;
+            }
+            #importimage._darkmode {
+                background: #333;
             }
 
             #saves {
@@ -71,6 +85,9 @@
                 right: 10px;
 
                 padding: 5px;
+            }
+            #saves._darkmode {
+                background: #333;
             }
 
             button {
@@ -99,6 +116,9 @@
 
                 margin: 5px;
             }
+            .controls._darkmode {
+                color: #eee;
+            }
 
             input[type="number"] {
                 padding: 5px;
@@ -107,6 +127,45 @@
 
             input[type="file"] {
                 width: 244px;
+            }
+
+            #darkcon {
+                position:absolute;
+                bottom: 25px;
+                left: 25px;
+            }
+
+            a._darkmode {
+                color: #0ff;
+            }
+
+            input[type="radio"]._darkmode {
+                appearance: none;
+                width: 12px;
+                height: 12px;
+                border-radius: 50%;
+
+                border: 2px solid #eee;
+
+                transition: all .1s ease-out;
+            }
+            input[type="radio"]:checked._darkmode {
+                border: 4px solid #111;
+                background: #0ff;
+            }
+
+            input[type="text"]._darkmode, input[type="number"]._darkmode {
+                background: #444;
+                color: #eee;
+                border: 1px solid #aaa;
+
+                border-radius: 2px;
+            }
+            button._darkmode {
+                background: #444;
+                color: #eee;
+                border: 1px solid #aaa;
+                border-radius: 2px;
             }
         </style>
     </head>
@@ -174,7 +233,11 @@
             <input type="text" id="import_data">
             <button id="import">import</button>
             
-            <input type="checkbox" id="oldcom" style="margin-right:0;"> <label for="oldcom" style="font-weight:bold;font-size: 12px;margin-left:0">old compression</label>
+            <input type="checkbox" id="oldcom" style="margin-right:0;margin-top:5px;"> <label for="oldcom" style="font-weight:bold;font-size: 12px;margin-left:0">old compression</label>
+        </div>
+        
+        <div id="darkcon">
+            <input type="checkbox" id="dark" style="margin-right:0;"> <label for="dark" style="font-weight:bold;font-size: 12px;margin-left:0">dark mode</label>
         </div>
         
 

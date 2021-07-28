@@ -12,10 +12,14 @@
         <style>
             body {
                 font-family: 'Courier New', Courier, monospace;
+                color: #000;
             }
 
             #canvas {
                 border: 1px solid #aaa;
+            }
+            #canvas._darkmode {
+                border: 1px solid #000;
             }
 
             #timer {
@@ -33,7 +37,7 @@
                 font-family: 'Courier New', Courier, monospace;
                 font-size: 12px;
                 font-weight: bold;
-                color: #222;
+                /* color: #222; */
             }
 
             #import_data {
@@ -57,7 +61,7 @@
                 font-family: 'Courier New', Courier, monospace;
                 font-size: 14px;
                 font-weight: bold;
-                color: #222;
+                /* color: #222; */
             }
 
             #colorselect {
@@ -79,15 +83,52 @@
                 padding: 5px;
             }
 
+            #colorselect._darkmode {
+                background: #333;
+            }
+
             hr {
                 border: none;
                 height: 1px;
                 margin: 5px 0 5px 0;
                 background: #000;
             }
+            hr._darkmode {
+                background: #eee;
+            }
 
             input[type="color"] {
                 margin-bottom: 5px;
+            }
+
+            select._darkmode {
+                background: #333;
+                color: #eee;
+            }
+
+            #darkcon {
+                position:absolute;
+                bottom: 25px;
+                left: 25px;
+            }
+
+            input[type="text"]._darkmode {
+                background: #444;
+                color: #eee;
+                border: 1px solid #aaa;
+
+                border-radius: 2px;
+            }
+
+            button._darkmode {
+                background: #444;
+                color: #eee;
+                border: 1px solid #aaa;
+                border-radius: 2px;
+            }
+
+            a._darkmode {
+                color: #0ff;
             }
         </style>
     </head>
@@ -135,6 +176,10 @@
 
         <a href="editor.html" id="editorlink">editor</a>
         <a href="https://www.youtube.com/watch?v=crWQ42PePHE" id="link">original game</a>
+
+        <div id="darkcon">
+            <input type="checkbox" id="dark" style="margin-right:0;"> <label for="dark" style="font-weight:bold;font-size: 12px;margin-left:0">dark mode</label>
+        </div>
 
         <script src="lz-string.min.js"></script>
         <script src="script.js"></script>
