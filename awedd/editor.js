@@ -207,8 +207,6 @@ document.getElementById('dropzone').addEventListener('drop', e => {
 
     let item
 
-    console.log(e.dataTransfer.getData('URL'))
-
     if (e.dataTransfer.items) {
         // let items = []
         // Use DataTransferItemList interface to access the file(s)
