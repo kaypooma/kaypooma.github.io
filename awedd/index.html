@@ -41,15 +41,15 @@
             }
 
             #editorlink {
-                position:absolute;
+                position:fixed;
 
                 bottom: 25px;
-                left: 25px;
+                right: 25px;
             }
             #link {
-                position:absolute;
+                position:fixed;
 
-                bottom: 25px;
+                bottom: 45px;
                 right: 25px;
             }
 
@@ -61,8 +61,8 @@
             }
 
             #colorselect {
-                position: absolute;
-                left: 620px;
+                position: fixed;
+                right: 8px;
                 top: 8px;
 
                 padding: 5px;
@@ -126,7 +126,7 @@
 
         <p id="timer">0 s</p>
         <p id="leveldata">default level</p>
-        <input type="text" id="import_data"> <button id="import">import level</button>
+        <input type="text" id="import_data"> <button id="import">import level</button> <input type="checkbox" id="oldcom" style="margin-right:0;"> <label for="oldcom" style="font-weight:bold;font-size: 12px;margin-left:0">old compression</label>
         <p class="controls">arrow keys to move, press a to jump over one tile gaps</p>
         <p class="controls">trees can be pushed but cannot be jumped to or jumped across</p>
         <p id="reset">press r to reset</p>

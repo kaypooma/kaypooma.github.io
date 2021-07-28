@@ -1,10 +1,13 @@
 const canvas = document.getElementById('canvas')
 const ctx = canvas.getContext('2d')
 
-const sw = 600
-const sh = 350
-
 const ts = 25
+
+let levelwidth = 24
+let levelheight = 14
+
+let sw = levelwidth*ts
+let sh = levelheight*ts
 
 document.getElementById('title').value = ''
 document.getElementById('creator').value = ''
@@ -53,10 +56,10 @@ let win = {c: 13, r: 23}
 // mouse position
 let mouse = {x: 0, y: 0, left: false, right: false}
 document.addEventListener('mousemove', e => {
-    mouse.x = e.clientX - 5
-    mouse.y = e.clientY - 5
+    mouse.x = e.pageX - 5
+    mouse.y = e.pageY - 5
 
-    if (mouse.x > 0 && mouse.x < ts*24 && mouse.y > 0 && mouse.y < ts*14) 
+    if (mouse.x > 0 && mouse.x < ts*levelwidth && mouse.y > 0 && mouse.y < ts*levelheight) 
         update(mouse.x, mouse.y, mouse.left, mouse.right)
 })
 document.addEventListener('mousedown', e => {
@@ -72,7 +75,7 @@ document.addEventListener('mousedown', e => {
             break
     }
 
-    if (mouse.x > 0 && mouse.x < ts*24 && mouse.y > 0 && mouse.y < ts*14) 
+    if (mouse.x > 0 && mouse.x < ts*levelwidth && mouse.y > 0 && mouse.y < ts*levelheight) 
         update(mouse.x, mouse.y, mouse.left, mouse.right)
 })
 document.addEventListener('mouseup', e => {
@@ -91,15 +94,81 @@ document.addEventListener('mouseup', e => {
     mouse.right = false
 })
 document.addEventListener('contextmenu', e => {
-    if (mouse.x > 0 && mouse.x < ts*24 && mouse.y > 0 && mouse.y < ts*14) 
+    if (mouse.x > 0 && mouse.x < ts*levelwidth && mouse.y > 0 && mouse.y < ts*levelheight) 
         e.preventDefault();
+})
+
+function updatewidth(width) {
+    levelwidth = width
+    sw = levelwidth*ts
+    ctx.canvas.width = sw
+
+    document.getElementById('level_width').value = width
+}
+function updateheight(height) {
+    levelheight = height
+    sh = levelheight*ts
+    ctx.canvas.height = sh
+
+    document.getElementById('level_height').value = height
+}
+
+// level size
+document.getElementById('level_width').addEventListener('change', () => {
+    let width = parseInt(document.getElementById('level_width').value)
+
+    updatewidth(width)
+
+    // update map width
+    for (c=0; c<map.length; c++) {
+        if (map[c].length<width) {
+            while (map[c].length<width) {
+                map[c].push(0)
+            }
+        } else {
+            map[c].splice(width, map[c].length-width)
+        }
+    }
+    // remove trees that are out of range
+    for (i=0; i<trees.length; i++) {
+        let t = trees[i]
+
+        if (t.r>width-1)
+            trees.splice(i, 1)
+    }
+
+    update(0,0,false,false)
+})
+document.getElementById('level_height').addEventListener('change', () => {
+    let height = parseInt(document.getElementById('level_height').value)
+
+    updateheight(height)
+
+    // update map height
+    for (c=0; c<map.length; c++) {
+        if (map.length<height) {
+            while (map.length<height) {
+                map.push('0'.repeat(levelwidth).split('').map(x => parseInt(x)))
+            }
+        } else {
+            map.splice(height, map.length-height)
+        }
+    }
+    // remove trees that are out of range
+    for (i=0; i<trees.length; i++) {
+        let t = trees[i]
+        if (t.c>width-1)
+            trees.splice(i, 1)
+    }
+
+    update(0,0,false,false)
 })
 
 // update
 function update(x, y, left, right) {
     // selected tile
-    let selectedX = Math.min(Math.floor(x/ts), 23)
-    let selectedY = Math.min(Math.floor(y/ts), 13)
+    let selectedX = Math.min(Math.floor(x/ts), levelwidth-1)
+    let selectedY = Math.min(Math.floor(y/ts), levelheight-1)
     if (selectedX<0) selectedX=0;
     if (selectedY<0) selectedY=0;
 
@@ -176,10 +245,10 @@ function update(x, y, left, right) {
     // gridlines
     ctx.fillStyle = '#ddd'
     
-    for (i=0; i<23; i++) {
+    for (i=0; i<levelwidth-1; i++) {
         ctx.fillRect((i+1)*ts, 0, 1, sh)
     }
-    for (i=0; i<13; i++) {
+    for (i=0; i<levelheight-1; i++) {
         ctx.fillRect(0, (i+1)*ts, sw, 1)
     } 
 }
@@ -226,7 +295,11 @@ function exportlevel(map, trees, player, end) {
     mapstr += '|'
     mapstr += document.getElementById('creator').value.replace(/\|/gm, ' ')
 
-    return LZString.compressToUTF16(mapstr)
+    // level size
+    // mapstr += '|'
+    // mapstr += levelwidth + '.' + levelheight
+
+    return LZString.compressToBase64(mapstr)
 }
 
 document.getElementById('export').addEventListener('click', () => {
@@ -284,6 +357,94 @@ levelerror.prototype.toString = function() {
     return `${this.name}: ${this.message}`
 }
 function importlevel(data) {
+    data = LZString.decompressFromBase64(data)
+
+    if (!data) 
+        throw new levelerror('invalid level data')
+
+    const sections = data.split('|')
+
+    if (sections.length !== 6) 
+        throw new levelerror('invalid level data')
+
+    // ground
+    let ground = sections[0].split(',')
+
+    // if (ground.length !== 14)
+    //     throw new levelerror('invalid ground data')
+    updateheight(ground.length)
+
+    for (c=0; c<ground.length; c++) {
+        let data = ground[c].split('')
+        for (i=0; i<data.length; i++) {
+            if (isNaN(parseInt(data[i])))
+                throw new levelerror('invalid ground data')
+
+            data[i] = parseInt(data[i])
+        }
+
+        // if (data.length !== 24)
+        //     throw new levelerror('invalid ground data')
+        updatewidth(data.length)
+
+        map[c] = data
+
+        // console.log(data)
+    }
+    
+    // trees
+    trees = []
+    let treedata = sections[1].split(',')
+
+    if (treedata.length>0 && treedata[0] !== '') {
+        for (i=0; i<treedata.length; i++) {
+            let pos = treedata[i].split('.')
+            if (pos.length !== 2)
+                throw new levelerror('invalid tree data')
+
+            for (p of pos) {
+                if (isNaN(parseInt(p)))
+                    throw new levelerror('invalid tree data')
+            }
+
+            trees.push({ c: parseInt(pos[0]), r: parseInt(pos[1]) })
+        }
+    }
+
+    // player start
+    let playerdata = sections[2].split('.')
+
+    if (playerdata.length !== 2)
+        throw new levelerror('invalid player data')
+
+    for (p of playerdata) {
+        if (isNaN(parseInt(p)))
+            throw new levelerror('invalid player data')
+    }
+
+    player.c = parseInt(playerdata[0])
+    player.r = parseInt(playerdata[1])
+
+    // level end
+    let enddata = sections[3].split('.')
+
+    if (enddata.length !== 2)
+        throw new levelerror('invalid end data')
+    for (p of enddata) {
+        if (isNaN(parseInt(p)))
+            throw new levelerror('invalid end data')
+    }
+
+    win.c = parseInt(enddata[0])
+    win.r = parseInt(enddata[1])
+    
+    // title/creator
+    document.getElementById('title').value = sections[4]
+    document.getElementById('creator').value = sections[5]
+
+    update(0,0,false,false)
+}
+function importlevel_old(data) {
     data = LZString.decompressFromUTF16(data)
 
     if (!data) 
@@ -297,8 +458,9 @@ function importlevel(data) {
     // ground
     let ground = sections[0].split(',')
 
-    if (ground.length !== 14)
-        throw new levelerror('invalid ground data')
+    // if (ground.length !== 14)
+    //     throw new levelerror('invalid ground data')
+    updateheight(ground.length)
 
     for (c=0; c<ground.length; c++) {
         let data = ground[c].split('')
@@ -309,8 +471,9 @@ function importlevel(data) {
             data[i] = parseInt(data[i])
         }
 
-        if (data.length !== 24)
-            throw new levelerror('invalid ground data')
+        // if (data.length !== 24)
+        //     throw new levelerror('invalid ground data')
+        updatewidth(data.length)
 
         map[c] = data
 

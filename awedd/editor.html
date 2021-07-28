@@ -28,10 +28,14 @@
             #tileselect {
                 margin: 0 5px 5px 5px;
 
-                width: 200px;
+                width: 300px;
                 height: 200px;
                 padding: 5px;
                 background: #ddd;
+
+                position:fixed;
+                top: 5px;
+                right: 5px;
             }
 
             hr {
@@ -42,16 +46,16 @@
             }
 
             #saves {
-                display: inline-block;
-                position: absolute;
+                /* display: block; */
+                position: fixed;
 
                 background: #ddd;
 
-                width: 377px;
+                width: 300px;
                 height: 200px;
 
-                top: 386px;
-                left: 220px;
+                top: 220px;
+                right: 10px;
 
                 padding: 5px;
             }
@@ -61,14 +65,14 @@
             }
             input[type="text"] {
                 padding: 5px;
-                width: 300px;
+                width: 225px;
             }
 
             #gamelink {
-                position:absolute;
+                position:fixed;
 
                 bottom: 25px;
-                left: 25px;
+                right: 25px;
             }
 
             #reset, .controls {
@@ -108,6 +112,11 @@
                 <input type="radio" id="end" name="selector" value="end">
                 <label for="end">level end</label>
             </div>
+            <hr>
+            <p>level size:</p>
+            <input type="number" id="level_width" value="24" max="50" min="1">
+            <span>by</span>
+            <input type="number" id="level_height" value="14" max="50" min="1">
         </div>
 
         <div id="saves">

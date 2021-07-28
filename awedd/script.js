@@ -1,11 +1,6 @@
 const canvas = document.getElementById('canvas')
 const ctx = canvas.getContext('2d')
 
-const sw = 600
-const sh = 350
-
-const ts = 25
-
 document.getElementById('jackpot').volume = 0.3
 
 // let defaultcolors = {
@@ -32,6 +27,25 @@ let map = [
     [ 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0 ],
     [ 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
 ]
+
+// let map = [
+//     [ 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
+//     [ 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
+//     [ 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0 ],
+//     [ 1, 0, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1 ],
+//     [ 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0 ],
+//     [ 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1 ],
+//     [ 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0 ],
+//     [ 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1 ],
+//     [ 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 ],
+//     [ 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 ],
+//     [ 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0 ],
+//     [ 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0 ],
+//     [ 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0 ],
+//     [ 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
+//     [ 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
+//     [ 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
+// ]
 let player = {
     dc: 13,
     dr: 8,
@@ -48,6 +62,14 @@ let trees = [
 let win = {c: 0, r: 10}
 
 let finished = false
+
+const ts = 25
+
+let sw = map[0].length*ts
+let sh = map.length*ts
+
+ctx.canvas.width = sw
+ctx.canvas.height = sh
 
 //  -------------------- game logic
 function checkTree(c, r) {
@@ -450,7 +472,7 @@ levelerror.prototype.toString = function() {
     return `${this.name}: ${this.message}`
 }
 function importlevel(data) {
-    data = LZString.decompressFromUTF16(data)
+    data = LZString.decompressFromBase64(data)
 
     if (!data) 
         throw new levelerror('invalid level data')
@@ -461,10 +483,13 @@ function importlevel(data) {
         throw new levelerror('invalid level data')
 
     // ground
+    map = []
     let ground = sections[0].split(',')
 
-    if (ground.length !== 14)
-        throw new levelerror('invalid ground data')
+    // if (ground.length !== 14)
+    //     throw new levelerror('invalid ground data')
+    sh = ground.length*ts
+    ctx.canvas.height = ground.length*ts
 
     for (c=0; c<ground.length; c++) {
         let data = ground[c].split('')
@@ -475,8 +500,10 @@ function importlevel(data) {
             data[i] = parseInt(data[i])
         }
 
-        if (data.length !== 24)
-            throw new levelerror('invalid ground data')
+        // if (data.length !== 24)
+        //     throw new levelerror('invalid ground data')
+        sw = data.length*ts
+        ctx.canvas.width = data.length*ts
 
         map[c] = data
 
@@ -535,13 +562,112 @@ function importlevel(data) {
     document.getElementById('leveldata').innerHTML = `"${sections[4]}" by "${sections[5]}"`
 
 }
+function importlevel_old(data) {
+    data = LZString.decompressFromUTF16(data)
 
-document.getElementById('import').addEventListener('click', () => {
-    importlevel(document.getElementById('import_data').value)
+    if (!data) 
+        throw new levelerror('invalid level data')
+
+    const sections = data.split('|')
+
+    if (sections.length !== 6) 
+        throw new levelerror('invalid level data')
+
+    // ground
+    let ground = sections[0].split(',')
+    map = []
+
+    // if (ground.length !== 14)
+    //     throw new levelerror('invalid ground data')
+    sh = ground.length*ts
+    ctx.canvas.height = ground.length*ts
+
+    for (c=0; c<ground.length; c++) {
+        let data = ground[c].split('')
+        for (i=0; i<data.length; i++) {
+            if (isNaN(parseInt(data[i])))
+                throw new levelerror('invalid ground data')
+
+            data[i] = parseInt(data[i])
+        }
+
+        // if (data.length !== 24)
+        //     throw new levelerror('invalid ground data')
+        sw = data.length*ts
+        ctx.canvas.width = data.length*ts
+
+        map[c] = data
+
+        // console.log(data)
+    }
+    
+    // trees
+    trees = []
+    let treedata = sections[1].split(',')
+
+    if (treedata.length>0 && treedata[0] !== '') {
+        for (i=0; i<treedata.length; i++) {
+            let pos = treedata[i].split('.')
+            if (pos.length !== 2)
+                throw new levelerror('invalid tree data')
+
+            for (p of pos) {
+                if (isNaN(parseInt(p)))
+                    throw new levelerror('invalid tree data')
+            }
+
+            trees.push({ dc: parseInt(pos[0]), dr: parseInt(pos[1]), c: parseInt(pos[0]), r: parseInt(pos[1]) })
+        }
+    }
+
+    // player start
+    let playerdata = sections[2].split('.')
+
+    if (playerdata.length !== 2)
+        throw new levelerror('invalid player data')
+
+    for (p of playerdata) {
+        if (isNaN(parseInt(p)))
+            throw new levelerror('invalid player data')
+    }
+
+    player.dc = parseInt(playerdata[0])
+    player.dr = parseInt(playerdata[1])
+    player.c = parseInt(playerdata[0])
+    player.r = parseInt(playerdata[1])
+
+    // level end
+    let enddata = sections[3].split('.')
+
+    if (enddata.length !== 2)
+        throw new levelerror('invalid end data')
+    for (p of enddata) {
+        if (isNaN(parseInt(p)))
+            throw new levelerror('invalid end data')
+    }
+
+    win.c = parseInt(enddata[0])
+    win.r = parseInt(enddata[1])
+    
+    // title/creator
+    document.getElementById('leveldata').innerHTML = `"${sections[4]}" by "${sections[5]}"`
+
     reset(animationframe)
 
     draw()
     update()
+}
+
+document.getElementById('import').addEventListener('click', () => {
+    if (document.getElementById('oldcom').checked) {
+        importlevel_old(document.getElementById('import_data').value)
+    } else {
+        importlevel(document.getElementById('import_data').value)
+        reset(animationframe)
+    
+        draw()
+        update()
+    }
 })
 
 draw()
