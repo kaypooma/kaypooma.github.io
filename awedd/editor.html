@@ -45,6 +45,19 @@
                 background: #000;
             }
 
+            #importimage {
+                margin: 0 5px 5px 5px;
+
+                width: 300px;
+                height: 140px;
+                padding: 5px;
+                background: #ddd;
+
+                position:fixed;
+                top: 220px;
+                right: 5px;
+            }
+
             #saves {
                 /* display: block; */
                 position: fixed;
@@ -54,7 +67,7 @@
                 width: 300px;
                 height: 200px;
 
-                top: 220px;
+                top: 375px;
                 right: 10px;
 
                 padding: 5px;
@@ -66,6 +79,9 @@
             input[type="text"] {
                 padding: 5px;
                 width: 225px;
+            }
+            input[type="range"] {
+                width: 100%;
             }
 
             #gamelink {
@@ -87,6 +103,10 @@
             input[type="number"] {
                 padding: 5px;
                 width: 50px;
+            }
+
+            input[type="file"] {
+                width: 244px;
             }
         </style>
     </head>
@@ -124,6 +144,20 @@
             <input type="number" id="level_height" value="14" max="50" min="1">
         </div>
 
+        <div id="importimage">
+            <p>import floor data from image:</p>
+            <hr>
+            <input type="file"
+                id="image_data" name="image_data"
+                accept="image/png, image/jpeg">
+            <button id="submitimage">apply</button>
+            <hr>
+            <p style="font-size:12px;font-weight:bold" id="threshold_value">floor threshold: &lt;128</p>
+            <input type="range" min="0" max="255" id="threshold" value="128">
+            <p style="font-size:12px;font-weight:bold" id="dark_threshold_value">tree threshold: &lt;64</p>
+            <input type="range" min="0" max="255" id="dark_threshold" value="64">
+        </div>
+
         <div id="saves">
             <p style="font-size: 12px">title</p> <input type="text" id="title">
             <p style="font-size: 12px">creator</p> <input type="text" id="creator">
@@ -137,7 +171,10 @@
 
             <input type="text" id="import_data">
             <button id="import">import</button>
+            
+            <input type="checkbox" id="oldcom" style="margin-right:0;"> <label for="oldcom" style="font-weight:bold;font-size: 12px;margin-left:0">old compression</label>
         </div>
+        
 
         <a href="index.html" id="gamelink">game</a>
 

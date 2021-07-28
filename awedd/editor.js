@@ -164,6 +164,71 @@ document.getElementById('level_height').addEventListener('change', () => {
     update(0,0,false,false)
 })
 
+// image import
+document.getElementById('submitimage').addEventListener('click', () => {
+    let el = document.getElementById('image_data')
+    let reader
+    let image = new Image()
+
+    if (el.files && el.files[0]) {
+        reader = new FileReader()
+
+        reader.onload = function(e) {
+            image.src = e.target.result
+
+            image.onload = function() {
+                handleImage(image)
+            }
+        }
+
+        reader.readAsDataURL(el.files[0])
+    }
+})
+document.getElementById('threshold').addEventListener('input', () => {
+    document.getElementById('threshold_value').innerHTML = `floor threshold: &lt;${document.getElementById('threshold').value}`
+    // document.getElementById('dark_threshold_value').innerHTML = `tree threshold: &lt;${document.getElementById('threshold').value}`
+    // document.getElementById('dark_threshold').value = document.getElementById('threshold').value - 10
+})
+document.getElementById('dark_threshold').addEventListener('input', () => {
+    // document.getElementById('threshold_value').innerHTML = `floor threshold: &gt;${parseInt(document.getElementById('dark_threshold').value) + 10}`
+    document.getElementById('dark_threshold_value').innerHTML = `tree threshold: &lt;${document.getElementById('dark_threshold').value}`
+    // document.getElementById('threshold').value = parseInt(document.getElementById('dark_threshold').value) + 10
+})
+
+function handleImage(image) {
+    // console.log(image.src, image.width, image.height)
+    map = []
+    for (c=0; c<levelheight; c++) {
+        map.push( '0'.repeat(levelwidth).split('').map(x => parseInt(x)) )
+    }
+    trees = []
+
+    let imagecanvas = document.createElement('canvas')
+
+    imagecanvas.width = levelwidth
+    imagecanvas.height = levelheight
+
+    imagecanvas.getContext('2d').drawImage(image, 0, 0, levelwidth, levelheight)
+
+    for (r=0; r<levelwidth; r++) {
+        for (c=0; c<levelheight; c++) {
+            let cdata = imagecanvas.getContext('2d').getImageData(r, c, 1, 1).data
+            let average = (cdata[0]+cdata[1]+cdata[2])/3
+
+            // console.log(average)
+            if (average<parseInt(document.getElementById('threshold').value)) {
+                map[c][r] = 1
+            }
+            if (average<parseInt(document.getElementById('dark_threshold').value)) {
+                trees.push( {c: c, r: r} )
+            }
+            // console.log( average )
+        }
+    }
+
+    update(0,0,false,false)
+}
+
 // update
 function update(x, y, left, right) {
     // selected tile
@@ -614,7 +679,11 @@ document.getElementById('import').addEventListener('click', () => {
     // document.getElementById('creator').value = sections[5]
 
     // update(0,0,false,false)
-    importlevel(document.getElementById('import_data').value)
+    if (document.getElementById('oldcom').checked) {
+        importlevel_old(document.getElementById('import_data').value)         
+    } else {
+        importlevel(document.getElementById('import_data').value)
+    }
 })
 
 update(0,0,false,false)
