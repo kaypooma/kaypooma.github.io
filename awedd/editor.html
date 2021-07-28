@@ -34,7 +34,7 @@
                 margin: 0 5px 5px 5px;
 
                 width: 300px;
-                height: 200px;
+                height: 150px;
                 padding: 5px;
                 background: #ddd;
 
@@ -60,16 +60,20 @@
                 margin: 0 5px 5px 5px;
 
                 width: 300px;
-                height: 155px;
+                height: 225px;
                 padding: 5px;
                 background: #ddd;
 
                 position:fixed;
-                top: 220px;
+                top: 170px;
                 right: 5px;
             }
             #importimage._darkmode {
                 background: #333;
+            }
+            #importimage button {
+                margin-top: 5px;
+                width: 100%;
             }
 
             #saves {
@@ -81,7 +85,7 @@
                 width: 300px;
                 height: 200px;
 
-                top: 390px;
+                top: 410px;
                 right: 10px;
 
                 padding: 5px;
@@ -167,6 +171,19 @@
                 border: 1px solid #aaa;
                 border-radius: 2px;
             }
+
+            #dropzone {
+                border: 1px dotted rgba(0,0,0,0.5);
+                width: calc(100% - 13px);
+                margin-top: 5px;
+                height: 30px;
+
+                padding: 5px;
+                font-size: 12px;
+                font-weight: bold;
+
+                text-overflow: clip;
+            }
         </style>
     </head>
     <body>
@@ -209,6 +226,7 @@
             <input type="file"
                 id="image_data" name="image_data"
                 accept="image/png, image/jpeg">
+            <div id="dropzone"> or drop file here</div>
             <button id="submitimage">apply</button>
             <hr>
             <p style="font-size:12px;font-weight:bold" id="threshold_value">floor threshold: &lt;128</p>
@@ -217,6 +235,8 @@
             <input type="range" min="0" max="255" id="dark_threshold" value="64">
 
             <input type="checkbox" id="invert" style="margin-right:0;"> <label for="invert" style="font-weight:bold;font-size: 12px;margin-left:0">invert</label>
+        
+            
         </div>
 
         <div id="saves">

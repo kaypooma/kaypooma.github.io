@@ -165,7 +165,10 @@ document.getElementById('level_height').addEventListener('change', () => {
 })
 
 // image import
-document.getElementById('submitimage').addEventListener('click', () => {
+let currentImage
+document.getElementById('image_data').addEventListener('change', e => {
+    document.getElementById('dropzone').innerHTML = 'or drop file here'
+
     let el = document.getElementById('image_data')
     let reader
     let image = new Image()
@@ -177,13 +180,78 @@ document.getElementById('submitimage').addEventListener('click', () => {
             image.src = e.target.result
 
             image.onload = function() {
-                handleImage(image)
+                currentImage = image
             }
         }
 
         reader.readAsDataURL(el.files[0])
     }
 })
+
+document.getElementById('dropzone').addEventListener('dragover', e => {
+    e.preventDefault()
+
+    document.getElementById('dropzone').style.backgroundColor = 'rgba(0,0,0,0.1)'
+})
+document.getElementById('dropzone').addEventListener('dragleave', e => {
+    e.preventDefault()
+
+    document.getElementById('dropzone').style.backgroundColor = 'rgba(0,0,0,0)'
+})
+
+document.getElementById('dropzone').addEventListener('drop', e => {
+    e.preventDefault()
+    document.getElementById('dropzone').style.backgroundColor = 'rgba(0,0,0,0)'
+
+    document.getElementById('image_data').value = ''
+
+    let item
+    if (e.dataTransfer.items) {
+        // let items = []
+        // Use DataTransferItemList interface to access the file(s)
+        // for (var i = 0; i < e.dataTransfer.items.length; i++) {
+        //   // If dropped items aren't files, reject them
+        //   if (e.dataTransfer.items[i].kind === 'file') {
+        //     var file = e.dataTransfer.items[i].getAsFile();
+        //     items.push(file)
+        //   }
+        // }
+
+        item = e.dataTransfer.items[0].getAsFile()
+    } else {
+        // Use DataTransfer interface to access the file(s)
+        // for (var i = 0; i < e.dataTransfer.files.length; i++) {
+        //   console.log('... file[' + i + '].name = ' + e.dataTransfer.files[i].name);
+        // }
+        item = e.dataTransfer.files[0]
+    }
+
+    if (item.type === 'image/png' || item.type === 'image/jpeg') {
+        document.getElementById('dropzone').innerHTML = item.name
+        
+        let reader
+        let image = new Image()
+        // console.log(item.getData())
+        reader = new FileReader()
+
+        reader.onload = function(e) {
+            image.src = e.target.result
+
+            image.onload = function() {
+                currentImage = image
+            }
+        }
+
+        reader.readAsDataURL(item)
+    } else {
+        alert('only types "image/png" and "image/jpeg" accepted')
+    }
+})
+
+document.getElementById('submitimage').addEventListener('click', () => {
+    handleImage(currentImage)
+})
+
 document.getElementById('threshold').addEventListener('input', () => {
     document.getElementById('threshold_value').innerHTML = `floor threshold: ${document.getElementById('invert').checked ? '&gt;' : '&lt;'}${document.getElementById('threshold').value}`
     // document.getElementById('dark_threshold_value').innerHTML = `tree threshold: &lt;${document.getElementById('threshold').value}`
