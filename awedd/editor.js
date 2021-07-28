@@ -185,14 +185,19 @@ document.getElementById('submitimage').addEventListener('click', () => {
     }
 })
 document.getElementById('threshold').addEventListener('input', () => {
-    document.getElementById('threshold_value').innerHTML = `floor threshold: &lt;${document.getElementById('threshold').value}`
+    document.getElementById('threshold_value').innerHTML = `floor threshold: ${document.getElementById('invert').checked ? '&gt;' : '&lt;'}${document.getElementById('threshold').value}`
     // document.getElementById('dark_threshold_value').innerHTML = `tree threshold: &lt;${document.getElementById('threshold').value}`
     // document.getElementById('dark_threshold').value = document.getElementById('threshold').value - 10
 })
 document.getElementById('dark_threshold').addEventListener('input', () => {
     // document.getElementById('threshold_value').innerHTML = `floor threshold: &gt;${parseInt(document.getElementById('dark_threshold').value) + 10}`
-    document.getElementById('dark_threshold_value').innerHTML = `tree threshold: &lt;${document.getElementById('dark_threshold').value}`
+    document.getElementById('dark_threshold_value').innerHTML = `tree threshold: ${document.getElementById('invert').checked ? '&gt;' : '&lt;'}${document.getElementById('dark_threshold').value}`
     // document.getElementById('threshold').value = parseInt(document.getElementById('dark_threshold').value) + 10
+})
+
+document.getElementById('invert').addEventListener('click', () => {
+    document.getElementById('threshold_value').innerHTML = `floor threshold: ${document.getElementById('invert').checked ? '&gt;' : '&lt;'}${document.getElementById('threshold').value}`
+    document.getElementById('dark_threshold_value').innerHTML = `tree threshold: ${document.getElementById('invert').checked ? '&gt;' : '&lt;'}${document.getElementById('dark_threshold').value}`
 })
 
 function handleImage(image) {
@@ -216,11 +221,20 @@ function handleImage(image) {
             let average = (cdata[0]+cdata[1]+cdata[2])/3
 
             // console.log(average)
-            if (average<parseInt(document.getElementById('threshold').value)) {
-                map[c][r] = 1
-            }
-            if (average<parseInt(document.getElementById('dark_threshold').value)) {
-                trees.push( {c: c, r: r} )
+            if (document.getElementById('invert').checked) {
+                if (average>parseInt(document.getElementById('threshold').value)) {
+                    map[c][r] = 1
+                }
+                if (average>parseInt(document.getElementById('dark_threshold').value)) {
+                    trees.push( {c: c, r: r} )
+                }
+            } else {
+                if (average<parseInt(document.getElementById('threshold').value)) {
+                    map[c][r] = 1
+                }
+                if (average<parseInt(document.getElementById('dark_threshold').value)) {
+                    trees.push( {c: c, r: r} )
+                }
             }
             // console.log( average )
         }
