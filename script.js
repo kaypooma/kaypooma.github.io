@@ -603,6 +603,11 @@ const ztochei = {
         date: '2021-03-24',
         color: '750e53',
         title_override: 'de Métamorphose',
+    },
+    futility: {
+        date: '2021-04-15',
+        color: '#5f0809',
+        title_override: 'FutilitY',
     }
 }
 
