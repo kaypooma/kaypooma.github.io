@@ -32,6 +32,47 @@
             bottom: 10px;
             right: 10px;
         }
+
+        #graphline {
+            width: 1px;
+            height: 100px;
+            background: #fff;
+            position: absolute;
+            top: 616px;
+            left: 20px;
+            pointer-events:none;
+            display: none;
+        }
+        #graphtext {
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            top: 616px;
+            left: 20px;
+            pointer-events:none;
+            display: none;
+            color: #fff;
+            padding-left: 5px;
+
+            text-shadow: rgba(0,0,0,0.5) 0px 2px 2px, 
+            rgba(0,0,0,1) -1px -1px 0,  
+            rgba(0,0,0,1)  1px -1px 0,  
+            rgba(0,0,0,1) -1px  1px 0,  
+            rgba(0,0,0,1)  1px  1px 0;
+
+            font-family: monospace;
+            font-size: 12px;
+        }
+
+        #help {
+            text-align: right;
+            width: 450px;
+            height: 200px;
+
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
     </style>
 </head>
 <body>
@@ -39,6 +80,15 @@
     <canvas id="line" width="1067" height="600"></canvas>
     <canvas id="graph" width="1067" height="100"></canvas>
 
+    <div id="graphline"></div>
+    <span id="graphtext">test<br>test<br>test</span>
+
+    <div id="help">
+        <p>drag or paste images in</p>
+        <p>you can drag start and end handles of line, or drag the entire line</p>
+        <p>hover over graph to get color info at that position</p>
+        <p>only updates on mouse up because it takes a while to compute</p>
+    </div>
     <a href="https://www.youtube.com/watch?v=Dq0bYwFIfIk">based</a>
 
     <script src="script.js"></script>

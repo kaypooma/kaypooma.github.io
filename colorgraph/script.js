@@ -6,7 +6,7 @@ const canvas = document.getElementById('canvas')
 const ctx = canvas.getContext('2d')
 
 const sw = 1067
-const sh = 700
+const sh = 600
 const scx = sw/2
 const scy = sh/2
 
@@ -26,14 +26,16 @@ document.addEventListener('mousedown', e => {
 })
 document.addEventListener('mouseup', e => {
     Mouse.click = false
-
+    
     Line.dragging.start = false
     Line.dragging.end = false
     Line.dragging.all = false
 
     Drag.set = false
 
-    drawgraph()
+    if (mouseInCanvas) {
+        drawgraph()
+    }
 })
 
 // line
@@ -44,6 +46,10 @@ const Line = { start: {x: 30, y: 30}, end: {x: 400, y: 400}, dragging: {start: f
 const Drag = { initX: 0, initY: 0, set: false,
     line: { start: {initX: 0, initY: 0}, end: {initX: 0, initY: 0} }
 }
+
+let mouseInCanvas = false
+linecanvas.addEventListener('mouseover', () => { mouseInCanvas = true })
+linecanvas.addEventListener('mouseleave', () => { mouseInCanvas = false })
 
 function updateline() {
     if (!Line.dragging.all) {
@@ -66,7 +72,7 @@ function updateline() {
         }
     }
 
-    if (!Line.dragging.start && !Line.dragging.end && Mouse.click) {
+    if (!Line.dragging.start && !Line.dragging.end && Mouse.click && mouseInCanvas) {
         if (Drag.set) {
             let diffX = Mouse.x - Drag.initX
             let diffY = Mouse.y - Drag.initY
@@ -272,18 +278,266 @@ function drawgraph() {
     gtx.fill()
 
 }
+// function drawgraph() {
+//     gtx.clearRect(0,0,sw,sh)
+
+//     gtx.fillStyle = '#000'
+//     gtx.fillRect( 0, 0, sw, gh )
+
+//     // number of samples along line
+//     const grain = 128
+
+//     for (i=0; i<grain; i++) {
+//         let position = Line.positionAt(1/(grain-1) * i)
+//         let color = ctx.getImageData(position.x, position.y, 1, 1).data
+
+        
+//     }
+
+// }
 
 // load example image
-let image1 = new Image()
-image1.src = 'img/1.png'
+// let image1 = new Image()
+// image1.src = 'img/1.png'
 
-image1.onload = function() {
-    imageready()
-}
+// image1.onload = function() {
+//     imageready()
+// }
 
-function imageready() {
-    ctx.drawImage(image1, 20, 20, 300, 300)
+// function imageready() {
+//     ctx.drawImage(image1, 20, 20, 300, 300)
+// }
+// drag stuff
+let currentImage
+const imageAttr = {x: 0, y: 0, w: 0, h: 0}
+linecanvas.addEventListener('dragover', e => {
+    e.preventDefault()
+
+    linecanvas.style.backgroundColor = 'rgba(0,0,0,0.1)'
+})
+linecanvas.addEventListener('dragleave', e => {
+    e.preventDefault()
+
+    linecanvas.style.backgroundColor = 'rgba(0,0,0,0)'
+})
+linecanvas.addEventListener('drop', e => {
+    e.preventDefault()
+    linecanvas.style.backgroundColor = 'rgba(0,0,0,0)'
+
+    // document.getElementById('image_data').value = ''
+
+    let item
+
+    if (e.dataTransfer.items) {
+        // let items = []
+        // Use DataTransferItemList interface to access the file(s)
+        // for (var i = 0; i < e.dataTransfer.items.length; i++) {
+        //   // If dropped items aren't files, reject them
+        //   if (e.dataTransfer.items[i].kind === 'file') {
+        //     var file = e.dataTransfer.items[i].getAsFile();
+        //     items.push(file)
+        //   }
+        // }
+
+        item = e.dataTransfer.items[0].getAsFile()
+    } else {
+        // Use DataTransfer interface to access the file(s)
+        // for (var i = 0; i < e.dataTransfer.files.length; i++) {
+        //   console.log('... file[' + i + '].name = ' + e.dataTransfer.files[i].name);
+        // }
+        item = e.dataTransfer.files[0]
+    }
+
+    if (item.type === 'image/png' || item.type === 'image/jpeg' || item.type === 'image/gif') {        
+        let reader
+        let image = new Image()
+        // console.log(item.getData())
+        reader = new FileReader()
+
+        reader.onload = function(e) {
+            image.src = e.target.result
+
+            image.onload = function() {
+                let xprompt = window.prompt('image x (default 0)')
+                let yprompt = window.prompt('image y (default 0)')
+                let wprompt = window.prompt('image width (defaults to canvas width)')
+                let hprompt = window.prompt('image height (defaults to canvas height)')
+
+                imageAttr.x = parseInt(xprompt) || 0
+                imageAttr.y = parseInt(yprompt) || 0
+                imageAttr.w = parseInt(wprompt) || sw
+                imageAttr.h = parseInt(hprompt) || sh
+
+                currentImage = image
+            }
+        }
+
+        reader.readAsDataURL(item)
+    } else {
+        alert('unsupported format')
+    }
+})
+
+document.onpaste = function (event) {
+    var items = (event.clipboardData || event.originalEvent.clipboardData).items;
+    console.log(JSON.stringify(items)); // might give you mime types
+    for (var index in items) {
+        var item = items[index];
+        if (item.kind === 'file') {
+            var blob = item.getAsFile();
+            var reader = new FileReader();
+            let image = new Image()
+            reader.onload = function (e) {
+                // console.log(event.target.result); // data url!image.src = e.target.result
+                image.src = e.target.result
+
+                image.onload = function() {
+                    let xprompt = window.prompt('image x (default 0)')
+                    let yprompt = window.prompt('image y (default 0)')
+                    let wprompt = window.prompt('image width (defaults to canvas width)')
+                    let hprompt = window.prompt('image height (defaults to canvas height)')
+
+                    imageAttr.x = parseInt(xprompt) || 0
+                    imageAttr.y = parseInt(yprompt) || 0
+                    imageAttr.w = parseInt(wprompt) || sw
+                    imageAttr.h = parseInt(hprompt) || sh
+
+                    currentImage = image
+                }
+            }; 
+            reader.readAsDataURL(blob);
+        }
+    }
+};
+
+// picker
+// function picker() {
+    
+//     let posX = Mouse.x
+//     let posY = Mouse.y
+
+//     // if (posX < Line.start.x) posX = Line.start.x
+//     // if (posX > Line.end.x) posX = Line.end.x
+
+//     // if (posY < Line.start.y) posY = Line.start.y
+//     // if (posY > Line.end.y) posY = Line.end.y
+
+//     // let help = p
+
+//     // console.log( (posX - Line.start.x) / (Line.end.x - Line.start.x) )
+//     let per = (posX - Line.start.x) / (Line.end.x - Line.start.x)
+//     if (per > 1) per = 1
+//     if (per < 0) per = 0
+
+//     let pos = Line.positionAt(per)
+    
+//     let color = ctx.getImageData(pos.x, pos.y, 1, 1).data
+
+//     ltx.strokeStyle = '#000'
+//     ltx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`
+//     ltx.fillRect(pos.x - 8, pos.y - 8, 16, 16)
+    
+//     ltx.lineWidth = 3
+//     ltx.strokeStyle = '#fff'
+
+//     ltx.beginPath()
+
+//     ltx.rect( pos.x - 8, pos.y - 8, 16, 16 )
+
+//     ltx.stroke()
+
+//     ltx.lineWidth = 1
+//     ltx.strokeStyle = '#111'
+
+//     ltx.beginPath()
+
+//     ltx.rect( pos.x - 8, pos.y - 8, 16, 16 )
+
+//     ltx.stroke()
+
+//     // wow
+//     // gtx.strokeStyle = '#fff'
+
+//     // gtx.moveTo( sw*per, 0 )
+//     // gtx.lineTo( sw*per, gh )
+
+//     // gtx.stroke()
+//     document.getElementById('graphline').style.left = 6 + sw*per + 'px'
+// }
+function picker(p) {
+    
+
+    // if (posX < Line.start.x) posX = Line.start.x
+    // if (posX > Line.end.x) posX = Line.end.x
+
+    // if (posY < Line.start.y) posY = Line.start.y
+    // if (posY > Line.end.y) posY = Line.end.y
+
+    // let help = p
+
+    // console.log( (posX - Line.start.x) / (Line.end.x - Line.start.x) )
+    let pos = Line.positionAt(p)
+    
+    let color = ctx.getImageData(pos.x, pos.y, 1, 1).data
+
+    ltx.strokeStyle = '#000'
+    ltx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`
+    ltx.fillRect(pos.x - 8, pos.y - 8, 16, 16)
+    
+    ltx.lineWidth = 3
+    ltx.strokeStyle = '#fff'
+
+    ltx.beginPath()
+
+    ltx.rect( pos.x - 8, pos.y - 8, 16, 16 )
+
+    ltx.stroke()
+
+    ltx.lineWidth = 1
+    ltx.strokeStyle = '#111'
+
+    ltx.beginPath()
+
+    ltx.rect( pos.x - 8, pos.y - 8, 16, 16 )
+
+    ltx.stroke()
+
+    // wow
+    // gtx.strokeStyle = '#fff'
+
+    // gtx.moveTo( sw*per, 0 )
+    // gtx.lineTo( sw*per, gh )
+
+    // gtx.stroke()
+    pickerColor = color
 }
+let pickerActive = false
+let pickerPosition = 0
+
+let pickerColor = [ 0,0,0 ]
+
+// graph hover
+
+graph.addEventListener('mouseover', () => {
+    // console.log('over')
+    pickerActive = true
+    document.getElementById('graphline').style.display = 'block'
+    document.getElementById('graphtext').style.display = 'block'
+})
+graph.addEventListener('mouseleave', () => {
+    // console.log('leave')
+    pickerActive = false
+    document.getElementById('graphline').style.display = 'none'
+    document.getElementById('graphtext').style.display = 'none'
+})
+graph.addEventListener('mousemove', () => {
+    // console.log(Mouse.x / sw)
+    pickerPosition = Mouse.x / sw
+    document.getElementById('graphline').style.left = 6 + sw*pickerPosition + 'px'
+    document.getElementById('graphtext').style.left = 6 + sw*pickerPosition + 'px'
+
+    document.getElementById('graphtext').innerHTML = `r: ${pickerColor[0]} <br> g: ${pickerColor[1]} <br> b: ${pickerColor[2]}`
+})
 
 function update() {
     ctx.clearRect(0, 0, sw, sh)
@@ -292,19 +546,36 @@ function update() {
     ctx.fillRect(0, 0, sw, sh)
 
     // draw example image
-    imageready()
-    // ctx.fillStyle = 'red'
-    // ctx.fillRect(20, 20, 100, 100)
-    // ctx.fillStyle = 'blue'
-    // ctx.fillRect(40, 20, 200, 100)
-    // ctx.fillStyle = 'green'
-    // ctx.fillRect(20, 70, 67, 100)
-    // ctx.fillStyle = 'yellow'
-    // ctx.fillRect(90, 70, 200, 100)
+    // imageready()
+    if (currentImage) {
+        ctx.drawImage(currentImage, imageAttr.x, imageAttr.y, imageAttr.w, imageAttr.h)
+    } else {
+        ctx.fillStyle = 'red'
+        ctx.fillRect(20, 20, 100, 100)
+        ctx.fillStyle = 'blue'
+        ctx.fillRect(40, 20, 200, 100)
+        ctx.fillStyle = 'green'
+        ctx.fillRect(20, 70, 67, 100)
+        ctx.fillStyle = 'yellow'
+        ctx.fillRect(90, 70, 200, 100)
+    }
 
     // line
     updateline()
     drawline()
+
+    // test
+    // picker()
+    // picker(0.5)
+    if (pickerActive) {
+        picker(pickerPosition)
+
+        // gtx.font = '12px monospace'
+        // gtx.fillText( 'test\ntest\ntest', sw*pickerPosition, 10 )
+    }
+
+    // ltx.fillStyle = 'red'
+    // ltx.fillRect( 0-10, 0-10, 20, 20 )
 
     // graph
     // drawgraph()
