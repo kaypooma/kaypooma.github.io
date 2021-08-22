@@ -348,7 +348,7 @@ linecanvas.addEventListener('drop', e => {
         item = e.dataTransfer.files[0]
     }
 
-    if (item.type === 'image/png' || item.type === 'image/jpeg' || item.type === 'image/gif') {        
+    if (item.type.indexOf('image') !== -1) {        
         let reader
         let image = new Image()
         // console.log(item.getData())
