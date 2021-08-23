@@ -77,6 +77,15 @@
             top: 10px;
             right: 10px;
         }
+
+        #help, #graphtext {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
     </style>
 </head>
 <body>
@@ -92,6 +101,7 @@
         <p>you can drag start and end handles of line, or drag the entire line</p>
         <p>hover over graph to get color info at that position</p>
         <p><input type="checkbox" id="realtime"> <label for="realtime">update graph in realtime (slow on firefox)</label></p>
+        <p><input type="number" min="0" max="2048" value="256" id="grain"> grain (number of samples along the line)</p>
     </div>
     <a href="https://www.youtube.com/watch?v=Dq0bYwFIfIk">based</a>
 

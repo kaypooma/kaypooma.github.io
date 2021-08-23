@@ -15,6 +15,13 @@ document.getElementById('realtime').addEventListener('click', () => {
     realtime = document.getElementById('realtime').checked
 })
 
+let sgrain = 256
+document.getElementById('grain').addEventListener('change', () => {
+    sgrain = document.getElementById('grain').value
+
+    if (sgrain<1) sgrain=1
+})
+
 // mouse handler
 const Mouse = { x: 0, y: 0, click: false }
 document.addEventListener('mousemove', e => {
@@ -204,7 +211,7 @@ function drawgraph() {
     gtx.clearRect(0,0,sw,sh)
 
     // number of samples along line
-    const grain = 256
+    const grain = sgrain
     const data = { r: [], g: [], b: [] }
 
     for (i=0; i<grain; i++) {
