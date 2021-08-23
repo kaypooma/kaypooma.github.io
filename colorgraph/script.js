@@ -230,7 +230,7 @@ function drawgraph() {
 
     gtx.moveTo( 0, (1-data.r[0]) * gh )
     for (i=1; i<data.r.length-1; i++) {
-        gtx.lineTo( sw/grain * i, (1-data.r[i]) * gh )
+        gtx.lineTo( sw/(grain-1) * i, (1-data.r[i]) * gh )
     }
     gtx.stroke()
 
@@ -238,7 +238,7 @@ function drawgraph() {
 
     gtx.moveTo( 0, gh )
     for (i=0; i<data.r.length; i++) {
-        gtx.lineTo( sw/grain * i, (1-data.r[i]) * gh )
+        gtx.lineTo( sw/(grain-1) * i, (1-data.r[i]) * gh )
     }
     gtx.lineTo( sw, gh )
 
@@ -251,7 +251,7 @@ function drawgraph() {
 
     gtx.moveTo( 0, (1-data.g[0]) * gh )
     for (i=1; i<data.r.length-1; i++) {
-        gtx.lineTo( sw/grain * i, (1-data.g[i]) * gh )
+        gtx.lineTo( sw/(grain-1) * i, (1-data.g[i]) * gh )
     }
     gtx.stroke()
 
@@ -259,7 +259,7 @@ function drawgraph() {
 
     gtx.moveTo( 0, gh )
     for (i=0; i<data.g.length; i++) {
-        gtx.lineTo( sw/grain * i, (1-data.g[i]) * gh )
+        gtx.lineTo( sw/(grain-1) * i, (1-data.g[i]) * gh )
     }
     gtx.lineTo( sw, gh )
 
@@ -272,7 +272,7 @@ function drawgraph() {
 
     gtx.moveTo( 0, (1-data.b[0]) * gh )
     for (i=1; i<data.r.length-1; i++) {
-        gtx.lineTo( sw/grain * i, (1-data.b[i]) * gh )
+        gtx.lineTo( sw/(grain-1) * i, (1-data.b[i]) * gh )
     }
     gtx.stroke()
 
@@ -280,7 +280,7 @@ function drawgraph() {
 
     gtx.moveTo( 0, gh )
     for (i=0; i<data.b.length; i++) {
-        gtx.lineTo( sw/grain * i, (1-data.b[i]) * gh )
+        gtx.lineTo( sw/(grain-1) * i, (1-data.b[i]) * gh )
     }
     gtx.lineTo( sw, gh )
 
