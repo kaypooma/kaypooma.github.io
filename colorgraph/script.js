@@ -10,6 +10,11 @@ const sh = 600
 const scx = sw/2
 const scy = sh/2
 
+let realtime = false
+document.getElementById('realtime').addEventListener('click', () => {
+    realtime = document.getElementById('realtime').checked
+})
+
 // mouse handler
 const Mouse = { x: 0, y: 0, click: false }
 document.addEventListener('mousemove', e => {
@@ -20,6 +25,10 @@ document.addEventListener('mousemove', e => {
     if (Mouse.x > sw) Mouse.x = sw
     if (Mouse.y < 0) Mouse.y = 0
     if (Mouse.y > sh) Mouse.y = sh
+
+    if (mouseInCanvas && Mouse.click && realtime) {
+        drawgraph()
+    }
 })
 document.addEventListener('mousedown', e => {
     Mouse.click = true
@@ -33,7 +42,7 @@ document.addEventListener('mouseup', e => {
 
     Drag.set = false
 
-    if (mouseInCanvas) {
+    if (mouseInCanvas && !realtime) {
         drawgraph()
     }
 })
