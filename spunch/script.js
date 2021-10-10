@@ -72,7 +72,6 @@ function handleImage(image) {
 }
 
 // ----------- make the funny gif
-
 // [x, y, w?, h?]
 const mode = {
     arc: { width: 57, height: 35, 
@@ -129,16 +128,18 @@ const ptx = pre.getContext('2d')
 const canvas = document.createElement('canvas')
 const ctx = canvas.getContext('2d')
 
-function makeGif(mode) {
-    canvas.width = mode.width
-    canvas.height = mode.height
+function makeGif(mode, sizemult = 1) {
+    sizemult = Math.min(sizemult, 4)
+
+    canvas.width = mode.width * sizemult
+    canvas.height = mode.height * sizemult
 
     const gif = new GIF({
         workers: 4,
         quality: 1,
         workerScript: 'gif.worker.js',
-        width: mode.width,
-        height: mode.height,    
+        width: mode.width * sizemult,
+        height: mode.height * sizemult,    
         transparent: '0x00ff00'  
     })
 
@@ -148,11 +149,11 @@ function makeGif(mode) {
     })
 
     for (i=0; i<mode.data.length; i++) {
-        ptx.clearRect(0, 0, mode.width, mode.height)
-        ptx.drawImage(currentImage, mode.data[i][0], mode.data[i][1], mode.data[i][2] || 16, mode.data[i][3] || 23)
+        ptx.clearRect(0, 0, mode.width * sizemult, mode.height * sizemult)
+        ptx.drawImage(currentImage, mode.data[i][0] * sizemult, mode.data[i][1] * sizemult, (mode.data[i][2] || 16) * sizemult, (mode.data[i][3] || 23) * sizemult)
 
         // took this idea from petpet (https://benisland.neocities.org/petpet/)
-        const imgdata = ptx.getImageData(0, 0, mode.width, mode.height)
+        const imgdata = ptx.getImageData(0, 0, mode.width * sizemult, mode.height * sizemult)
         for (c = 0; c < imgdata.data.length; c+=4) {
             imgdata.data[c + 1] = Math.min(imgdata.data[c + 1], 250)
 
@@ -166,7 +167,7 @@ function makeGif(mode) {
         }
         
         ctx.fillStyle = '#00ff00'
-        ctx.fillRect(0, 0, mode.width, mode.height)
+        ctx.fillRect(0, 0, mode.width * sizemult, mode.height * sizemult)
         ctx.putImageData(imgdata, 0, 0)
 
         gif.addFrame( ctx, {copy: true, delay: 20} )
