@@ -126,8 +126,6 @@ document.getElementById('make').addEventListener('click', function() {
 const canvas = document.createElement('canvas')
 const ctx = canvas.getContext('2d')
 
-ctx.imageSmoothingEnabled = false
-
 function makeGif(mode) {
     canvas.width = mode.width
     canvas.height = mode.height
