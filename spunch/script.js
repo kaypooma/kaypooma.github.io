@@ -134,8 +134,7 @@ function makeGif(mode) {
         workers: 4,
         workerScript: 'gif.worker.js',
         width: mode.width,
-        height: mode.height,    
-        dither: 'FloydSteinberg'    
+        height: mode.height,      
     })
 
     gif.on('finished', b => {
