@@ -123,6 +123,9 @@ document.getElementById('make').addEventListener('click', function() {
 })
 
 // make the funny gif function
+const pre = document.createElement('canvas')
+const ptx = pre.getContext('2d')
+
 const canvas = document.createElement('canvas')
 const ctx = canvas.getContext('2d')
 
@@ -135,7 +138,8 @@ function makeGif(mode) {
         quality: 1,
         workerScript: 'gif.worker.js',
         width: mode.width,
-        height: mode.height,      
+        height: mode.height,    
+        transparent: '0x00ff00'  
     })
 
     gif.on('finished', b => {
@@ -144,10 +148,26 @@ function makeGif(mode) {
     })
 
     for (i=0; i<mode.data.length; i++) {
-        // ctx.clearRect(0, 0, mode.width, mode.height)
-        ctx.fillStyle = document.getElementById('bg').value
+        ptx.clearRect(0, 0, mode.width, mode.height)
+        ptx.drawImage(currentImage, mode.data[i][0], mode.data[i][1], mode.data[i][2] || 16, mode.data[i][3] || 23)
+
+        // took this idea from petpet (https://benisland.neocities.org/petpet/)
+        const imgdata = ptx.getImageData(0, 0, mode.width, mode.height)
+        for (c = 0; c < imgdata.data.length; c+=4) {
+            imgdata.data[c + 1] = Math.min(imgdata.data[c + 1], 250)
+
+            if (imgdata.data[c + 3] < 120) {
+                imgdata.data[c] = 0
+                imgdata.data[c+1] = 255
+                imgdata.data[c+2] = 0
+            }
+
+            imgdata.data[c + 3] = 255
+        }
+        
+        ctx.fillStyle = '#00ff00'
         ctx.fillRect(0, 0, mode.width, mode.height)
-        ctx.drawImage(currentImage, mode.data[i][0], mode.data[i][1], mode.data[i][2] || 16, mode.data[i][3] || 23)
+        ctx.putImageData(imgdata, 0, 0)
 
         gif.addFrame( ctx, {copy: true, delay: 20} )
     }
