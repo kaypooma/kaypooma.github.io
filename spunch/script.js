@@ -132,6 +132,7 @@ function makeGif(mode) {
 
     const gif = new GIF({
         workers: 4,
+        quality: 1,
         workerScript: 'gif.worker.js',
         width: mode.width,
         height: mode.height,      
