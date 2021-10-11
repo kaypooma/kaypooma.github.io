@@ -6,7 +6,7 @@ var rotations = 0
 var ding = 0
 var aOpacity = 0
 
-var speedCap = 75
+var speedCap = 50
 
 var achievements = [
     [10, 'congratulations, you figured out the game'],
@@ -94,10 +94,22 @@ $(document).on('keyup', function(e) {
     $('.mash').hide()
 })
 
+// 2021 deltatime update
+
+let delta = 0
+let oldtime = 0
+let newtime = 0
+
 function update() {
+    newtime = Date.now()
+    delta = newtime-oldtime
+    oldtime = newtime
+
+    delta /= 8
+
     rot += accel;
     if (accel > 0) {
-        accel -= 0.075;
+        accel -= 0.075*delta;
     } else {
         accel = 0
     }
@@ -163,20 +175,18 @@ function update() {
     }
 
     if (ding > 0) {
-        ding -= 0.05;
+        ding -= 0.05*delta;
     } else {
         ding = 0;
     }
 
     if (aOpacity > 0) {
-        aOpacity -= 0.005;
+        aOpacity -= 0.002*delta;
     } else {
         aOpacity = 0;
     }
 
-    if (accel >= speedCap) {
-        accel = speedCap
-    }
+    accel = Math.min(accel, speedCap)
 
     $('.taco').css('transform', 'rotate(' + rot + 'deg)')
     $('.rotations').css('opacity', ding)
