@@ -107,6 +107,10 @@ const mode = {
             [6, 6, 18, 19]
         ]
     },
+
+    // circle: { width: 16, height: 16, data: function(f) { 
+    //     return [ Math.cos( f*Math.PI*2 )*4, Math.sin( f*Math.PI*2 )*4, 16, 16 ]
+    // }, frames: 12 },
 }
 // populate dropdown
 for (m in mode) {
@@ -154,10 +158,25 @@ function makeGif(mode, sizemult = 1) {
         render.style.display = 'block'
     })
 
-    for (i=0; i<mode.data.length; i++) {
-        ptx.clearRect(0, 0, mode.width * sizemult, mode.height * sizemult)
-        ptx.drawImage(currentImage, mode.data[i][0] * sizemult, mode.data[i][1] * sizemult, (mode.data[i][2] || 16) * sizemult, (mode.data[i][3] || 23) * sizemult)
+    let posdata = []
 
+    if (typeof mode.data === 'object') {
+        posdata = mode.data
+    } else {
+        const fnum = mode.frames || 12
+        for (i=0; i<fnum; i++) {
+            let calc = mode.data( i / fnum )
+            posdata.push( calc )
+
+            console.log(calc)
+        }
+    }
+
+    for (i=0; i<posdata.length; i++) {
+        ptx.clearRect(0, 0, mode.width * sizemult, mode.height * sizemult)
+
+        ptx.drawImage(currentImage, posdata[i][0] * sizemult, posdata[i][1] * sizemult, (posdata[i][2] || 16) * sizemult, (posdata[i][3] || 23) * sizemult)
+        
         // took this idea from petpet (https://benisland.neocities.org/petpet/)
         const imgdata = ptx.getImageData(0, 0, mode.width * sizemult, mode.height * sizemult)
         for (c = 0; c < imgdata.data.length; c+=4) {
