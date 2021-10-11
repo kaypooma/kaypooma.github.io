@@ -56,6 +56,10 @@
                 height: 1px;
                 background: #aaa;
             }
+
+            #loading {
+                display: none;
+            }
         </style>
     </head>
     <body> 
@@ -66,9 +70,12 @@
         <select name="modeselect" id="modeselect"></select>
 
         <button id="make">make the funny gif</button>
+
+        <input type="checkbox" id="hires" name="hires"> <label for="hires">hi-res</label>
         
         <hr>
 
+        <p id="loading">...</p>
         <img id="render">
         
         <script src="gif.js"></script>

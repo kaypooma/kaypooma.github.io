@@ -118,7 +118,7 @@ for (m in mode) {
 }
 
 document.getElementById('make').addEventListener('click', function() { 
-    makeGif( mode[ document.getElementById('modeselect').value ] ) 
+    makeGif( mode[ document.getElementById('modeselect').value ], document.getElementById('hires').checked ? 4 : 1 ) 
 })
 
 // make the funny gif function
@@ -130,6 +130,9 @@ const ctx = canvas.getContext('2d')
 
 function makeGif(mode, sizemult = 1) {
     sizemult = Math.min(sizemult, 4)
+
+    document.getElementById('loading').style.display = 'block'
+    render.style.display = 'none'
 
     canvas.width = mode.width * sizemult
     canvas.height = mode.height * sizemult
@@ -146,6 +149,9 @@ function makeGif(mode, sizemult = 1) {
     gif.on('finished', b => {
         const render = document.getElementById('render')
         render.src = URL.createObjectURL(b)
+
+        document.getElementById('loading').style.display = 'none'
+        render.style.display = 'block'
     })
 
     for (i=0; i<mode.data.length; i++) {
