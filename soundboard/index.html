@@ -85,6 +85,12 @@
             footer #rangecon {
                 margin-left: auto;
                 margin-right: 10px;
+
+                width: 100px;
+            }
+
+            footer #rangecon input[type='range'] {
+                width: 100px;
             }
 
             #rangecon label {
@@ -99,6 +105,7 @@
             <button id="random">random sound</button> 
 
             <div id="rangecon"><label for="volume" id="volumelabel">volume: 0.5</label> <input type="range" min="0" max="100" id="volume"></div>
+            <div id="rangecon"><label for="speed" id="speedlabel">speed: 1</label> <input type="range" min="25" max="400" value="100" step="25" id="speed"></div>
         </footer>
         <script src="script.js"></script>
     </body>
