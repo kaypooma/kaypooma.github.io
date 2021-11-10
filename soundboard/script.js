@@ -28,6 +28,13 @@ const audioContext = new window.AudioContext();
     $('#reverse').addEventListener('click', () => {
         reverse = $('#reverse').checked
     })
+
+    document.addEventListener('keydown', e => {
+        if (e.key = 'r' || !$('#reverse').checked) reverse = true 
+    })
+    document.addEventListener('keyup', e => {
+        if (e.key = 'r' || !$('#reverse').checked) reverse = false 
+    })
     
     const parseName = (name) => name.replace(/\_/g, ' ')
 
