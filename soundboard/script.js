@@ -3,17 +3,17 @@ const sounds = [
     // speech
     'you_stupid', 'no_i_not', '21', 'amogus_scream', 'amogus', 'aou', 'boyfriend', 'bruh', 'deez_nuts', 'flight_cry', 'flight_scream', 'grandma', 'jack_black', 'mammot', 'oh_my_god', 'porch', 'pussy', 'scream2', 'what_da_dog_doin', 'whip',
     '----',
-    // sound effects
-    'airhorn', 'bfdi_cheering', 'bonk', 'boowomp', 'crowd_laughing', 'dialup', 'dubstep', 'eas_one', 'eas_two', 'epic_fail', 'fl_studio_render', 'fnaf_ambience', 'fnaf_jumpscare', 'geometry_dash', 'krabs', 'ps2_startup', 'ragdoll_sounds', 'role_reveal', 'samsung_notification', 'squeak', 'swoosh', 'vine_boom', 'wii_freeze', 'windows_95', 'windows_xp',
+    // misc
+    'airhorn', 'bfdi_cheering', 'crowd_laughing', 'dialup', 'dubstep', 'eas_one', 'eas_two', 'epic_fail', 'fl_studio_render', 'fnaf_ambience', 'fnaf_jumpscare', 'geometry_dash', 'krabs', 'ps2_startup', 'ragdoll_sounds', 'role_reveal', 'samsung_notification', 'wii_freeze', 'windows_95', 'windows_xp',
     '----',
     // fart
     'reverb_fart', 'wet_fart', 'short_fart', 
     '----',
-    // ding buzzer
-    'ding', 'wrong', 'mouse_click', 'glass', 
+    // short sounds
+    'bonk', 'boowomp', 'squeak', 'swoosh', 'ding', 'wrong', 'mouse_click', 'glass', 
     '----',
     // suspense
-    'suspense_1', 'suspense_2', 'suspense_3', 'suspense_4', 'suspense_5', 'suspense_6'
+    'vine_boom', 'suspense_1', 'suspense_2', 'suspense_3', 'suspense_4', 'suspense_5', 'suspense_6'
 ];
 const audioContext = new window.AudioContext();
 
