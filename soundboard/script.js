@@ -70,6 +70,10 @@ const sounds = [
     $('#volume').addEventListener('input', () => {
         setVolume( $('#volume').value/100 )
     })
+    $('#volume').addEventListener('dblclick', () => {
+        $('#volume').value = 50
+        setVolume( 0.5 )
+    })
 
     const setSpeed = (s) => {
         speed = s
@@ -81,6 +85,10 @@ const sounds = [
     }
     $('#speed').addEventListener('input', () => {
         setSpeed( $('#speed').value/100 )
+    })
+    $('#speed').addEventListener('dblclick', () => {
+        $('#speed').value = 100
+        setSpeed( 1 )
     })
 
     const addSeperator = () => {
