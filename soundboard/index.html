@@ -5,8 +5,101 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Sound Board</title>
+
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
+
+            * {
+                margin: 0;
+            }
+
+            body {                
+                font-family: 'Roboto Mono', monospace;
+                background: #111;
+                color: #ddd;
+            }
+
+            button {
+                background: #111;
+                border: 1px solid #000;
+                color: inherit;
+
+                transition: all .1s ease-out;
+
+                cursor: pointer;
+            }
+            button:hover {
+                box-shadow: 0 2px 0 #fff;
+                transform: translateY(-2px);
+            }
+
+            main {
+                display: flex;
+                width: 100vw;
+                height: 80vh;
+
+                flex-wrap: wrap;
+                align-content: flex-start;
+            }
+
+            main button {
+                height: 25px;
+                margin: 5px;
+                padding: 5px;
+                font-size: 12px;
+
+                flex-grow: 1;
+
+                /* min-width: 60px; */
+
+                font-family: 'Roboto Mono', monospace;
+            }
+
+            main hr {
+                flex-grow: 999;
+                width: 100%;
+                border: none;
+                background: #fff;
+                height: 1px;
+                margin: 5px;
+            }
+
+            footer {
+                border-top: 1px solid #fff;
+                height: calc(20vh - 11px);
+
+                margin-top: 10px;
+
+                display: flex;
+                align-items: center;
+            }
+
+            footer button {
+                margin: 10px;
+                width: 100px;
+                height: 50px;
+                
+                font-family: 'Roboto Mono', monospace;
+            }
+
+            footer #rangecon {
+                margin-left: auto;
+                margin-right: 10px;
+            }
+
+            #rangecon label {
+                font-size: 12px;
+            }
+        </style>
     </head>
-<body>
-    
-</body>
+    <body>
+        <main></main>
+        <footer> 
+            <button id="stopall">stop all</button> 
+            <button id="random">random sound</button> 
+
+            <div id="rangecon"><label for="volume" id="volumelabel">volume: 0.5</label> <input type="range" min="0" max="100" id="volume"></div>
+        </footer>
+        <script src="script.js"></script>
+    </body>
 </html>
