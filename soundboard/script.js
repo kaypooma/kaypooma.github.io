@@ -30,10 +30,14 @@ const audioContext = new window.AudioContext();
     })
 
     document.addEventListener('keydown', e => {
-        if (!$('#reverse').checked || e.key === 'r') reverse = true 
+        if (!$('#reverse').checked) {
+            if (e.key === 'r') reverse = true 
+        }
     })
     document.addEventListener('keyup', e => {
-        if (!$('#reverse').checked || e.key === 'r') reverse = false 
+        if (!$('#reverse').checked) {
+            if (!$('#reverse').checked || e.key === 'r') reverse = false 
+        }
     })
     
     const parseName = (name) => name.replace(/\_/g, ' ')
@@ -62,8 +66,9 @@ const audioContext = new window.AudioContext();
 
                 let reversedBuffer = audioBuffer
                 
-                Array.prototype.reverse.call( reversedBuffer.getChannelData(0) )
-                Array.prototype.reverse.call( reversedBuffer.getChannelData(1) )        
+                for (i=0; i<reversedBuffer.numberOfChannels; i++) {
+                    Array.prototype.reverse.call( reversedBuffer.getChannelData(i) )
+                }
 
                 const soundSource = audioContext.createBufferSource()
 
