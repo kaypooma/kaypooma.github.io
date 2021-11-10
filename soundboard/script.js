@@ -30,10 +30,10 @@ const audioContext = new window.AudioContext();
     })
 
     document.addEventListener('keydown', e => {
-        if (e.key = 'r' || !$('#reverse').checked) reverse = true 
+        if (!$('#reverse').checked || e.key === 'r') reverse = true 
     })
     document.addEventListener('keyup', e => {
-        if (e.key = 'r' || !$('#reverse').checked) reverse = false 
+        if (!$('#reverse').checked || e.key === 'r') reverse = false 
     })
     
     const parseName = (name) => name.replace(/\_/g, ' ')
