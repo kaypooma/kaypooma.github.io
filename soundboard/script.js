@@ -39,11 +39,18 @@ const audioContext = new window.AudioContext();
             if (!$('#reverse').checked || e.key === 'r') reverse = false 
         }
     })
+
+    let overlap = true
+    $('#overlap').addEventListener('click', () => {
+        overlap = $('#overlap').checked
+    })
     
     const parseName = (name) => name.replace(/\_/g, ' ')
 
     const playSound = (name) => {
         let tag = `${name}.${Date.now()}`
+
+        if (!overlap) stopAllSound()
 
         const audio = new Audio()
         audio.src = `sounds/${name}.ogg`
@@ -57,6 +64,8 @@ const audioContext = new window.AudioContext();
     }
     const playSoundReverse = (name) => {
         let tag = `${name}.${Date.now()}`
+
+        if (!overlap) stopAllSound()
 
         fetch(`sounds/${name}.ogg`)
             .then(response => response.arrayBuffer())
