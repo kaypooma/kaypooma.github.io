@@ -15,6 +15,7 @@ const sounds = [
     // suspense
     'suspense_1', 'suspense_2', 'suspense_3', 'suspense_4', 'suspense_5', 'suspense_6'
 ];
+const audioContext = new window.AudioContext();
 
 (() => {
     const $ = (s) => document.querySelector(s)
@@ -22,6 +23,11 @@ const sounds = [
 
     let volume = 0.5
     let speed = 1
+
+    let reverse = false
+    $('#reverse').addEventListener('click', () => {
+        reverse = $('#reverse').checked
+    })
     
     const parseName = (name) => name.replace(/\_/g, ' ')
 
@@ -38,11 +44,50 @@ const sounds = [
         audioQueue[tag] = audio
         audio.addEventListener('ended', () => { removeSound(tag) })
     }
-    const removeSound = (tag) => {
-        audioQueue[tag].pause()
-        audioQueue[tag].remove()
+    const playSoundReverse = (name) => {
+        let tag = `${name}.${Date.now()}`
 
-        delete audioQueue[tag]
+        fetch(`sounds/${name}.ogg`)
+            .then(response => response.arrayBuffer())
+            .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer))
+            .then(audioBuffer => {
+                let tag = `${name}.${Date.now()}`
+
+                let reversedBuffer = audioBuffer
+                
+                Array.prototype.reverse.call( reversedBuffer.getChannelData(0) )
+                Array.prototype.reverse.call( reversedBuffer.getChannelData(1) )        
+
+                const soundSource = audioContext.createBufferSource()
+
+                const gainNode = audioContext.createGain()
+                gainNode.gain.value = 0.2 * volume
+                gainNode.connect(audioContext.destination)
+
+                soundSource.playbackRate.value = speed
+
+                soundSource.buffer = reversedBuffer
+                soundSource.connect(gainNode)
+
+                soundSource.start()
+
+                audioQueue[tag] = soundSource
+                soundSource.addEventListener('ended', () => { removeSound(tag) })
+            })
+    }
+
+    const removeSound = (tag) => {
+        if (audioQueue[tag]) {
+            if (Object.prototype.toString.call(audioQueue[tag]) === '[object HTMLAudioElement]') { // audio tag
+                audioQueue[tag].pause()
+                audioQueue[tag].remove()
+            } else { // audio buffer
+                audioQueue[tag].stop()
+                audioQueue[tag].disconnect()
+            }
+
+            delete audioQueue[tag]
+        }
     }
     const stopAllSound = () => {
         for (tag in audioQueue) {
@@ -105,7 +150,13 @@ const sounds = [
         btn.id = name
         btn.innerHTML = parseName(name)
 
-        btn.addEventListener('click', () => { playSound(name) })
+        btn.addEventListener('click', () => { 
+            if (reverse) {
+                playSoundReverse(name)
+            } else {
+                playSound(name) 
+            }
+        })
 
         $('main').appendChild(btn)
     }
