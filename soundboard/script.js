@@ -113,7 +113,11 @@ const audioContext = new window.AudioContext();
     })
 
     $('#random').addEventListener('click', () => {
-        playSound( sounds[Math.floor(Math.random()*sounds.length)] )
+        if (reverse) {
+            playSoundReverse( sounds[Math.floor(Math.random()*sounds.length)] )
+        } else {
+            playSound( sounds[Math.floor(Math.random()*sounds.length)] )
+        }
     })
 
     const setVolume = (vol) => {
