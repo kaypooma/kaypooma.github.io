@@ -45,9 +45,9 @@ const audioContext = new window.AudioContext();
         overlap = $('#overlap').checked
     })
     
-    const parseName = (name) => name.replace(/\_/g, ' ')
+    const parseName = name => name.replace(/\_/g, ' ')
 
-    const playSound = (name) => {
+    const playSound = name => {
         let tag = `${name}.${Date.now()}`
 
         if (!overlap) stopAllSound()
@@ -62,7 +62,7 @@ const audioContext = new window.AudioContext();
         audioQueue[tag] = audio
         audio.addEventListener('ended', () => { removeSound(tag) })
     }
-    const playSoundReverse = (name) => {
+    const playSoundReverse = name => {
         let tag = `${name}.${Date.now()}`
 
         if (!overlap) stopAllSound()
@@ -97,7 +97,7 @@ const audioContext = new window.AudioContext();
             })
     }
 
-    const removeSound = (tag) => {
+    const removeSound = tag => {
         if (audioQueue[tag]) {
             if (Object.prototype.toString.call(audioQueue[tag]) === '[object HTMLAudioElement]') { // audio tag
                 audioQueue[tag].pause()
@@ -129,7 +129,7 @@ const audioContext = new window.AudioContext();
         }
     })
 
-    const setVolume = (vol) => {
+    const setVolume = vol => {
         volume = vol
         $('#volumelabel').innerHTML = `volume: ${vol}`
         
@@ -147,7 +147,7 @@ const audioContext = new window.AudioContext();
         setVolume( 0.5 )
     })
 
-    const setSpeed = (s) => {
+    const setSpeed = s => {
         speed = s
         $('#speedlabel').innerHTML = `speed: ${s}`
         
@@ -169,7 +169,7 @@ const audioContext = new window.AudioContext();
         const hr = document.createElement('hr')
         $('main').appendChild(hr)
     }
-    const addToSoundboard = (name) => {
+    const addToSoundboard = name => {
         const btn = document.createElement('button')
 
         btn.id = name
