@@ -2,32 +2,42 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Flag Generator</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Flag GEnerator New</title>
 
-        <link rel="stylesheet" href="style.css">
+        <style>
+            canvas {
+                border: 1px solid #aaa;
+                position: absolute;
+                margin: auto;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+
+                background-image: url(alpha.png);
+            }
+
+            #generate {
+                padding: 5px;
+
+                position: absolute;
+                margin: auto;
+                top: 450px;
+                bottom: 0;
+                left: 0;
+                right: 0;
+
+                width: 600px;
+                height: 40px;
+            }
+        </style>
     </head>
     <body>
-        <div class="flag">
-            <div class="style horizontal">
-                <div style="background: #f00"></div>
-                <div style="background: #0f0"></div>
-                <div style="background: #00f"></div>
-            </div>
+        <canvas id="canvas" width="600" height="400"></canvas>
+        <button id="generate">generate</button>
 
-            <div class="style vertical">
-                <div style="background: #f00"></div>
-                <div style="background: #0f0"></div>
-                <div style="background: #00f"></div>
-            </div>
-
-            <div class="triangle"></div>
-
-            <div class="star" data-color="#ff0"></div>
-        </div>
-
-        <button class="generate">generate</button>
-
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="script.js"></script>
     </body>
 </html>
