@@ -98,6 +98,7 @@ class Flag {
     }
 }
 
+// maybe rewrite these to take an object as params and also extend a parent design class so you dont have to rewrite everything every time
 const FlagDesign = {
     Stripe: class Stripe {
         constructor(color = 'red', amount = 4, direction = 'horizontal') {
@@ -203,9 +204,9 @@ const FlagDesign = {
     },
 
     Circle: class Circle {
-        constructor(color = 'red', size = 100, offsetX = 0, offsetY = 0) {
+        constructor(color = 'red', diameter = 100, offsetX = 0, offsetY = 0) {
             this.color = color
-            this.size = size
+            this.diameter = diameter
             this.offsetX = offsetX
             this.offsetY = offsetY
         }
@@ -215,7 +216,7 @@ const FlagDesign = {
             
             ctx.beginPath()
             
-            ctx.arc(scx + this.offsetX, scy + this.offsetY, this.size/2, 0, Math.PI*2)
+            ctx.arc(scx + this.offsetX, scy + this.offsetY, this.diameter/2, 0, Math.PI*2)
 
             ctx.closePath()
             ctx.fill()
@@ -223,9 +224,9 @@ const FlagDesign = {
     },
 
     Star: class Star {
-        constructor(color = 'red', size = 100, spokes = 5, offsetX = 0, offsetY = 0) {
+        constructor(color = 'red', diameter = 100, offsetX = 0, offsetY = 0, spokes = 5) {
             this.color = color
-            this.size = size
+            this.diameter = diameter
             this.spokes = spokes
             this.offsetX = offsetX
             this.offsetY = offsetY
@@ -236,7 +237,7 @@ const FlagDesign = {
             
             ctx.beginPath()
             
-            let radius = [this.size/2, this.size/2*0.39]
+            let radius = [this.diameter/2, this.diameter/2*0.39]
             for (let i=0; i<this.spokes*2; i++) {
                 // console.log(i)
                 ctx[i===0 ? 'moveTo' : 'lineTo'](scx + Math.sin(i/this.spokes/2 * Math.PI*2 + Math.PI) * radius[i%2] + this.offsetX, scy + Math.cos(i/this.spokes/2 * Math.PI*2 + Math.PI) * radius[i%2] + this.offsetY)
@@ -332,13 +333,15 @@ const FlagDesign = {
             ctx.beginPath()
 
             // bottom left
-            ctx.moveTo(scx - width/2, scy + height/2 - this.thickness)
-            ctx.lineTo(scx - width/2, scy + height/2)
-            ctx.lineTo(scx - width/2 + this.thickness, scy + height/2)
+            let thicknessAdjust = this.thickness / Math.SQRT2
 
-            ctx.lineTo(scx + width/2, scy - height/2 + this.thickness)
+            ctx.moveTo(scx - width/2, scy + height/2 - thicknessAdjust)
+            ctx.lineTo(scx - width/2, scy + height/2)
+            ctx.lineTo(scx - width/2 + thicknessAdjust, scy + height/2)
+
+            ctx.lineTo(scx + width/2, scy - height/2 + thicknessAdjust)
             ctx.lineTo(scx + width/2, scy - height/2)
-            ctx.lineTo(scx + width/2 - this.thickness, scy - height/2)
+            ctx.lineTo(scx + width/2 - thicknessAdjust, scy - height/2)
 
             ctx.closePath()
             ctx.fill()
@@ -400,7 +403,16 @@ const FlagDesign = {
 
     funny.addDesign(new FlagDesign.Border('white', funny.height/20 * 6, 'tb'))
     funny.addDesign(new FlagDesign.Border('#377e3f', funny.height/20 * 4, 'tb'))
-    funny.addDesign(new FlagDesign.Star('#ecc81d', funny.height/20 * 8, 5, 0, funny.height/20 * ((3 - Math.sqrt(5)) / 2)))
+    funny.addDesign(new FlagDesign.Star('#ecc81d', funny.height/20 * 8, 0, funny.height/20 * ((3 - Math.sqrt(5)) / 2)))
+
+    // funny.addDesign(new FlagDesign.Bend('red', 50))
+    // funny.addDesign(new FlagDesign.Bend('red', 50, true))
+
+    // funny.setColor('#fff')
+    // funny.setSize(400)
+    // funny.setAspectRatio(3, 2)
+
+    // funny.addDesign(new FlagDesign.Circle('#bc002d', funny.height * 3/5))
     
     funny.draw(ctx)
 
