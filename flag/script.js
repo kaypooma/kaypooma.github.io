@@ -224,10 +224,11 @@ const FlagDesign = {
     },
 
     Star: class Star {
-        constructor(color = 'red', diameter = 100, offsetX = 0, offsetY = 0, spokes = 5) {
+        constructor(color = 'red', diameter = 100, offsetX = 0, offsetY = 0, spokes = 5, turning = 2) {
             this.color = color
             this.diameter = diameter
             this.spokes = spokes
+            this.turning = turning
             this.offsetX = offsetX
             this.offsetY = offsetY
         }
@@ -237,7 +238,7 @@ const FlagDesign = {
             
             ctx.beginPath()
             
-            let radius = [this.diameter/2, this.diameter/2*0.39]
+            let radius = [this.diameter/2, this.diameter/2 * ( Math.cos( Math.PI*this.turning / this.spokes ) / Math.cos( Math.PI * (this.turning - 1) / this.spokes ) )]
             for (let i=0; i<this.spokes*2; i++) {
                 // console.log(i)
                 ctx[i===0 ? 'moveTo' : 'lineTo'](scx + Math.sin(i/this.spokes/2 * Math.PI*2 + Math.PI) * radius[i%2] + this.offsetX, scy + Math.cos(i/this.spokes/2 * Math.PI*2 + Math.PI) * radius[i%2] + this.offsetY)
@@ -397,22 +398,76 @@ const FlagDesign = {
 (() => {
     let funny = new Flag()
 
-    funny.setColor('#b40a2d')
-    funny.setSize(400)
-    funny.setAspectRatio(3, 2)
+    funny.setSize(500)
 
-    funny.addDesign(new FlagDesign.Border('white', funny.height/20 * 6, 'tb'))
-    funny.addDesign(new FlagDesign.Border('#377e3f', funny.height/20 * 4, 'tb'))
-    funny.addDesign(new FlagDesign.Star('#ecc81d', funny.height/20 * 8, 0, funny.height/20 * ((3 - Math.sqrt(5)) / 2)))
+    let frand = Math.floor(Math.random() * (5 - 1 + 1) + 1)
+    switch (frand) {
+        case 1:
+            // ---- suriname
+            funny.setColor('#b40a2d')
+            funny.setAspectRatio(3, 2)
+        
+            funny.addDesign(new FlagDesign.Border('white', funny.height/20 * 6, 'tb'))
+            funny.addDesign(new FlagDesign.Border('#377e3f', funny.height/20 * 4, 'tb'))
+            funny.addDesign(new FlagDesign.Star('#ecc81d', funny.height/20 * 8, 0, funny.height/20 * ((3 - Math.sqrt(5)) / 2)))
+            
+            break
+        case 2:
+            // ---- japan
+            funny.setColor('#fff')
+            funny.setAspectRatio(3, 2)
 
-    // funny.addDesign(new FlagDesign.Bend('red', 50))
-    // funny.addDesign(new FlagDesign.Bend('red', 50, true))
+            funny.addDesign(new FlagDesign.Circle('#bc002d', funny.height * 3/5))
 
-    // funny.setColor('#fff')
-    // funny.setSize(400)
-    // funny.setAspectRatio(3, 2)
+            break
+        case 3:    
+            // ---- germany
+            funny.setColor('#ff0000')
+            funny.setAspectRatio(5, 3)
+        
+            funny.addDesign(new FlagDesign.Border('#000', funny.height/3, 't'))
+            funny.addDesign(new FlagDesign.Border('#fc0', funny.height/3, 'b'))
 
-    // funny.addDesign(new FlagDesign.Circle('#bc002d', funny.height * 3/5))
+            break
+        case 4:
+            // ---- taiwan
+            funny.setColor('#F20000')
+            funny.setAspectRatio(3, 2)
+        
+            funny.addDesign( new FlagDesign.Canton('#0029CC', funny.width/2, funny.height/2) )
+        
+            funny.addDesign( new FlagDesign.Star('#FFF', funny.height/80*30, -funny.width/4, -funny.height/4, 12, 5) )
+        
+            funny.addDesign( new FlagDesign.Circle('#0029CC', funny.height/80*17, -funny.width/4, -funny.height/4) )
+            funny.addDesign( new FlagDesign.Circle('#FFF', funny.height/80*15, -funny.width/4, -funny.height/4) )
+
+            break
+        case 5:
+            // ---- us
+            funny.setColor('#FFFFFF')
+            funny.setAspectRatio(19, 10)
+        
+            funny.addDesign( new FlagDesign.Stripe('#B22234', 7, 'vertical') )
+            funny.addDesign( new FlagDesign.Canton('#3C3B6E', funny.width * 2/5, funny.height * 7/13) )
+
+            for (let r=0; r<5; r++) {
+                for (let c=0; c<6; c++) {
+                    let spx = funny.width * 2/5 / 12
+                    let spy = funny.height * 7/13 / 10
+                    funny.addDesign( new FlagDesign.Star('#FFFFFF', funny.height/13 * (4/5), -funny.width/2 + spx + spx*c*2, -funny.height/2 + spy + spy*r*2) )
+                }
+            }
+        
+            for (let r=0; r<4; r++) {
+                for (let c=0; c<5; c++) {
+                    let spx = funny.width * 2/5 / 12
+                    let spy = funny.height * 7/13 / 10
+                    funny.addDesign( new FlagDesign.Star('#FFFFFF', funny.height/13 * (4/5), -funny.width/2 + spx*2 + spx*c*2, -funny.height/2 + spy*2 + spy*r*2) )
+                }
+            }
+
+            break
+    } 
     
     funny.draw(ctx)
 
