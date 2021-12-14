@@ -394,12 +394,12 @@ const FlagDesign = {
 (() => {
     let funny = new Flag()
 
-    funny.setColor('purple')
-    funny.setAspectRatio(19, 15)
+    funny.setColor('#b40a2d')
+    funny.setAspectRatio(3, 2)
 
     funny.addDesign(new FlagDesign.Border('white', 80, 'tb'))
-    funny.addDesign(new FlagDesign.Border('green', 50, 'tb'))
-    funny.addDesign(new FlagDesign.Star('yellow', 120, 5, 0, 5))
+    funny.addDesign(new FlagDesign.Border('#377e3f', 50, 'tb'))
+    funny.addDesign(new FlagDesign.Star('#ecc81d', 110, 5, 0, 5))
     
     funny.draw(ctx)
 
