@@ -397,9 +397,9 @@ const FlagDesign = {
     funny.setColor('#b40a2d')
     funny.setAspectRatio(3, 2)
 
-    funny.addDesign(new FlagDesign.Border('white', 80, 'tb'))
-    funny.addDesign(new FlagDesign.Border('#377e3f', 50, 'tb'))
-    funny.addDesign(new FlagDesign.Star('#ecc81d', 110, 5, 0, 5))
+    funny.addDesign(new FlagDesign.Border('white', funny.height/20 * 6, 'tb'))
+    funny.addDesign(new FlagDesign.Border('#377e3f', funny.height/20 * 4, 'tb'))
+    funny.addDesign(new FlagDesign.Star('#ecc81d', funny.height/20 * 8, 5, 0, 5))
     
     funny.draw(ctx)
 
