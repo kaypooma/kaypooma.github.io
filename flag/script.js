@@ -429,9 +429,8 @@ const FlagDesign = {
 
     funny.setSize(500)
 
-    let frand = Math.floor(Math.random() * (5 - 1 + 1) + 1)
-    switch (frand) {
-        case 1:
+    let starters = [
+        () => {
             // ---- suriname
             funny.setColor('#b40a2d')
             funny.setAspectRatio(3, 2)
@@ -439,26 +438,23 @@ const FlagDesign = {
             funny.addDesign(new FlagDesign.Border('white', funny.height/20 * 6, 'tb'))
             funny.addDesign(new FlagDesign.Border('#377e3f', funny.height/20 * 4, 'tb'))
             funny.addDesign(new FlagDesign.Star('#ecc81d', funny.height/20 * 8, 0, funny.height/20 * ((3 - Math.sqrt(5)) / 2)))
-            
-            break
-        case 2:
+        },
+        () => {
             // ---- japan
             funny.setColor('#fff')
             funny.setAspectRatio(3, 2)
 
             funny.addDesign(new FlagDesign.Circle('#bc002d', funny.height * 3/5))
-
-            break
-        case 3:    
+        },
+        () => {            
             // ---- germany
             funny.setColor('#ff0000')
             funny.setAspectRatio(5, 3)
         
             funny.addDesign(new FlagDesign.Border('#000', funny.height/3, 't'))
             funny.addDesign(new FlagDesign.Border('#fc0', funny.height/3, 'b'))
-
-            break
-        case 4:
+        },
+        () => {            
             // ---- taiwan
             funny.setColor('#F20000')
             funny.setAspectRatio(3, 2)
@@ -469,9 +465,8 @@ const FlagDesign = {
         
             funny.addDesign( new FlagDesign.Circle('#0029CC', funny.height/80*17, -funny.width/4, -funny.height/4) )
             funny.addDesign( new FlagDesign.Circle('#FFF', funny.height/80*15, -funny.width/4, -funny.height/4) )
-
-            break
-        case 5:
+        },
+        () => {            
             // ---- us
             funny.setColor('#FFFFFF')
             funny.setAspectRatio(19, 10)
@@ -494,9 +489,162 @@ const FlagDesign = {
                     funny.addDesign( new FlagDesign.Star('#FFFFFF', funny.height/13 * (4/5), -funny.width/2 + spx*2 + spx*c*2, -funny.height/2 + spy*2 + spy*r*2) )
                 }
             }
+        },
+        () => {
+            // ---- armenia
+            funny.setColor('#0033A0')
+            funny.setAspectRatio(2, 1)
 
-            break
-    } 
+            funny.addDesign( new FlagDesign.Border('#D90012', funny.height/3, 't') )
+            funny.addDesign( new FlagDesign.Border('#F2A800', funny.height/3, 'b') )
+        },
+        () => {
+            // ---- burundi
+            funny.setColor('#CF0921')
+            funny.setAspectRatio(5, 3)
+
+            funny.addDesign( new FlagDesign.Chevron('#18B637', funny.width/2) )
+            funny.addDesign( new FlagDesign.Chevron('#18B637', funny.width/2, true) )
+
+            funny.addDesign( new FlagDesign.Bend('#fff', funny.width*0.09) )
+            funny.addDesign( new FlagDesign.Bend('#fff', funny.width*0.09, true) )
+
+            funny.addDesign( new FlagDesign.Circle('#fff', funny.height/1.8) )
+
+            let spos = [
+                [0, -funny.height/8],
+                [-funny.height/8, funny.height/12],
+                [funny.height/8, funny.height/12],
+            ]
+
+            for (let i=0; i<spos.length; i++) {
+                funny.addDesign( new FlagDesign.Star('#18B637', funny.height*0.14, spos[i][0], spos[i][1], 6, 2) )
+                funny.addDesign( new FlagDesign.Star('#CF0921', funny.height*0.12, spos[i][0], spos[i][1], 6, 2) )
+            }
+        },
+        () => {
+            // ---- denmark
+            funny.setColor('#d00c33')
+            funny.setAspectRatio(37, 28)
+
+            funny.addDesign( new FlagDesign.Cross('#fff', funny.height/28*4, -funny.width/2 + funny.height/28*4/2 + funny.height/28*12, 0) )
+        },
+        () => {
+            // ---- norway
+            funny.setColor('#bb042b')
+            funny.setAspectRatio(22, 16)
+
+            funny.addDesign( new FlagDesign.Cross('#fff', funny.height/16*4, -funny.width/2 + funny.height/16*4/2 + funny.height/16*6) )
+            funny.addDesign( new FlagDesign.Cross('#001a5b', funny.height/16*2, -funny.width/2 + funny.height/16*4/2 + funny.height/16*6) )
+        },
+        () => {
+            // ---- iceland
+            funny.setColor('#02529C')
+            funny.setAspectRatio(25, 18)
+
+            funny.addDesign( new FlagDesign.Cross('#fff', funny.height/18*4, -funny.width/2 + funny.height/18*4/2 + funny.height/18*7) )
+            funny.addDesign( new FlagDesign.Cross('#DC1E35', funny.height/18*2, -funny.width/2 + funny.height/18*4/2 + funny.height/18*7) )
+        },
+        () => {
+            // ---- sweden
+            funny.setColor('#005a99')
+            funny.setAspectRatio(16, 10)
+
+            funny.addDesign( new FlagDesign.Cross('#fcd115', funny.height/10*2, -funny.width/2 + funny.height/10*2/2 + funny.height/10*5) )
+        },
+        () => {
+            // ---- finland
+            funny.setColor('#fff')
+            funny.setAspectRatio(18, 11)
+
+            funny.addDesign( new FlagDesign.Cross('#002f6c', funny.height/11*3, -funny.width/2 + funny.height/11*3/2 + funny.height/11*5) )
+        },
+        () => {
+            // ---- china
+            funny.setColor('#ee1d24')
+            funny.setAspectRatio(30, 20)
+
+            let unit = funny.width/30
+
+            funny.addDesign( new FlagDesign.Star('#ffff00', unit*6, -funny.width/2 + unit*5, -funny.height/2 + unit*5) )
+            
+            // it took me way too long to figure out the math for this
+            funny.addDesign( new FlagDesign.Star('#ffff00', unit*2, -funny.width/2 + unit*10, -funny.height/2 + unit*2, 5, 2, Math.PI/2 - Math.atan(3/5) ) )
+            funny.addDesign( new FlagDesign.Star('#ffff00', unit*2, -funny.width/2 + unit*12, -funny.height/2 + unit*4, 5, 2, Math.PI/2 - Math.atan(1/7) ) )
+            funny.addDesign( new FlagDesign.Star('#ffff00', unit*2, -funny.width/2 + unit*12, -funny.height/2 + unit*7, 5, 2, Math.PI/2 - Math.atan(2/7) ) )
+            funny.addDesign( new FlagDesign.Star('#ffff00', unit*2, -funny.width/2 + unit*10, -funny.height/2 + unit*9, 5, 2, Math.PI/2 - Math.atan(4/5) ) ) 
+        },
+    ]
+
+    arrayRand(starters)()
+
+    // switch (frand) {
+    //     case 1:
+    //         // ---- suriname
+    //         funny.setColor('#b40a2d')
+    //         funny.setAspectRatio(3, 2)
+        
+    //         funny.addDesign(new FlagDesign.Border('white', funny.height/20 * 6, 'tb'))
+    //         funny.addDesign(new FlagDesign.Border('#377e3f', funny.height/20 * 4, 'tb'))
+    //         funny.addDesign(new FlagDesign.Star('#ecc81d', funny.height/20 * 8, 0, funny.height/20 * ((3 - Math.sqrt(5)) / 2)))
+            
+    //         break
+    //     case 2:
+    //         // ---- japan
+    //         funny.setColor('#fff')
+    //         funny.setAspectRatio(3, 2)
+
+    //         funny.addDesign(new FlagDesign.Circle('#bc002d', funny.height * 3/5))
+
+    //         break
+    //     case 3:    
+    //         // ---- germany
+    //         funny.setColor('#ff0000')
+    //         funny.setAspectRatio(5, 3)
+        
+    //         funny.addDesign(new FlagDesign.Border('#000', funny.height/3, 't'))
+    //         funny.addDesign(new FlagDesign.Border('#fc0', funny.height/3, 'b'))
+
+    //         break
+    //     case 4:
+    //         // ---- taiwan
+    //         funny.setColor('#F20000')
+    //         funny.setAspectRatio(3, 2)
+        
+    //         funny.addDesign( new FlagDesign.Canton('#0029CC', funny.width/2, funny.height/2) )
+        
+    //         funny.addDesign( new FlagDesign.Star('#FFF', funny.height/80*30, -funny.width/4, -funny.height/4, 12, 5) )
+        
+    //         funny.addDesign( new FlagDesign.Circle('#0029CC', funny.height/80*17, -funny.width/4, -funny.height/4) )
+    //         funny.addDesign( new FlagDesign.Circle('#FFF', funny.height/80*15, -funny.width/4, -funny.height/4) )
+
+    //         break
+    //     case 5:
+    //         // ---- us
+    //         funny.setColor('#FFFFFF')
+    //         funny.setAspectRatio(19, 10)
+        
+    //         funny.addDesign( new FlagDesign.Stripe('#B22234', 7, 'vertical') )
+    //         funny.addDesign( new FlagDesign.Canton('#3C3B6E', funny.width * 2/5, funny.height * 7/13) )
+
+    //         for (let r=0; r<5; r++) {
+    //             for (let c=0; c<6; c++) {
+    //                 let spx = funny.width * 2/5 / 12
+    //                 let spy = funny.height * 7/13 / 10
+    //                 funny.addDesign( new FlagDesign.Star('#FFFFFF', funny.height/13 * (4/5), -funny.width/2 + spx + spx*c*2, -funny.height/2 + spy + spy*r*2) )
+    //             }
+    //         }
+        
+    //         for (let r=0; r<4; r++) {
+    //             for (let c=0; c<5; c++) {
+    //                 let spx = funny.width * 2/5 / 12
+    //                 let spy = funny.height * 7/13 / 10
+    //                 funny.addDesign( new FlagDesign.Star('#FFFFFF', funny.height/13 * (4/5), -funny.width/2 + spx*2 + spx*c*2, -funny.height/2 + spy*2 + spy*r*2) )
+    //             }
+    //         }
+
+    //         break
+    // } 
     
     funny.draw(ctx)
     funny.updateSaveAttributes()
@@ -571,6 +719,12 @@ const FlagDesign = {
             ['#161853', '#292C6D', '#FAEDF0', '#EC255A'],
             ['#E8505B', '#F9D56E', '#F3ECC2', '#14B1AB'],
             ['#E6DEDD', '#8F1D14', '#1B120F', '#F89D13'],
+
+            ['#08D9D6', '#252A34', '#FF2E63', '#EAEAEA'],
+            ['#384259', '#F73859', '#7AC7C4', '#C4EDDE'],
+            ['#3DB2FF', '#FFEDDA', '#FFB830', '#FF2442'],
+            ['#000', '#FFF', '#333', '#666', '#999', '#AAA', '#CCC'],
+            ['#F00', '#FFF', '#FF0', '#0FF', '#00FF0C'],
     
             ['#006400', '#FFD200', '#D40000', '#000000', '#FFFFFF', '#FFCC00'],
             ['#00247D', '#FFFFFF', '#CF142B', '#FFCE00', '#5B97B1'],
@@ -641,6 +795,33 @@ const FlagDesign = {
                         flag.addDesign( new FlagDesign.Star( `hsl(${h}, ${s}%, ${l}%)`, flag.width/12, Math.cos( i/15 * Math.PI*2 - Math.PI/10 ) * flag.width/6 - flag.width/4, Math.sin( i/15 * Math.PI*2 - Math.PI/10 ) * flag.width/6, 5, 2, -rad(i/15 * 360) ) )
                     }
                 },
+            ],
+
+            circle: [
+                (h,s,l, flag) => {
+                    flag.addDesign( new FlagDesign.Circle( `hsl(${h}, ${s}%, ${l}%)`, flag.width/4) )
+                },       
+                (h,s,l, flag) => {
+                    flag.addDesign( new FlagDesign.Circle( `hsl(${h}, ${s}%, ${l}%)`, flag.height*2/3) )
+                },      
+                (h,s,l, flag) => {
+                    flag.addDesign( new FlagDesign.Circle( `hsl(${h}, ${s}%, ${l}%)`, flag.width/4, -flag.width/6) )
+                },        
+                (h,s,l, flag) => {
+                    flag.addDesign( new FlagDesign.Circle( `hsl(${h}, ${s}%, ${l}%)`, flag.width/4, flag.width/6) )
+                },       
+                (h,s,l, flag) => {
+                    flag.addDesign( new FlagDesign.Circle( `hsl(${h}, ${s}%, ${l}%)`, flag.height*2/3, -flag.width/6) )
+                },        
+                (h,s,l, flag) => {
+                    flag.addDesign( new FlagDesign.Circle( `hsl(${h}, ${s}%, ${l}%)`, flag.height*2/3, flag.width/6) )
+                },         
+                (h,s,l, flag) => {
+                    flag.addDesign( new FlagDesign.Circle( `hsl(${h}, ${s}%, ${l}%)`, flag.height*4/3, -flag.width/4) )
+                },        
+                (h,s,l, flag) => {
+                    flag.addDesign( new FlagDesign.Circle( `hsl(${h}, ${s}%, ${l}%)`, flag.height*4/3, flag.width/4) )
+                },                      
             ],
 
             bend: [
@@ -758,6 +939,7 @@ const FlagDesign = {
             right: 1,
 
             star: 2,
+            circle: 2,
         }
 
         let draworder = [[],[],[]]
