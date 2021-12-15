@@ -569,8 +569,8 @@ const FlagDesign = {
             funny.addDesign( new FlagDesign.Star('#ffff00', unit*6, -funny.width/2 + unit*5, -funny.height/2 + unit*5) )
             
             // it took me way too long to figure out the math for this
-            funny.addDesign( new FlagDesign.Star('#ffff00', unit*2, -funny.width/2 + unit*10, -funny.height/2 + unit*2, 5, 2, Math.PI/2 - Math.atan(3/5) ) )
-            funny.addDesign( new FlagDesign.Star('#ffff00', unit*2, -funny.width/2 + unit*12, -funny.height/2 + unit*4, 5, 2, Math.PI/2 - Math.atan(1/7) ) )
+            funny.addDesign( new FlagDesign.Star('#ffff00', unit*2, -funny.width/2 + unit*10, -funny.height/2 + unit*2, 5, 2, Math.PI/2 + Math.atan(3/5) ) )
+            funny.addDesign( new FlagDesign.Star('#ffff00', unit*2, -funny.width/2 + unit*12, -funny.height/2 + unit*4, 5, 2, Math.PI/2 + Math.atan(1/7) ) )
             funny.addDesign( new FlagDesign.Star('#ffff00', unit*2, -funny.width/2 + unit*12, -funny.height/2 + unit*7, 5, 2, Math.PI/2 - Math.atan(2/7) ) )
             funny.addDesign( new FlagDesign.Star('#ffff00', unit*2, -funny.width/2 + unit*10, -funny.height/2 + unit*9, 5, 2, Math.PI/2 - Math.atan(4/5) ) ) 
         },
