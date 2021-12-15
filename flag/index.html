@@ -7,6 +7,10 @@
         <title>Flag GEnerator New</title>
 
         <style>
+            body {
+                background: url('fotwbckg.gif');
+            }
+
             canvas {
                 border: 1px solid #aaa;
                 position: absolute;
@@ -20,7 +24,9 @@
             }
 
             h1 {
+                font-size: 4em;
                 text-align: center;
+                text-shadow: 0px 0px 0 #899CD5, 1px 1px 0 #8194CD, 2px 2px 0 #788BC4, 3px 3px 0 #6F82BB, 4px 4px 0 #677AB3, 5px 5px 0 #5E71AA, 6px 6px 0 #5568A1, 7px 7px 0 #4C5F98, 8px 8px 0 #445790, 9px 9px 0 #3B4E87, 10px 10px 0 #32457E, 11px 11px 0 #2A3D76, 12px 12px 0 #21346D, 13px 13px 0 #182B64, 14px 14px 0 #0F225B, 15px 15px 0 #071A53, 16px 16px 0 #02114A, 17px 17px 0 #0B0841, 18px 18px 0 #130039, 19px 19px 0 #1C0930, 20px 20px 0 #251227, 21px 21px 20px rgba(0,0,0,1), 21px 21px 1px rgba(0,0,0,0.5), 0px 0px 20px rgba(0,0,0,.2);
             }
 
             #generate {
@@ -69,6 +75,58 @@
             #dcon button {
                 margin-left: 5px;
             }
+
+            #marquee {
+                position: absolute;
+                left: 0;
+                bottom: 0;
+
+                width: 100%;
+
+                margin: 0;
+                padding: 0;
+                
+                text-shadow: -1px 1px #ef3550,
+                            -2px 2px #f48fb1,
+                            -3px 3px #7e57c2,
+                            -4px 4px #2196f3,
+                            -5px 5px #26c6da,
+                            -6px 6px #43a047,
+                            -7px 7px #eeff41,
+                            -8px 8px #f9a825,
+                            -9px 9px #ff5722;
+
+                overflow: hidden;
+            }
+
+            #marquee p {
+                display: inline-block;
+                font-weight: bold;
+
+                animation: marquee 30s linear infinite;
+            }
+            @keyframes marquee {
+                0%   { transform: scaleX(2) translate(-80%, 0); }
+                100% { transform: scaleX(2) translate(calc(50vw + 100%), 0); }
+            }
+
+            #marquee #xscale {
+                animation: bouncyx 2s ease-in-out infinite;
+                animation-direction: alternate;
+            }
+            @keyframes bouncyx {
+                0%   { transform: scaleX(1); }
+                100% { transform: scaleX(1.5); }
+            }
+
+            #marquee #scale {
+                animation: bouncy 1s ease-in-out infinite;
+                animation-direction: alternate;
+            }
+            @keyframes bouncy {
+                0%   { transform: scaleY(1); }
+                100% { transform: scaleY(3); }
+            }
         </style>
     </head>
     <body>
@@ -77,6 +135,8 @@
         <canvas id="canvas" width="600" height="400"></canvas>
         <button id="generate">generate</button>
         <div id="dcon"><input type="range" id="design_num" min="1" max="20" value="2"> <label for="design_num" id="dlabel">number of designs: 2</label> <p id="seperator">|</p> <input type="range" id="resolution" min="1" max="10" value="4"> <label for="resolution" id="rlabel">download resolution: 0</label> <button id="download">download</button></div>
+
+        <div id="marquee"><div id="xscale"><div id="scale"><p>copyright &copy; kaypooma 2004</p></div></div></div>
 
         <script src="script.js"></script>
     </body>

@@ -1,0 +1,133 @@
+/** {
+    margin: 0;
+    padding: 0;
+}*/
+
+body {
+    font-family: 'Arvo', Arial, Helvetica, sans-serif;
+}
+
+#c {
+    border: 1px solid #aaa;
+}
+
+body {
+    cursor: none;
+    overflow: hidden;
+    user-select: none;
+}
+
+.text-input {
+    background: transparent;
+    border: none;
+    position: absolute;
+    padding: 0;
+    margin: 0;
+    width: 640px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
+}
+
+.text-input:focus {
+    outline: none;
+}
+
+.cursor, .line-i {
+    width: 2px;
+    height: 2px;
+    border: 1px solid #000;
+    border-radius: 50%;
+    pointer-events: none;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3); 
+    position: absolute;
+}
+
+.line-i {
+    box-shadow: none;
+    animation: 1s glow ease-out infinite;
+}
+
+button {
+    font-family: 'Arvo', Arial, Helvetica, sans-serif;
+    border: none;
+    padding: 0 5px 0 5px;
+    height: 23px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    font-size: 13px;
+    text-align: center;
+    margin: 2px;
+    cursor: pointer;
+    background: #fff;
+    transition: all .1s ease-out;
+    position: relative;
+    top: -1px;
+}
+
+.color-con {
+    display: inline-block;
+}
+
+input[type="color"] {
+    -webkit-appearance: none;
+    border: none;
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    position: relative;
+    top: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    transition: all .1s ease-out;
+    cursor: pointer;
+}
+
+input[type="color"]:hover {    
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    background: #eee;
+}
+
+input[type="color"]:focus {
+    outline: none;
+}
+
+input[type="color"]::-webkit-color-swatch-wrapper {
+	padding: 0;
+}
+
+input[type="color"]::-webkit-color-swatch {
+	border: none;
+}
+
+hr {
+    border: 0;
+    height: 1px;
+    background: #aaa;
+}
+
+.sep {
+    display: inline-block;
+    width: 1px;
+    height: 20px;
+    background: #aaa;
+    position: relative;
+    top: 5px;
+    margin: 0 2.5px 0 2.5px;
+}
+
+button:hover {    
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    background: #eee;
+}
+
+button:active {    
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+    background: #ddd;
+}
+
+button:focus {
+    outline: none;
+}
+
+@keyframes glow {
+    0%, 100% { box-shadow: 0 0 0 red; }
+    50% { box-shadow: 0 0 10px red; }
+}

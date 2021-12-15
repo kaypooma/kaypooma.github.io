@@ -1,0 +1,27 @@
+/* Desktop icons */
+
+.test-app {
+    background-image: url('../img/ico/testicon.png')
+}
+
+.bomb-app {
+    background-image: url('../img/ico/bomb.png')
+}
+
+.credits-app {
+    background-image: url('../img/ico/credits.png')
+}
+
+/* Start menu icons */
+
+.sm-run {    
+    background-image: url('../img/ico/sm/run.png');
+}
+
+.sm-color {
+    background-image: url('../img/ico/sm/color.png')
+}
+
+.sm-paint {
+    background-image: url('../img/ico/sm/paint_2.png')
+}

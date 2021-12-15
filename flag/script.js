@@ -291,12 +291,13 @@ const FlagDesign = {
     },
 
     GreekCross: class GreekCross {
-        constructor(color = 'red', size = 100, thickness = 30, offsetX = 0, offsetY = 0) {
+        constructor(color = 'red', size = 100, thickness = 30, offsetX = 0, offsetY = 0, rotation = 0) {
             this.color = color
             this.size = size
             this.thickness = thickness
             this.offsetX = offsetX
             this.offsetY = offsetY
+            this.rotation = rotation
         }
 
         draw(ctx) {
@@ -308,8 +309,21 @@ const FlagDesign = {
             let width = this.Flag.width
             let height = this.Flag.height
 
+            if (this.rotation) {
+                ctx.save()
+
+                let xoffset = (scx - this.size/2 + this.offsetX) + 0.5 * this.size
+                let yoffset = (scy - this.size/2 + this.offsetY) + 0.5 * this.size
+
+                ctx.translate(xoffset, yoffset)
+                ctx.rotate(this.rotation)
+                ctx.translate(-xoffset, -yoffset)
+            }
+
             ctx.fillRect(scx - this.thickness/2 + this.offsetX, scy - this.size/2 + this.offsetY, this.thickness, this.size)
             ctx.fillRect(scx - this.size/2 + this.offsetX, scy - this.thickness/2 + this.offsetY, this.size, this.thickness)
+
+            if (this.rotation) ctx.restore()
         }
     },
 
@@ -382,9 +396,10 @@ const FlagDesign = {
     },
 
     RightTriangle: class RightTriangle {
-        constructor(color = 'red', position = 'tl') {
+        constructor(color = 'red', position = 'tl', size = 0) {
             this.color = color
             this.position = position
+            this.size = size
         }
 
         draw(ctx) {
@@ -396,30 +411,40 @@ const FlagDesign = {
             let width = this.Flag.width
             let height = this.Flag.height
 
+            let size = this.size
+
             ctx.beginPath()
 
             let pl = scx - width/2
             let pr = scx + width/2
             let pt = scy - height/2
             let pb = scy + height/2
+
             switch (this.position) {
                 case 'tl':
                     ctx.moveTo(pl, pt)
-                    ctx.lineTo(pr, pt)
+                    ctx.lineTo(size ? pl + size : pr, pt)
                     ctx.lineTo(pl, pb)
+
                     break
                 case 'tr':
                     ctx.moveTo(pr, pt)
-                    ctx.lineTo(pl, pt)
+                    ctx.lineTo(size ? pr - size : pl, pt)
                     ctx.lineTo(pr, pb)
+                    
+                    break
                 case 'bl':
                     ctx.moveTo(pl, pb)
-                    ctx.lineTo(pr, pb)
+                    ctx.lineTo(size ? pl + size : pr, pb)
                     ctx.lineTo(pl, pt)
+
+                    break
                 case 'br':
                     ctx.moveTo(pr, pb)
-                    ctx.lineTo(pl, pb)
+                    ctx.lineTo(size ? pr - size : pl, pb)
                     ctx.lineTo(pr, pt)
+
+                    break
             }
 
             ctx.closePath()
@@ -436,6 +461,7 @@ const FlagDesign = {
         rlabel.innerHTML = `download resolution: ${Math.floor(saveAttributes.Flag.width * resmult.value)}x${Math.floor(saveAttributes.Flag.height * resmult.value)} (${resmult.value}x)`
     }
 
+    // starter flag
     let funny = new Flag()
 
     funny.setSize(500)
@@ -585,9 +611,50 @@ const FlagDesign = {
             funny.addDesign( new FlagDesign.Star('#ffff00', unit*2, -funny.width/2 + unit*12, -funny.height/2 + unit*7, 5, 2, Math.PI/2 - Math.atan(2/7) ) )
             funny.addDesign( new FlagDesign.Star('#ffff00', unit*2, -funny.width/2 + unit*10, -funny.height/2 + unit*9, 5, 2, Math.PI/2 - Math.atan(4/5) ) ) 
         },
+        () => {
+            // ---- antigua and barbuda
+            funny.setColor('#0064be')
+            funny.setAspectRatio(3, 2)
+
+            let unit = funny.width/138
+
+            funny.addDesign( new FlagDesign.Border('#000', unit*36, 't') )
+
+            funny.addDesign( new FlagDesign.Star('#ffcb00', unit*60, 0, unit*-10, 16, 7) )
+
+            funny.addDesign( new FlagDesign.Border('#0064be', unit*56, 'b') )
+            funny.addDesign( new FlagDesign.Border('#fff', unit*36, 'b') )
+
+            funny.addDesign( new FlagDesign.RightTriangle('#cf132a', 'bl', funny.width/2) )
+            funny.addDesign( new FlagDesign.RightTriangle('#cf132a', 'br', funny.width/2) )
+        },
+        () => {
+            // ---- chile
+            funny.setColor('#fff')
+            funny.setAspectRatio(3, 2)
+
+            let unit = funny.width/12
+
+            funny.addDesign( new FlagDesign.Border('#cc0c2f', funny.height/2, 'b') )
+            funny.addDesign( new FlagDesign.Canton('#00338d', unit*4, unit*4) )
+
+            funny.addDesign( new FlagDesign.Star('#fff', unit*2, -funny.width/2 + unit*2, -funny.height/2 + unit*2) )
+        },
+        () => {
+            // ---- cuba
+            funny.setColor('#fff')
+            funny.setAspectRatio(2, 1)
+
+            let unit = funny.width/60
+
+            funny.addDesign( new FlagDesign.Stripe('#002663', 3, 'vertical') )
+            funny.addDesign( new FlagDesign.Chevron('#cc0c2f', unit*Math.sqrt(675)) )
+            funny.addDesign( new FlagDesign.Star('#fff', unit*10, -funny.width/2 + unit*8.66, -funny.height/2 + unit*15) )
+        },
     ]
 
     arrayRand(starters)()
+    // funny.addDesign( new FlagDesign.GreekCross('blue', funny.width/2, funny.width/8, 0, 0, Math.PI/3) )
     
     funny.draw(ctx)
     funny.updateSaveAttributes()
@@ -694,46 +761,56 @@ const FlagDesign = {
 
         designs: {
             border: [
+                // fess
                 (h,s,l, flag) => {
                     flag.addDesign( new FlagDesign.Border( `hsl(${h}, ${s}%, ${l}%)`, flag.height/3, 'tb' ) )
                 },
+                // pale
                 (h,s,l, flag) => {
                     flag.addDesign( new FlagDesign.Border( `hsl(${h}, ${s}%, ${l}%)`, flag.width/3, 'lr' ) )
                 },
+                // border
                 (h,s,l, flag) => {
                     flag.addDesign( new FlagDesign.Border( `hsl(${h}, ${s}%, ${l}%)`, flag.width*0.02, 'lrtb' ) )
                 },
             ],
 
             star: [
+                // large star in middle
                 (h,s,l, flag) => {
                     flag.addDesign( new FlagDesign.Star( `hsl(${h}, ${s}%, ${l}%)`, flag.width/4, 0, 0, 5, 2 ) )
                 },
+                // two stars on sides
                 (h,s,l, flag) => {
                     flag.addDesign( new FlagDesign.Star( `hsl(${h}, ${s}%, ${l}%)`, flag.width/8, -flag.width/4, 0 ) )
                     flag.addDesign( new FlagDesign.Star( `hsl(${h}, ${s}%, ${l}%)`, flag.width/8, flag.width/4, 0 ) )
                 },
+                // large star with two smaller stars
                 (h,s,l, flag) => {
                     flag.addDesign( new FlagDesign.Star( `hsl(${h}, ${s}%, ${l}%)`, flag.width/4, 0, 0 ) )
                     flag.addDesign( new FlagDesign.Star( `hsl(${h}, ${s}%, ${l}%)`, flag.width/8, -flag.width/4, 0 ) )
                     flag.addDesign( new FlagDesign.Star( `hsl(${h}, ${s}%, ${l}%)`, flag.width/8, flag.width/4, 0 ) )
                 },
+                // four stars in quadrants
                 (h,s,l, flag) => {
                     flag.addDesign( new FlagDesign.Star( `hsl(${h}, ${s}%, ${l}%)`, flag.width/10, -flag.width/4, -flag.height/4 ) )
                     flag.addDesign( new FlagDesign.Star( `hsl(${h}, ${s}%, ${l}%)`, flag.width/10, flag.width/4, -flag.height/4 ) )
                     flag.addDesign( new FlagDesign.Star( `hsl(${h}, ${s}%, ${l}%)`, flag.width/10, -flag.width/4, flag.height/4 ) )
                     flag.addDesign( new FlagDesign.Star( `hsl(${h}, ${s}%, ${l}%)`, flag.width/10, flag.width/4, flag.height/4 ) )
                 },
+                // star ring middle
                 (h,s,l, flag) => {
                     for (i=0; i<15; i++) {
                         flag.addDesign( new FlagDesign.Star( `hsl(${h}, ${s}%, ${l}%)`, flag.width/12, Math.cos( i/15 * Math.PI*2 - Math.PI/10 ) * flag.width/6, Math.sin( i/15 * Math.PI*2 - Math.PI/10 ) * flag.width/6, 5, 2, -rad(i/15 * 360) ) )
                     }
                 },
+                // star ring right
                 (h,s,l, flag) => {
                     for (i=0; i<15; i++) {
                         flag.addDesign( new FlagDesign.Star( `hsl(${h}, ${s}%, ${l}%)`, flag.width/12, Math.cos( i/15 * Math.PI*2 - Math.PI/10 ) * flag.width/6 + flag.width/4, Math.sin( i/15 * Math.PI*2 - Math.PI/10 ) * flag.width/6, 5, 2, -rad(i/15 * 360) ) )
                     }
                 },
+                // star ring left
                 (h,s,l, flag) => {
                     for (i=0; i<15; i++) {
                         flag.addDesign( new FlagDesign.Star( `hsl(${h}, ${s}%, ${l}%)`, flag.width/12, Math.cos( i/15 * Math.PI*2 - Math.PI/10 ) * flag.width/6 - flag.width/4, Math.sin( i/15 * Math.PI*2 - Math.PI/10 ) * flag.width/6, 5, 2, -rad(i/15 * 360) ) )
@@ -742,52 +819,103 @@ const FlagDesign = {
             ],
 
             circle: [
+                // large circle in middle
                 (h,s,l, flag) => {
                     flag.addDesign( new FlagDesign.Circle( `hsl(${h}, ${s}%, ${l}%)`, flag.width/4) )
                 },       
+                // large circle on left
+                (h,s,l, flag) => {
+                    flag.addDesign( new FlagDesign.Circle( `hsl(${h}, ${s}%, ${l}%)`, flag.height*2/3, -flag.width/6) )
+                }, 
+                // large circle on right       
+                (h,s,l, flag) => {
+                    flag.addDesign( new FlagDesign.Circle( `hsl(${h}, ${s}%, ${l}%)`, flag.height*2/3, flag.width/6) )
+                },      
+
+                // smaller circle in middle
                 (h,s,l, flag) => {
                     flag.addDesign( new FlagDesign.Circle( `hsl(${h}, ${s}%, ${l}%)`, flag.height*2/3) )
-                },      
+                },   
+                // smaller circle on left   
                 (h,s,l, flag) => {
                     flag.addDesign( new FlagDesign.Circle( `hsl(${h}, ${s}%, ${l}%)`, flag.width/4, -flag.width/6) )
                 },        
+                // smaller circle on right
                 (h,s,l, flag) => {
                     flag.addDesign( new FlagDesign.Circle( `hsl(${h}, ${s}%, ${l}%)`, flag.width/4, flag.width/6) )
-                },       
-                (h,s,l, flag) => {
-                    flag.addDesign( new FlagDesign.Circle( `hsl(${h}, ${s}%, ${l}%)`, flag.height*2/3, -flag.width/6) )
-                },        
-                (h,s,l, flag) => {
-                    flag.addDesign( new FlagDesign.Circle( `hsl(${h}, ${s}%, ${l}%)`, flag.height*2/3, flag.width/6) )
-                },         
+                },     
+
+                // overflow circle on left   
                 (h,s,l, flag) => {
                     flag.addDesign( new FlagDesign.Circle( `hsl(${h}, ${s}%, ${l}%)`, flag.height*4/3, -flag.width/4) )
-                },        
+                },     
+                // overflow circle on right   
                 (h,s,l, flag) => {
                     flag.addDesign( new FlagDesign.Circle( `hsl(${h}, ${s}%, ${l}%)`, flag.height*4/3, flag.width/4) )
                 },                      
             ],
 
+            greekcross: [
+                // large cross in middle
+                (h,s,l, flag) => {
+                    flag.addDesign( new FlagDesign.GreekCross( `hsl(${h}, ${s}%, ${l}%)`, flag.height/2, flag.height/6) )
+                },       
+                // large cross on left
+                (h,s,l, flag) => {
+                    flag.addDesign( new FlagDesign.GreekCross( `hsl(${h}, ${s}%, ${l}%)`, flag.height/2, flag.height/6, -flag.width/12) )
+                }, 
+                // large cross on right       
+                (h,s,l, flag) => {
+                    flag.addDesign( new FlagDesign.GreekCross( `hsl(${h}, ${s}%, ${l}%)`, flag.height/2, flag.height/6, flag.width/12) )
+                },      
+
+                // small cross in middle
+                (h,s,l, flag) => {
+                    flag.addDesign( new FlagDesign.GreekCross( `hsl(${h}, ${s}%, ${l}%)`, flag.height/4, flag.height/12) )
+                },       
+                // small cross on left
+                (h,s,l, flag) => {
+                    flag.addDesign( new FlagDesign.GreekCross( `hsl(${h}, ${s}%, ${l}%)`, flag.height/4, flag.height/12, -flag.width/4) )
+                }, 
+                // small cross on right       
+                (h,s,l, flag) => {
+                    flag.addDesign( new FlagDesign.GreekCross( `hsl(${h}, ${s}%, ${l}%)`, flag.height/4, flag.height/12, flag.width/4) )
+                },     
+                
+                // amsterdam
+                (h,s,l, flag) => {
+                    flag.addDesign( new FlagDesign.GreekCross( `hsl(${h}, ${s}%, ${l}%)`, flag.height/3, flag.height/8, 0, 0, Math.PI/4) )
+                    flag.addDesign( new FlagDesign.GreekCross( `hsl(${h}, ${s}%, ${l}%)`, flag.height/3, flag.height/8, -flag.width/3.5, 0, Math.PI/4) )
+                    flag.addDesign( new FlagDesign.GreekCross( `hsl(${h}, ${s}%, ${l}%)`, flag.height/3, flag.height/8, flag.width/3.5, 0, Math.PI/4) )
+                },       
+            ],
+
             bend: [
+                // bend from top left -> bottom right
                 (h,s,l, flag) => {
                     flag.addDesign( new FlagDesign.Bend( `hsl(${h}, ${s}%, ${l}%)`, flag.width*0.1 ) )
                 },
+                // bend from bottom left -> top right
                 (h,s,l, flag) => {
                     flag.addDesign( new FlagDesign.Bend( `hsl(${h}, ${s}%, ${l}%)`, flag.width*0.1, true ) )
                 },
+                // saltire
                 (h,s,l, flag) => {
                     flag.addDesign( new FlagDesign.Bend( `hsl(${h}, ${s}%, ${l}%)`, flag.width*0.1 ) )
                     flag.addDesign( new FlagDesign.Bend( `hsl(${h}, ${s}%, ${l}%)`, flag.width*0.1, true ) )
                 },
 
+                // bend from top left -> bottom right with border
                 (h,s,l, flag) => {
                     flag.addDesign( new FlagDesign.Bend( `hsl(${h}, ${s}%, ${Math.max(l+50, 100)}%)`, flag.width*0.15 ) )
                     flag.addDesign( new FlagDesign.Bend( `hsl(${h}, ${s}%, ${l}%)`, flag.width*0.1 ) )
                 },
+                // bend from bottom left -> top right with border
                 (h,s,l, flag) => {
                     flag.addDesign( new FlagDesign.Bend( `hsl(${h}, ${s}%, ${Math.max(l+50, 100)}%)`, flag.width*0.15, true ) )
                     flag.addDesign( new FlagDesign.Bend( `hsl(${h}, ${s}%, ${l}%)`, flag.width*0.1, true ) )
                 },
+                // saltire with border
                 (h,s,l, flag) => {
                     flag.addDesign( new FlagDesign.Bend( `hsl(${h}, ${s}%, ${Math.max(l+50, 100)}%)`, flag.width*0.15 ) )
                     flag.addDesign( new FlagDesign.Bend( `hsl(${h}, ${s}%, ${Math.max(l+50, 100)}%)`, flag.width*0.15, true ) )
@@ -798,24 +926,30 @@ const FlagDesign = {
             ],
 
             cross: [
+                // centered cross
                 (h,s,l, flag) => {
                     flag.addDesign( new FlagDesign.Cross( `hsl(${h}, ${s}%, ${l}%)`, flag.width*0.1 ) )
                 },
+                // left shifted
                 (h,s,l, flag) => {
                     flag.addDesign( new FlagDesign.Cross( `hsl(${h}, ${s}%, ${l}%)`, flag.width*0.1, -flag.width/5 ) )
                 },
+                // right shifted
                 (h,s,l, flag) => {
                     flag.addDesign( new FlagDesign.Cross( `hsl(${h}, ${s}%, ${l}%)`, flag.width*0.1, flag.width/5 ) )
                 },
 
+                // centered cross with border
                 (h,s,l, flag) => {
                     flag.addDesign( new FlagDesign.Cross( `hsl(${h}, ${s}%, ${Math.max(l+50, 100)}%)`, flag.width*0.15 ) )
                     flag.addDesign( new FlagDesign.Cross( `hsl(${h}, ${s}%, ${l}%)`, flag.width*0.1 ) )
                 },
+                // left shifted with border
                 (h,s,l, flag) => {
                     flag.addDesign( new FlagDesign.Cross( `hsl(${h}, ${s}%, ${Math.max(l+50, 100)}%)`, flag.width*0.15, -flag.width/5 ) )
                     flag.addDesign( new FlagDesign.Cross( `hsl(${h}, ${s}%, ${l}%)`, flag.width*0.1, -flag.width/5 ) )
                 },
+                // right shifted with border
                 (h,s,l, flag) => {
                     flag.addDesign( new FlagDesign.Cross( `hsl(${h}, ${s}%, ${Math.max(l+50, 100)}%)`, flag.width*0.15, flag.width/5 ) )
                     flag.addDesign( new FlagDesign.Cross( `hsl(${h}, ${s}%, ${l}%)`, flag.width*0.1, flag.width/5 ) )
@@ -823,12 +957,15 @@ const FlagDesign = {
             ],
 
             chevron: [
+                // left chevron
                 (h,s,l, flag) => {
                     flag.addDesign( new FlagDesign.Chevron( `hsl(${h}, ${s}%, ${l}%)`, flag.width/2 ) )
                 },
+                // right chevron
                 (h,s,l, flag) => {
                     flag.addDesign( new FlagDesign.Chevron( `hsl(${h}, ${s}%, ${l}%)`, flag.width/2, true ) )
                 },
+                // double chevron
                 (h,s,l, flag) => {
                     flag.addDesign( new FlagDesign.Chevron( `hsl(${h}, ${s}%, ${l}%)`, flag.width/2 ) )
                     flag.addDesign( new FlagDesign.Chevron( `hsl(${h}, ${s}%, ${l}%)`, flag.width/2, true ) )
@@ -836,25 +973,44 @@ const FlagDesign = {
             ],
 
             right: [
+                // top left triangle
                 (h,s,l, flag) => {
                     flag.addDesign( new FlagDesign.RightTriangle( `hsl(${h}, ${s}%, ${l}%)`, 'tl' ) )
                 },
+                // top right triangle
                 (h,s,l, flag) => {
                     flag.addDesign( new FlagDesign.RightTriangle( `hsl(${h}, ${s}%, ${l}%)`, 'tr' ) )
                 },
+                // bottom left triangle
                 (h,s,l, flag) => {
                     flag.addDesign( new FlagDesign.RightTriangle( `hsl(${h}, ${s}%, ${l}%)`, 'bl' ) )
                 },
+                // bottom right triangle
                 (h,s,l, flag) => {
                     flag.addDesign( new FlagDesign.RightTriangle( `hsl(${h}, ${s}%, ${l}%)`, 'br' ) )
                 },
             ],
+            top_right: [        
+                // bottom left + bottom right
+                (h,s,l, flag) => {
+                    flag.addDesign( new FlagDesign.RightTriangle( `hsl(${h}, ${s}%, ${l}%)`, 'bl', flag.width/2 ) )
+                    flag.addDesign( new FlagDesign.RightTriangle( `hsl(${h}, ${s}%, ${l}%)`, 'br', flag.width/2 ) )
+                },
+
+                // top left + top right
+                (h,s,l, flag) => {
+                    flag.addDesign( new FlagDesign.RightTriangle( `hsl(${h}, ${s}%, ${l}%)`, 'tl', flag.width/2 ) )
+                    flag.addDesign( new FlagDesign.RightTriangle( `hsl(${h}, ${s}%, ${l}%)`, 'tr', flag.width/2 ) )
+                },
+            ],
 
             quadrant: [
+                // top left, bottom right
                 (h,s,l, flag) => {
                     flag.addDesign( new FlagDesign.Quadrant( `hsl(${h}, ${s}%, ${l}%)`, 'tl' ) )
                     flag.addDesign( new FlagDesign.Quadrant( `hsl(${h}, ${s}%, ${l}%)`, 'br' ) )
                 },
+                // top right, bottom left
                 (h,s,l, flag) => {
                     flag.addDesign( new FlagDesign.Quadrant( `hsl(${h}, ${s}%, ${l}%)`, 'tr' ) )
                     flag.addDesign( new FlagDesign.Quadrant( `hsl(${h}, ${s}%, ${l}%)`, 'bl' ) )
@@ -884,6 +1040,8 @@ const FlagDesign = {
 
             star: 2,
             circle: 2,
+            top_right: 2,
+            greekcross: 2,
         }
 
         let draworder = [[],[],[]]

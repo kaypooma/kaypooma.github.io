@@ -1,0 +1,489 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Arvo', Arial, Helvetica, sans-serif;
+    overflow: hidden;
+    user-select: none;
+    cursor: default;
+}
+
+.tim-preload {    
+    background: url('../img/timothy.png') no-repeat -9999px -9999px;
+}
+
+.windows-preload {    
+    background: url('../img/wlogo.png') no-repeat -9999px -9999px;
+}
+
+.windowsw-preload {    
+    background: url('../img/wlogo-white.png') no-repeat -9999px -9999px;
+}
+
+iframe {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.blank {
+    width: 100%;
+    height: 100vh;
+    background: #000;
+    position: absolute;
+    top: 0;
+    left: 0;
+    cursor: none;
+}
+
+.hidden {
+    display: none;
+}
+
+.startup {
+    width: 100%;
+    height: 100vh;
+    background: rgba(0, 0, 105, 255);
+    position: absolute;
+    top: 0;
+    left: 0;
+    cursor: none;
+}
+
+.startup .tim {
+    background-image: url('../img/timothy.png');
+    width: 151px;
+    height: 254px;
+    position: absolute;
+    margin: auto;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.error-code {
+    width: 413px;
+    height: 113px;
+    background: url('../img/errorcode.png');
+
+    position: absolute;
+    margin: auto;
+    top: 75%;
+    left: 0;
+    right: 0;
+}
+
+.loading-icon {
+    width: 25px;
+    height: 25px;
+    border: 8px solid skyblue;
+    border-left-color: steelblue;
+    animation: 2s loading linear infinite;
+    border-radius: 100px;
+}
+
+.startup .loading-icon {
+    position: absolute;
+    margin: auto;
+    left: 0;
+    right: 0;
+    top: 75%;
+}
+
+.startup .loading-text {
+    width: 200px;
+    height: 100px;
+    text-align: center;
+    line-height: 100px;
+    color: #fff;
+    position: absolute;
+    margin: auto;
+    top: 77%;
+    left: 0;
+    right: 0;
+}
+
+.desktop-bg {
+    width: 100%;
+    height: 100%;
+    background: skyblue;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -9999;
+}
+
+.taskbar {
+    width: 100%;
+    height: 60px;
+    background: rgba(100, 100, 120, 200);
+    position: absolute;
+    bottom: 0;
+    z-index: 9999;
+}
+
+.taskbar .start {
+    width: 120px;
+    height: 60px;
+    background: url('../img/wlogo.png');
+    background-size: 40px 40px;
+    background-repeat: no-repeat;
+    background-position: 10px 10px;
+    text-indent: 60px;
+    line-height: 60px;
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    transition: all .1s ease-out;
+    cursor: pointer;
+}
+
+.taskbar .start:hover {
+    background-color: rgba(0, 0, 0, 0.3);
+    background-image: url('../img/wlogo-white.png');
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5) inset;
+}
+
+.start-menu {
+    width: 350px;
+    height: 75%;
+    background: rgba(100, 100, 120, 200);
+    position: absolute;
+    z-index: 500;
+    bottom: 60px;
+    transition: all .4s cubic-bezier(0.215, 0.610, 0.355, 1.000);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.sdown {
+    transform: translate(0, 100%);
+}
+
+.smenuapp {
+    width: 330px;
+    height: 32px;
+    padding: 10px;
+    line-height: 32px;
+    text-indent: 42px;
+    color: white;
+    background-size: 32px 32px;
+    background-position: 10px 10px;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    transition: all .1s ease-out;
+}
+
+.smenuapp:hover {
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5) inset;
+    text-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
+}
+
+.sys-error {
+    width: 350px;
+    height: 200px;
+    background: #fff;
+    z-index: 20;
+    padding: 5px;
+    position: absolute;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+}
+
+.sys-error .errtitlebar {
+    width: 100%;
+    height: 20px;
+    padding: 5px;
+    color: white;
+    position: relative;
+    top: -5px;
+    left: -5px;
+}
+
+.errtitlebar {
+    background: #ddd;
+}
+
+.sys-error .errcontent {
+    width: 100%;
+}
+
+.sys-error .errbuttons {
+    display: flex;
+    position: absolute;
+    justify-content: center;
+    padding: 5px 0 5px 0;
+    bottom: 0;
+}
+
+.sys-error .erricon {
+    display: block;
+    margin: auto;
+    left: 0;
+    right: 0;
+    pointer-events: none;
+}
+
+.sys-button {
+    padding: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    font-size: 13px;
+    text-align: center;
+    margin: 5px;
+    cursor: pointer;
+    background: #fff;
+    transition: all .1s ease-out;
+}
+
+.sys-button:hover {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    background: #eee;
+}
+
+.sys-button:active {
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+    background: #ddd;
+}
+
+.sys-close {
+    width: 30px;
+    height: 30px;
+    background: red;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: all .1s ease-out;
+    cursor: pointer;
+}
+
+.sys-close:hover {
+    background: salmon;
+}
+
+.errbottom {
+    height: 100%;
+}
+
+.open {
+    animation: 0.2s dialog-open ease-out forwards;
+}
+
+.close {
+    animation: 0.2s dialog-close ease-out forwards;
+}
+
+.icons {
+    position: absolute;
+    top: 0;
+    left: 0;
+    flex-wrap: wrap;
+    flex-direction: column;
+    z-index: 10;
+}
+
+.app {
+    width: 64px;
+    height: 64px;
+    background-size: 64px 64px;
+    margin: 5px;
+    margin-bottom: 40px;
+    z-index: 10;
+    margin-right: 40px;
+    display: inline-block;
+    cursor: pointer;
+    transition: all .1s ease-out;
+}
+
+.app:after {
+    display: inline-block;
+    content: attr(data-appname);
+    color: #fff;
+    text-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
+    width: 64px;
+    text-align: center;
+    position: relative;
+    top: 64px;
+    font-size: 13px;
+    transition: all .1s ease-out;
+}
+
+.app:hover:after {
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    transform: translate(0, -2px);
+}
+
+.sys-window {
+    width: 350px;
+    height: 200px;
+    background: white;
+    position: absolute;
+    z-index: 20;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+}
+
+.sys-titlebar {
+    padding: 5px 0 5px 0;
+    text-indent: 5px;
+    height: 20px;
+    background: #ddd;
+    line-height: 20px;
+    color: white;
+}
+
+.sys-wcontent {
+    display: block;
+    padding: 5px;
+    height: 100%;
+}
+
+.sys-wclose {
+    width: 30px;
+    height: 30px;
+    background: red;
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+    transition: all .1s ease-out;
+}
+
+.sys-wclose:hover {
+    background: salmon;
+}
+
+input[type='text'] {
+    font-family: 'Arvo', Arial, Helvetica, sans-serif;
+    padding: 5px;
+    background: #fff;
+    border: 1px solid #aaa;
+}
+
+input[type='text']:focus {
+    outline: none;
+}
+
+.run-command {
+    width: 100%;
+    transform: translate(-6px, -5px)
+}
+
+.runmessage {
+    font-size: 13px;
+    overflow-y: scroll;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5) inset;
+    height: 97px;
+    padding: 0 5px 0 5px;
+    font-family: Courier New, Courier, monospace;
+    font-weight: bold;
+    background: #333;
+}
+
+.time {
+    width: 100px;
+    height: 60px;
+
+    position: absolute;
+    right: 0;
+    bottom: 0;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    flex-wrap: wrap;
+
+    color: #fff;
+}
+
+hr {
+    border: 0;
+    background: #aaa;
+    height: 1px;
+    margin: 5px 0 5px 0;
+}
+
+.credit {
+    height: 32px;
+    line-height: 32px;
+    text-indent: 36px;
+    margin: 5px 0 5px 0;
+    background-size: 32px 32px;
+    background-position: 0 0;
+    background-repeat: no-repeat;
+}
+
+.changecolor {
+    width: 60px;
+    height: 60px;
+    margin-right: 5px;
+    padding: 0;
+    background: red;
+    display: inline-block;
+    transition: all .1s ease-out;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    position: relative;
+    z-index: 50;
+}
+
+.changecolor:hover {    
+    transform: translate(0, -2px);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
+}
+
+.custom-color {
+    position: absolute;
+    top: 50px;
+}
+
+.color-r {
+    background: rgba(244,67,54,255);
+}
+
+.color-o {
+    background: rgba(255,152,0,255);
+}
+
+.color-y {
+    background: rgba(255,235,59,255);
+}
+
+.color-g {
+    background: rgba(76,175,80,255);
+}
+
+.color-b {
+    background: rgba(33,150,243,255);
+}
+
+.color-p {
+    background: rgba(156,39,176,255);
+}
+
+@keyframes loading {
+    100% { transform: rotate(360deg) }
+}
+
+@keyframes dialog-open {
+    0% { transform: translate(0, 10px) scale(0.9); opacity: 0; }
+    100% { transform: translate(0, 0) scale(1); opacity: 1; }
+}
+
+@keyframes dialog-close {
+    100% { transform: translate(0, 10px) scale(0.9); opacity: 0; }
+}
+
+::-webkit-scrollbar {
+    width: 12px;
+}
+ 
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+}
+ 
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.5);
+}

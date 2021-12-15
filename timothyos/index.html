@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>TimothyOS</title>
+        <link rel="stylesheet" href="css/style.css">     
+        <link href="https://fonts.googleapis.com/css?family=Exo+2|Josefin+Sans|Arvo" rel="stylesheet">
+        <link rel="stylesheet" href="css/icons.css">
+        <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css">
+    </head>
+    <body>
+        <div class="preload">
+            <div class="tim-preload"></div>
+            <div class="windows-preload"></div>
+            <div class="windowsw-preload"></div>
+        </div>
+
+        <div class="startup-con">
+            <div class="blank"></div>
+            <div class="startup hidden">
+                <div class="tim"></div>
+                <div class="loading-icon"></div>
+                <div class="loading-text">Starting TimothyOS</div>
+                <div class="error-code hidden"></div>
+            </div>
+        </div>
+
+        <div class="desktop hidden">
+            <div class="desktop-bg"></div>
+            <div class="taskbar">
+                <div class="start">Start</div>
+                <div class="time">
+                    <div class="time-time">1:30 PM</div>
+                    <div class="time-date">5/6/17</div>
+                </div>
+            </div>
+            <div class="start-menu sdown">
+                <div class="smenuapp sm-run" onclick="runRunApp()">Run</div>
+                <div class="smenuapp sm-color" onclick="runColorApp()">Color</div>
+                <div class="smenuapp sm-paint" onclick="runPaintApp()">10583paint</div>
+            </div>
+            <div class="icons">
+                <div class="app test-app" data-appname="Test app" onclick="testApp()"></div>
+                <div class="app bomb-app" data-appname="Not a virus" onclick="bombApp()"></div>
+                <div class="app credits-app" data-appname="Credits" onclick="creditsApp()"></div>
+            </div>
+        
+            <!--<div class="sys-error">
+                <div class="errtitlebar">
+                    <div class="errtitle">Title</div>
+                    <div class="sys-close"></div>
+                </div>
+                <div class="errcontent">Content</div>
+                <div class="errbuttons">
+                    <div class="sys-button">Button 1</div>
+                    <div class="sys-button">Button 2</div>
+                </div>
+            </div>-->
+        </div>
+
+        <script src="js/jquery.js"></script>
+        <script
+  src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"
+  integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="
+  crossorigin="anonymous"></script>
+        <script src="js/script.js"></script>
+    </body>
+</html>
