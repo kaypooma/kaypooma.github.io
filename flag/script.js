@@ -13,23 +13,12 @@ const saveAttributes = {
 }
 
 class Flag {
-    // static #defaultParams = {
-    //     color: 'red',
-
-    //     size: 400,
-    //     aspect: { w: 4, h: 3 },
-
-    //     designs: [],
-    // }
     #updateWH() {
         this.width = this.params.size
         this.height = this.params.size*(this.params.aspect.h/this.params.aspect.w)
     }
 
     constructor(pa) {
-        // this.params = Flag.defaultParams
-        // console.log(Flag.#defaultParams)
-
         // default
         this.params = {
             color: 'red',
@@ -39,11 +28,6 @@ class Flag {
     
             designs: [],
         }
-        // for (let p in Flag.#defaultParams) {
-        //     this.params[p] = Flag.#defaultParams[p]
-        // }
-
-        // console.log(Flag.#defaultParams)
 
         this.#updateWH()
 
@@ -252,7 +236,6 @@ const FlagDesign = {
             
             let radius = [this.diameter/2, this.diameter/2 * ( Math.cos( Math.PI*this.turning / this.spokes ) / Math.cos( Math.PI * (this.turning - 1) / this.spokes ) )]
             for (let i=0; i<this.spokes*2; i++) {
-                // console.log(i)
                 ctx[i===0 ? 'moveTo' : 'lineTo'](scx + Math.sin(i/this.spokes/2 * Math.PI*2 + Math.PI + this.rotation) * radius[i%2] + this.offsetX, scy + Math.cos(i/this.spokes/2 * Math.PI*2 + Math.PI + this.rotation) * radius[i%2] + this.offsetY)
             }
 
@@ -351,27 +334,6 @@ const FlagDesign = {
             ctx.translate(scx, scy)
             ctx.rotate(Math.atan( this.Flag.params.aspect.h/this.Flag.params.aspect.w / 1) * (this.mirrored ? -1 : 1))
             ctx.translate(-scx, -scy)
-
-            // if (this.mirrored) {
-            //     ctx.scale(-1, 1)
-            //     ctx.translate(-sw, 0)
-            // }
-
-            // ctx.beginPath()
-
-            // let thicknessAdjust = this.thickness / Math.SQRT2
-            // let aspectAdjust
-
-            // ctx.moveTo(scx - width/2, scy + height/2 - thicknessAdjust)
-            // ctx.lineTo(scx - width/2, scy + height/2)
-            // ctx.lineTo(scx - width/2 + thicknessAdjust, scy + height/2)
-
-            // ctx.lineTo(scx + width/2, scy - height/2 + thicknessAdjust)
-            // ctx.lineTo(scx + width/2, scy - height/2)
-            // ctx.lineTo(scx + width/2 - thicknessAdjust, scy - height/2)
-
-            // ctx.closePath()
-            // ctx.fill()
 
             let bwidth = width * Math.hypot(1, this.Flag.params.aspect.h/this.Flag.params.aspect.w)
             ctx.fillRect(scx - bwidth/2, scy - this.thickness/2, bwidth, this.thickness)
@@ -577,74 +539,6 @@ const FlagDesign = {
     ]
 
     arrayRand(starters)()
-
-    // switch (frand) {
-    //     case 1:
-    //         // ---- suriname
-    //         funny.setColor('#b40a2d')
-    //         funny.setAspectRatio(3, 2)
-        
-    //         funny.addDesign(new FlagDesign.Border('white', funny.height/20 * 6, 'tb'))
-    //         funny.addDesign(new FlagDesign.Border('#377e3f', funny.height/20 * 4, 'tb'))
-    //         funny.addDesign(new FlagDesign.Star('#ecc81d', funny.height/20 * 8, 0, funny.height/20 * ((3 - Math.sqrt(5)) / 2)))
-            
-    //         break
-    //     case 2:
-    //         // ---- japan
-    //         funny.setColor('#fff')
-    //         funny.setAspectRatio(3, 2)
-
-    //         funny.addDesign(new FlagDesign.Circle('#bc002d', funny.height * 3/5))
-
-    //         break
-    //     case 3:    
-    //         // ---- germany
-    //         funny.setColor('#ff0000')
-    //         funny.setAspectRatio(5, 3)
-        
-    //         funny.addDesign(new FlagDesign.Border('#000', funny.height/3, 't'))
-    //         funny.addDesign(new FlagDesign.Border('#fc0', funny.height/3, 'b'))
-
-    //         break
-    //     case 4:
-    //         // ---- taiwan
-    //         funny.setColor('#F20000')
-    //         funny.setAspectRatio(3, 2)
-        
-    //         funny.addDesign( new FlagDesign.Canton('#0029CC', funny.width/2, funny.height/2) )
-        
-    //         funny.addDesign( new FlagDesign.Star('#FFF', funny.height/80*30, -funny.width/4, -funny.height/4, 12, 5) )
-        
-    //         funny.addDesign( new FlagDesign.Circle('#0029CC', funny.height/80*17, -funny.width/4, -funny.height/4) )
-    //         funny.addDesign( new FlagDesign.Circle('#FFF', funny.height/80*15, -funny.width/4, -funny.height/4) )
-
-    //         break
-    //     case 5:
-    //         // ---- us
-    //         funny.setColor('#FFFFFF')
-    //         funny.setAspectRatio(19, 10)
-        
-    //         funny.addDesign( new FlagDesign.Stripe('#B22234', 7, 'vertical') )
-    //         funny.addDesign( new FlagDesign.Canton('#3C3B6E', funny.width * 2/5, funny.height * 7/13) )
-
-    //         for (let r=0; r<5; r++) {
-    //             for (let c=0; c<6; c++) {
-    //                 let spx = funny.width * 2/5 / 12
-    //                 let spy = funny.height * 7/13 / 10
-    //                 funny.addDesign( new FlagDesign.Star('#FFFFFF', funny.height/13 * (4/5), -funny.width/2 + spx + spx*c*2, -funny.height/2 + spy + spy*r*2) )
-    //             }
-    //         }
-        
-    //         for (let r=0; r<4; r++) {
-    //             for (let c=0; c<5; c++) {
-    //                 let spx = funny.width * 2/5 / 12
-    //                 let spy = funny.height * 7/13 / 10
-    //                 funny.addDesign( new FlagDesign.Star('#FFFFFF', funny.height/13 * (4/5), -funny.width/2 + spx*2 + spx*c*2, -funny.height/2 + spy*2 + spy*r*2) )
-    //             }
-    //         }
-
-    //         break
-    // } 
     
     funny.draw(ctx)
     funny.updateSaveAttributes()
