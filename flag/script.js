@@ -331,8 +331,11 @@ const FlagDesign = {
 
             if (this.mirrored) {
                 ctx.save()
-                ctx.scale(-1, 1)
-                ctx.translate(-sw, 0)
+                // ctx.scale(-1, 1)
+                // ctx.translate(-sw, 0)
+                ctx.translate(scx, scy)
+                ctx.rotate(Math.PI)
+                ctx.translate(-scx, -scy)
             }
 
             ctx.beginPath()
