@@ -7,6 +7,11 @@ const sh = 400
 const scx = sw/2
 const scy = sh/2
 
+const saveAttributes = {
+    width: 400,
+    height: 400
+}
+
 class Flag {
     // static #defaultParams = {
     //     color: 'red',
@@ -70,23 +75,25 @@ class Flag {
     }
 
     draw(ctx, clear = false) {
+        ctx.save()
+
         if (clear) ctx.clearRect(0, 0, sw, sh)
-
-        // clipping path
-        // ctx.beginPath()
-
-        // ctx.moveTo( scx - width/2, scy - height/2 )
-        // ctx.lineTo( scx + width/2, scy - height/2 )
-        // ctx.lineTo( scx + width/2, scy + height/2 )
-        // ctx.lineTo( scx - width/2, scy + height/2 )
-
-        // ctx.closePath()
-        // ctx.clip()
-
-        ctx.fillStyle = this.params.color
 
         let width = this.width
         let height = this.height
+
+        // clipping path
+        ctx.beginPath()
+
+        ctx.moveTo( scx - width/2, scy - height/2 )
+        ctx.lineTo( scx + width/2, scy - height/2 )
+        ctx.lineTo( scx + width/2, scy + height/2 )
+        ctx.lineTo( scx - width/2, scy + height/2 )
+
+        ctx.closePath()
+        ctx.clip()
+
+        ctx.fillStyle = this.params.color
 
         ctx.fillRect( scx - width/2, scy - height/2, width, height)
 
@@ -94,7 +101,11 @@ class Flag {
             design.draw(ctx)
         }
 
-        // ctx.restore()
+        ctx.restore()
+    }
+    updateSaveAttributes() {
+        saveAttributes.width = this.width
+        saveAttributes.height = this.height
     }
 }
 
@@ -224,13 +235,14 @@ const FlagDesign = {
     },
 
     Star: class Star {
-        constructor(color = 'red', diameter = 100, offsetX = 0, offsetY = 0, spokes = 5, turning = 2) {
+        constructor(color = 'red', diameter = 100, offsetX = 0, offsetY = 0, spokes = 5, turning = 2, rotation = 0) {
             this.color = color
             this.diameter = diameter
             this.spokes = spokes
             this.turning = turning
             this.offsetX = offsetX
             this.offsetY = offsetY
+            this.rotation = rotation
         }
 
         draw(ctx) {
@@ -241,7 +253,7 @@ const FlagDesign = {
             let radius = [this.diameter/2, this.diameter/2 * ( Math.cos( Math.PI*this.turning / this.spokes ) / Math.cos( Math.PI * (this.turning - 1) / this.spokes ) )]
             for (let i=0; i<this.spokes*2; i++) {
                 // console.log(i)
-                ctx[i===0 ? 'moveTo' : 'lineTo'](scx + Math.sin(i/this.spokes/2 * Math.PI*2 + Math.PI) * radius[i%2] + this.offsetX, scy + Math.cos(i/this.spokes/2 * Math.PI*2 + Math.PI) * radius[i%2] + this.offsetY)
+                ctx[i===0 ? 'moveTo' : 'lineTo'](scx + Math.sin(i/this.spokes/2 * Math.PI*2 + Math.PI + this.rotation) * radius[i%2] + this.offsetX, scy + Math.cos(i/this.spokes/2 * Math.PI*2 + Math.PI + this.rotation) * radius[i%2] + this.offsetY)
             }
 
             ctx.closePath()
@@ -289,33 +301,9 @@ const FlagDesign = {
     },
 
     Chevron: class Chevron {
-        constructor(color = 'red', size = 200) {
+        constructor(color = 'red', size = 200, mirrored = false) {
             this.color = color
             this.size = size
-        }
-        
-        draw(ctx) {
-            ctx.fillStyle = this.color
-
-            let width = this.Flag.width
-            let height = this.Flag.height
-
-            ctx.beginPath()
-
-            ctx.moveTo(scx - width/2, scy - height/2)
-            ctx.lineTo(scx - width/2, scy + height/2)
-
-            ctx.lineTo(scx - width/2 + this.size, scy)
-
-            ctx.closePath()
-            ctx.fill()
-        }
-    },
-
-    Bend: class Bend {
-        constructor(color = 'red', thickness = 50, mirrored = false) {
-            this.color = color
-            this.thickness = thickness
             this.mirrored = mirrored
         }
         
@@ -333,21 +321,62 @@ const FlagDesign = {
 
             ctx.beginPath()
 
-            // bottom left
-            let thicknessAdjust = this.thickness / Math.SQRT2
-
-            ctx.moveTo(scx - width/2, scy + height/2 - thicknessAdjust)
+            ctx.moveTo(scx - width/2, scy - height/2)
             ctx.lineTo(scx - width/2, scy + height/2)
-            ctx.lineTo(scx - width/2 + thicknessAdjust, scy + height/2)
 
-            ctx.lineTo(scx + width/2, scy - height/2 + thicknessAdjust)
-            ctx.lineTo(scx + width/2, scy - height/2)
-            ctx.lineTo(scx + width/2 - thicknessAdjust, scy - height/2)
+            ctx.lineTo(scx - width/2 + this.size, scy)
 
             ctx.closePath()
             ctx.fill()
 
             if (this.mirrored) ctx.restore()
+        }
+    },
+
+    Bend: class Bend {
+        constructor(color = 'red', thickness = 50, mirrored = false) {
+            this.color = color
+            this.thickness = thickness
+            this.mirrored = mirrored
+        }
+        
+        draw(ctx) {
+            ctx.fillStyle = this.color
+
+            let width = this.Flag.width
+            let height = this.Flag.height
+
+            ctx.save()
+
+            ctx.translate(scx, scy)
+            ctx.rotate(Math.atan( this.Flag.params.aspect.h/this.Flag.params.aspect.w / 1) * (this.mirrored ? -1 : 1))
+            ctx.translate(-scx, -scy)
+
+            // if (this.mirrored) {
+            //     ctx.scale(-1, 1)
+            //     ctx.translate(-sw, 0)
+            // }
+
+            // ctx.beginPath()
+
+            // let thicknessAdjust = this.thickness / Math.SQRT2
+            // let aspectAdjust
+
+            // ctx.moveTo(scx - width/2, scy + height/2 - thicknessAdjust)
+            // ctx.lineTo(scx - width/2, scy + height/2)
+            // ctx.lineTo(scx - width/2 + thicknessAdjust, scy + height/2)
+
+            // ctx.lineTo(scx + width/2, scy - height/2 + thicknessAdjust)
+            // ctx.lineTo(scx + width/2, scy - height/2)
+            // ctx.lineTo(scx + width/2 - thicknessAdjust, scy - height/2)
+
+            // ctx.closePath()
+            // ctx.fill()
+
+            let bwidth = width * Math.hypot(1, this.Flag.params.aspect.h/this.Flag.params.aspect.w)
+            ctx.fillRect(scx - bwidth/2, scy - this.thickness/2, bwidth, this.thickness)
+
+            ctx.restore()
         }
     },
 
@@ -470,12 +499,317 @@ const FlagDesign = {
     } 
     
     funny.draw(ctx)
+    funny.updateSaveAttributes()
+
+    // ----------------------------------------------
+
+    function arrayRand(array) {
+        return array[Math.floor(Math.random() * array.length)]
+    }
+    function arrayRand_nr(array) {
+        var copy = array.slice(0)
+        return function() {
+            if (copy.length < 1) { copy = array.slice(0) }
+            var index = Math.floor(Math.random() * copy.length)
+            var item = copy[index]
+            copy.splice(index, 1)
+            return item
+        }
+    }
+    function hexToHSL(H) {
+        // Convert hex to RGB first
+        let r = 0, g = 0, b = 0;
+        if (H.length == 4) {
+            r = "0x" + H[1] + H[1];
+            g = "0x" + H[2] + H[2];
+            b = "0x" + H[3] + H[3];
+            } else if (H.length == 7) {
+            r = "0x" + H[1] + H[2];
+            g = "0x" + H[3] + H[4];
+            b = "0x" + H[5] + H[6];
+        }
+        // Then to HSL
+        r /= 255;
+        g /= 255;
+        b /= 255;
+        let cmin = Math.min(r,g,b),
+            cmax = Math.max(r,g,b),
+            delta = cmax - cmin,
+            h = 0,
+            s = 0,
+            l = 0;
+
+        if (delta == 0)
+            h = 0;
+        else if (cmax == r)
+            h = ((g - b) / delta) % 6;
+        else if (cmax == g)
+            h = (b - r) / delta + 2;
+        else
+            h = (r - g) / delta + 4;
+
+        h = Math.round(h * 60);
+
+        if (h < 0)
+            h += 360;
+
+        l = (cmax + cmin) / 2;
+        s = delta == 0 ? 0 : delta / (1 - Math.abs(2 * l - 1));
+        s = +(s * 100).toFixed(1);
+        l = +(l * 100).toFixed(1);
+
+        return [h,s,l]
+    }
+    function rad(deg) {
+        return deg * (Math.PI/180)
+    }
+
+    const FlagRandom = {
+        palettes: [
+            ['#FF5959', '#FFAD5A', '#4F9DA6', '#1A0841'],
+            ['#BFF4ED', '#280F34', '#E41655', '#B30753'],
+            ['#161853', '#292C6D', '#FAEDF0', '#EC255A'],
+            ['#E8505B', '#F9D56E', '#F3ECC2', '#14B1AB'],
+            ['#E6DEDD', '#8F1D14', '#1B120F', '#F89D13'],
+    
+            ['#006400', '#FFD200', '#D40000', '#000000', '#FFFFFF', '#FFCC00'],
+            ['#00247D', '#FFFFFF', '#CF142B', '#FFCE00', '#5B97B1'],
+            ['#AA151B', '#F1BF00', '#0039F0', '#CCCCCC', '#ED72AA', '#058E6E'],
+            ['#5EB6E4', '#FFFFFF', '#F1BF31', '#D99F31', '#658D5C', '#94BB79'],
+            ['#D21034', '#007168', '#000000', '#FFFFFF', '#FCE100'],
+            ['#00209F', '#D21034', '#FFFFFF', '#016A16', '#F1B517'],
+        ],
+
+        aspectRatios: [
+            [1, 1],
+            [3, 2],
+            [2, 1],
+            [8, 5],
+            [18, 11],
+            [5, 3],
+            [28, 11],
+            [335, 189],
+            [11, 7],
+            [19, 10],
+            [(1 + Math.sqrt(5)) / 2, 1],
+        ],
+
+        designs: {
+            border: [
+                (h,s,l, flag) => {
+                    flag.addDesign( new FlagDesign.Border( `hsl(${h}, ${s}%, ${l}%)`, flag.height/3, 'tb' ) )
+                },
+                (h,s,l, flag) => {
+                    flag.addDesign( new FlagDesign.Border( `hsl(${h}, ${s}%, ${l}%)`, flag.width/3, 'lr' ) )
+                },
+                (h,s,l, flag) => {
+                    flag.addDesign( new FlagDesign.Border( `hsl(${h}, ${s}%, ${l}%)`, flag.width*0.02, 'lrtb' ) )
+                },
+            ],
+
+            star: [
+                (h,s,l, flag) => {
+                    flag.addDesign( new FlagDesign.Star( `hsl(${h}, ${s}%, ${l}%)`, flag.width/4, 0, 0, 5, 2 ) )
+                },
+                (h,s,l, flag) => {
+                    flag.addDesign( new FlagDesign.Star( `hsl(${h}, ${s}%, ${l}%)`, flag.width/8, -flag.width/4, 0 ) )
+                    flag.addDesign( new FlagDesign.Star( `hsl(${h}, ${s}%, ${l}%)`, flag.width/8, flag.width/4, 0 ) )
+                },
+                (h,s,l, flag) => {
+                    flag.addDesign( new FlagDesign.Star( `hsl(${h}, ${s}%, ${l}%)`, flag.width/4, 0, 0 ) )
+                    flag.addDesign( new FlagDesign.Star( `hsl(${h}, ${s}%, ${l}%)`, flag.width/8, -flag.width/4, 0 ) )
+                    flag.addDesign( new FlagDesign.Star( `hsl(${h}, ${s}%, ${l}%)`, flag.width/8, flag.width/4, 0 ) )
+                },
+                (h,s,l, flag) => {
+                    flag.addDesign( new FlagDesign.Star( `hsl(${h}, ${s}%, ${l}%)`, flag.width/10, -flag.width/4, -flag.height/4 ) )
+                    flag.addDesign( new FlagDesign.Star( `hsl(${h}, ${s}%, ${l}%)`, flag.width/10, flag.width/4, -flag.height/4 ) )
+                    flag.addDesign( new FlagDesign.Star( `hsl(${h}, ${s}%, ${l}%)`, flag.width/10, -flag.width/4, flag.height/4 ) )
+                    flag.addDesign( new FlagDesign.Star( `hsl(${h}, ${s}%, ${l}%)`, flag.width/10, flag.width/4, flag.height/4 ) )
+                },
+                (h,s,l, flag) => {
+                    for (i=0; i<15; i++) {
+                        flag.addDesign( new FlagDesign.Star( `hsl(${h}, ${s}%, ${l}%)`, flag.width/12, Math.cos( i/15 * Math.PI*2 - Math.PI/10 ) * flag.width/6, Math.sin( i/15 * Math.PI*2 - Math.PI/10 ) * flag.width/6, 5, 2, -rad(i/15 * 360) ) )
+                    }
+                },
+                (h,s,l, flag) => {
+                    for (i=0; i<15; i++) {
+                        flag.addDesign( new FlagDesign.Star( `hsl(${h}, ${s}%, ${l}%)`, flag.width/12, Math.cos( i/15 * Math.PI*2 - Math.PI/10 ) * flag.width/6 + flag.width/4, Math.sin( i/15 * Math.PI*2 - Math.PI/10 ) * flag.width/6, 5, 2, -rad(i/15 * 360) ) )
+                    }
+                },
+                (h,s,l, flag) => {
+                    for (i=0; i<15; i++) {
+                        flag.addDesign( new FlagDesign.Star( `hsl(${h}, ${s}%, ${l}%)`, flag.width/12, Math.cos( i/15 * Math.PI*2 - Math.PI/10 ) * flag.width/6 - flag.width/4, Math.sin( i/15 * Math.PI*2 - Math.PI/10 ) * flag.width/6, 5, 2, -rad(i/15 * 360) ) )
+                    }
+                },
+            ],
+
+            bend: [
+                (h,s,l, flag) => {
+                    flag.addDesign( new FlagDesign.Bend( `hsl(${h}, ${s}%, ${l}%)`, flag.width*0.1 ) )
+                },
+                (h,s,l, flag) => {
+                    flag.addDesign( new FlagDesign.Bend( `hsl(${h}, ${s}%, ${l}%)`, flag.width*0.1, true ) )
+                },
+                (h,s,l, flag) => {
+                    flag.addDesign( new FlagDesign.Bend( `hsl(${h}, ${s}%, ${l}%)`, flag.width*0.1 ) )
+                    flag.addDesign( new FlagDesign.Bend( `hsl(${h}, ${s}%, ${l}%)`, flag.width*0.1, true ) )
+                },
+
+                (h,s,l, flag) => {
+                    flag.addDesign( new FlagDesign.Bend( `hsl(${h}, ${s}%, ${Math.max(l+50, 100)}%)`, flag.width*0.15 ) )
+                    flag.addDesign( new FlagDesign.Bend( `hsl(${h}, ${s}%, ${l}%)`, flag.width*0.1 ) )
+                },
+                (h,s,l, flag) => {
+                    flag.addDesign( new FlagDesign.Bend( `hsl(${h}, ${s}%, ${Math.max(l+50, 100)}%)`, flag.width*0.15, true ) )
+                    flag.addDesign( new FlagDesign.Bend( `hsl(${h}, ${s}%, ${l}%)`, flag.width*0.1, true ) )
+                },
+                (h,s,l, flag) => {
+                    flag.addDesign( new FlagDesign.Bend( `hsl(${h}, ${s}%, ${Math.max(l+50, 100)}%)`, flag.width*0.15 ) )
+                    flag.addDesign( new FlagDesign.Bend( `hsl(${h}, ${s}%, ${Math.max(l+50, 100)}%)`, flag.width*0.15, true ) )
+
+                    flag.addDesign( new FlagDesign.Bend( `hsl(${h}, ${s}%, ${l}%)`, flag.width*0.1 ) )
+                    flag.addDesign( new FlagDesign.Bend( `hsl(${h}, ${s}%, ${l}%)`, flag.width*0.1, true ) )
+                },
+            ],
+
+            cross: [
+                (h,s,l, flag) => {
+                    flag.addDesign( new FlagDesign.Cross( `hsl(${h}, ${s}%, ${l}%)`, flag.width*0.1 ) )
+                },
+                (h,s,l, flag) => {
+                    flag.addDesign( new FlagDesign.Cross( `hsl(${h}, ${s}%, ${l}%)`, flag.width*0.1, -flag.width/5 ) )
+                },
+                (h,s,l, flag) => {
+                    flag.addDesign( new FlagDesign.Cross( `hsl(${h}, ${s}%, ${l}%)`, flag.width*0.1, flag.width/5 ) )
+                },
+
+                (h,s,l, flag) => {
+                    flag.addDesign( new FlagDesign.Cross( `hsl(${h}, ${s}%, ${Math.max(l+50, 100)}%)`, flag.width*0.15 ) )
+                    flag.addDesign( new FlagDesign.Cross( `hsl(${h}, ${s}%, ${l}%)`, flag.width*0.1 ) )
+                },
+                (h,s,l, flag) => {
+                    flag.addDesign( new FlagDesign.Cross( `hsl(${h}, ${s}%, ${Math.max(l+50, 100)}%)`, flag.width*0.15, -flag.width/5 ) )
+                    flag.addDesign( new FlagDesign.Cross( `hsl(${h}, ${s}%, ${l}%)`, flag.width*0.1, -flag.width/5 ) )
+                },
+                (h,s,l, flag) => {
+                    flag.addDesign( new FlagDesign.Cross( `hsl(${h}, ${s}%, ${Math.max(l+50, 100)}%)`, flag.width*0.15, flag.width/5 ) )
+                    flag.addDesign( new FlagDesign.Cross( `hsl(${h}, ${s}%, ${l}%)`, flag.width*0.1, flag.width/5 ) )
+                },
+            ],
+
+            chevron: [
+                (h,s,l, flag) => {
+                    flag.addDesign( new FlagDesign.Chevron( `hsl(${h}, ${s}%, ${l}%)`, flag.width/2 ) )
+                },
+                (h,s,l, flag) => {
+                    flag.addDesign( new FlagDesign.Chevron( `hsl(${h}, ${s}%, ${l}%)`, flag.width/2, true ) )
+                },
+                (h,s,l, flag) => {
+                    flag.addDesign( new FlagDesign.Chevron( `hsl(${h}, ${s}%, ${l}%)`, flag.width/2 ) )
+                    flag.addDesign( new FlagDesign.Chevron( `hsl(${h}, ${s}%, ${l}%)`, flag.width/2, true ) )
+                },
+            ],
+
+            right: [
+                (h,s,l, flag) => {
+                    flag.addDesign( new FlagDesign.RightTriangle( `hsl(${h}, ${s}%, ${l}%)`, 'tl' ) )
+                },
+                (h,s,l, flag) => {
+                    flag.addDesign( new FlagDesign.RightTriangle( `hsl(${h}, ${s}%, ${l}%)`, 'tr' ) )
+                },
+                (h,s,l, flag) => {
+                    flag.addDesign( new FlagDesign.RightTriangle( `hsl(${h}, ${s}%, ${l}%)`, 'bl' ) )
+                },
+                (h,s,l, flag) => {
+                    flag.addDesign( new FlagDesign.RightTriangle( `hsl(${h}, ${s}%, ${l}%)`, 'br' ) )
+                },
+            ],
+
+            quadrant: [
+                (h,s,l, flag) => {
+                    flag.addDesign( new FlagDesign.Quadrant( `hsl(${h}, ${s}%, ${l}%)`, 'tl' ) )
+                    flag.addDesign( new FlagDesign.Quadrant( `hsl(${h}, ${s}%, ${l}%)`, 'br' ) )
+                },
+                (h,s,l, flag) => {
+                    flag.addDesign( new FlagDesign.Quadrant( `hsl(${h}, ${s}%, ${l}%)`, 'tr' ) )
+                    flag.addDesign( new FlagDesign.Quadrant( `hsl(${h}, ${s}%, ${l}%)`, 'bl' ) )
+                },
+            ],
+        }
+    }
 
     document.getElementById('generate').addEventListener('click', () => {
         let rand = new Flag()
 
-        rand.addDesign(new FlagDesign.RightTriangle('blue', 'tl'))
+        let aspect = arrayRand(FlagRandom.aspectRatios)
+        rand.setAspectRatio( aspect[0], aspect[1] )
+
+        let palette = arrayRand(FlagRandom.palettes)
+        rand.setColor(palette[0])
+
+        // 0 = background, 1 = midground, 2 = foreground
+        let ordering = {
+            border: 0,
+            quadrant: 0,
+
+            bend: 1,
+            cross: 1,
+            chevron: 1,
+            right: 1,
+
+            star: 2,
+        }
+
+        let draworder = [[],[],[]]
+        
+        for (let i=0; i<document.getElementById('design_num').value; i++) {
+            let randDesign = arrayRand_nr(Object.keys(FlagRandom.designs))()
+            let designFunc = arrayRand(FlagRandom.designs[randDesign])
+
+            // console.log(ordering[randDesign])
+            draworder[ordering[randDesign]].push( designFunc )
+        }
+        
+        let colorindex = 0
+        for (let i=0; i<draworder.length; i++) {
+            for (let d=0; d<draworder[i].length; d++) {
+                // console.log(draworder[i][d])
+                let designFunc = draworder[i][d]
+                
+                let c = hexToHSL(palette[(colorindex%(palette.length-1))+1])
+                designFunc(c[0], c[1], c[2], rand)
+
+                colorindex++
+            }
+        }
 
         rand.draw(ctx, true)
+        rand.updateSaveAttributes()
+    })
+
+    document.getElementById('design_num').addEventListener('input', () => {
+        document.getElementById('dlabel').innerHTML = `number of designs: ${document.getElementById('design_num').value}`
+    })
+
+    document.getElementById('download').addEventListener('click', () => {
+        let save = document.createElement('canvas')
+        let savectx = save.getContext('2d')
+
+        let imgdata = ctx.getImageData(scx - saveAttributes.width/2, scy - saveAttributes.height/2, saveAttributes.width, saveAttributes.height)
+
+        save.width = saveAttributes.width
+        save.height = saveAttributes.height
+
+        savectx.putImageData(imgdata, 0, 0)
+
+        let download = document.createElement('a')
+        download.setAttribute('download', `flag-${Date.now()}.png`)
+
+        save.toBlob(blob => {
+            let url = URL.createObjectURL(blob)
+
+            download.setAttribute('href', url)
+            download.click()
+        })
     })
 })();
