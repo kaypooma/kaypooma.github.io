@@ -47,8 +47,27 @@
                 left: 0;
                 right: 0;
 
-                width: 600px;
+                width: 650px;
                 height: 40px;
+
+                border: 1px solid #aaa;
+
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            #dcon label {
+                width: 150px;
+                height: fit-content;
+            }
+
+            #dcon #seperator {
+                margin: 0 5px 0 5px;
+            }
+
+            #dcon button {
+                margin-left: 5px;
             }
         </style>
     </head>
@@ -57,7 +76,7 @@
 
         <canvas id="canvas" width="600" height="400"></canvas>
         <button id="generate">generate</button>
-        <div id="dcon"><input type="range" id="design_num" min="1" max="20" value="2"> <label for="design_num" id="dlabel">number of designs: 2</label> | <button id="download">download</button></div>
+        <div id="dcon"><input type="range" id="design_num" min="1" max="20" value="2"> <label for="design_num" id="dlabel">number of designs: 2</label> <p id="seperator">|</p> <input type="range" id="resolution" min="1" max="10" value="4"> <label for="resolution" id="rlabel">download resolution: 0</label> <button id="download">download</button></div>
 
         <script src="script.js"></script>
     </body>

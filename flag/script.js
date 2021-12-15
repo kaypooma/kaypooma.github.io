@@ -58,28 +58,32 @@ class Flag {
         this.params.designs.push( design )
     }
 
-    draw(ctx, clear = false) {
+    draw(ctx, clear = false, transform = [1,0,0,1,0,0]) {
         ctx.save()
 
-        if (clear) ctx.clearRect(0, 0, sw, sh)
+        if (clear) ctx.clearRect(0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight)
+        ctx.transform(transform[0], transform[1], transform[2], transform[3], transform[4], transform[5])
 
         let width = this.width
         let height = this.height
 
+        let ccx = ctx.canvas.clientWidth/2
+        let ccy = ctx.canvas.clientHeight/2
+
         // clipping path
         ctx.beginPath()
 
-        ctx.moveTo( scx - width/2, scy - height/2 )
-        ctx.lineTo( scx + width/2, scy - height/2 )
-        ctx.lineTo( scx + width/2, scy + height/2 )
-        ctx.lineTo( scx - width/2, scy + height/2 )
+        ctx.moveTo( ccx - width/2, ccy - height/2 )
+        ctx.lineTo( ccx + width/2, ccy - height/2 )
+        ctx.lineTo( ccx + width/2, ccy + height/2 )
+        ctx.lineTo( ccx - width/2, ccy + height/2 )
 
         ctx.closePath()
         ctx.clip()
 
         ctx.fillStyle = this.params.color
 
-        ctx.fillRect( scx - width/2, scy - height/2, width, height)
+        ctx.fillRect( ccx - width/2, ccy - height/2, width, height)
 
         for (let design of this.params.designs) {
             design.draw(ctx)
@@ -90,6 +94,8 @@ class Flag {
     updateSaveAttributes() {
         saveAttributes.width = this.width
         saveAttributes.height = this.height
+
+        saveAttributes.Flag = this
     }
 }
 
@@ -107,6 +113,9 @@ const FlagDesign = {
 
             let width = this.Flag.width
             let height = this.Flag.height
+
+            let scx = ctx.canvas.clientWidth/2
+            let scy = ctx.canvas.clientHeight/2
 
             for (let i=0; i<this.amount; i++) {
                 if (this.direction === 'horizontal') {
@@ -130,6 +139,9 @@ const FlagDesign = {
 
             let width = this.Flag.width
             let height = this.Flag.height
+
+            let scx = ctx.canvas.clientWidth/2
+            let scy = ctx.canvas.clientHeight/2
 
             for (let s of this.sides) {
                 switch (s) {
@@ -165,6 +177,9 @@ const FlagDesign = {
             let width = this.Flag.width
             let height = this.Flag.height
 
+            let scx = ctx.canvas.clientWidth/2
+            let scy = ctx.canvas.clientHeight/2
+
             ctx.fillRect(scx - width/2 + this.offsetX, scy - height/2 + this.offsetY, this.width, this.height)
         }
     },
@@ -180,6 +195,9 @@ const FlagDesign = {
 
             let width = this.Flag.width
             let height = this.Flag.height
+
+            let scx = ctx.canvas.clientWidth/2
+            let scy = ctx.canvas.clientHeight/2
 
             switch (this.position) {
                 case 'tl':
@@ -208,6 +226,9 @@ const FlagDesign = {
 
         draw(ctx) {
             ctx.fillStyle = this.color
+
+            let scx = ctx.canvas.clientWidth/2
+            let scy = ctx.canvas.clientHeight/2
             
             ctx.beginPath()
             
@@ -231,6 +252,9 @@ const FlagDesign = {
 
         draw(ctx) {
             ctx.fillStyle = this.color
+
+            let scx = ctx.canvas.clientWidth/2
+            let scy = ctx.canvas.clientHeight/2
             
             ctx.beginPath()
             
@@ -255,6 +279,9 @@ const FlagDesign = {
         draw(ctx) {
             ctx.fillStyle = this.color
 
+            let scx = ctx.canvas.clientWidth/2
+            let scy = ctx.canvas.clientHeight/2
+
             let width = this.Flag.width
             let height = this.Flag.height
 
@@ -275,6 +302,9 @@ const FlagDesign = {
         draw(ctx) {
             ctx.fillStyle = this.color
 
+            let scx = ctx.canvas.clientWidth/2
+            let scy = ctx.canvas.clientHeight/2
+
             let width = this.Flag.width
             let height = this.Flag.height
 
@@ -292,6 +322,9 @@ const FlagDesign = {
         
         draw(ctx) {
             ctx.fillStyle = this.color
+
+            let scx = ctx.canvas.clientWidth/2
+            let scy = ctx.canvas.clientHeight/2
 
             let width = this.Flag.width
             let height = this.Flag.height
@@ -326,6 +359,9 @@ const FlagDesign = {
         draw(ctx) {
             ctx.fillStyle = this.color
 
+            let scx = ctx.canvas.clientWidth/2
+            let scy = ctx.canvas.clientHeight/2
+
             let width = this.Flag.width
             let height = this.Flag.height
 
@@ -350,6 +386,9 @@ const FlagDesign = {
 
         draw(ctx) {
             ctx.fillStyle = this.color
+
+            let scx = ctx.canvas.clientWidth/2
+            let scy = ctx.canvas.clientHeight/2
 
             let width = this.Flag.width
             let height = this.Flag.height
@@ -387,6 +426,13 @@ const FlagDesign = {
 };
 
 (() => {
+    function updateDownloadRes() {
+        let resmult = document.getElementById('resolution')
+        let rlabel = document.getElementById('rlabel')
+
+        rlabel.innerHTML = `download resolution: ${Math.floor(saveAttributes.Flag.width * resmult.value)}x${Math.floor(saveAttributes.Flag.height * resmult.value)} (${resmult.value}x)`
+    }
+
     let funny = new Flag()
 
     funny.setSize(500)
@@ -542,6 +588,7 @@ const FlagDesign = {
     
     funny.draw(ctx)
     funny.updateSaveAttributes()
+    updateDownloadRes()
 
     // ----------------------------------------------
 
@@ -861,22 +908,29 @@ const FlagDesign = {
 
         rand.draw(ctx, true)
         rand.updateSaveAttributes()
+        updateDownloadRes()
     })
 
     document.getElementById('design_num').addEventListener('input', () => {
         document.getElementById('dlabel').innerHTML = `number of designs: ${document.getElementById('design_num').value}`
     })
 
+    document.getElementById('resolution').addEventListener('input', () => updateDownloadRes())
+
     document.getElementById('download').addEventListener('click', () => {
         let save = document.createElement('canvas')
         let savectx = save.getContext('2d')
 
-        let imgdata = ctx.getImageData(scx - saveAttributes.width/2, scy - saveAttributes.height/2, saveAttributes.width, saveAttributes.height)
+        let resmult = document.getElementById('resolution').value
 
-        save.width = saveAttributes.width
-        save.height = saveAttributes.height
+        // let imgdata = ctx.getImageData(scx - saveAttributes.width/2, scy - saveAttributes.height/2, saveAttributes.width, saveAttributes.height)
 
-        savectx.putImageData(imgdata, 0, 0)
+        save.width = saveAttributes.width*resmult
+        save.height = saveAttributes.height*resmult
+
+        saveAttributes.Flag.draw(savectx, true, [resmult, 0, 0, resmult, save.width/2, save.height/2])
+
+        // savectx.putImageData(imgdata, 0, 0)
 
         let download = document.createElement('a')
         download.setAttribute('download', `flag-${Date.now()}.png`)
