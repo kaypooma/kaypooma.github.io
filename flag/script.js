@@ -359,19 +359,19 @@ for (let audio of ['kalimba.ogg', 'zip.ogg', 'boing.ogg']) {
                 },
                 // star ring middle
                 (h,s,l, flag) => {
-                    for (i=0; i<15; i++) {
+                    for (let i=0; i<15; i++) {
                         flag.addDesign( new FlagDesign.Star( `hsl(${h}, ${s}%, ${l}%)`, flag.width/12, Math.cos( i/15 * Math.PI*2 - Math.PI/10 ) * flag.width/6, Math.sin( i/15 * Math.PI*2 - Math.PI/10 ) * flag.width/6, 5, 2, -rad(i/15 * 360) ) )
                     }
                 },
                 // star ring right
                 (h,s,l, flag) => {
-                    for (i=0; i<15; i++) {
+                    for (let i=0; i<15; i++) {
                         flag.addDesign( new FlagDesign.Star( `hsl(${h}, ${s}%, ${l}%)`, flag.width/12, Math.cos( i/15 * Math.PI*2 - Math.PI/10 ) * flag.width/6 + flag.width/4, Math.sin( i/15 * Math.PI*2 - Math.PI/10 ) * flag.width/6, 5, 2, -rad(i/15 * 360) ) )
                     }
                 },
                 // star ring left
                 (h,s,l, flag) => {
-                    for (i=0; i<15; i++) {
+                    for (let i=0; i<15; i++) {
                         flag.addDesign( new FlagDesign.Star( `hsl(${h}, ${s}%, ${l}%)`, flag.width/12, Math.cos( i/15 * Math.PI*2 - Math.PI/10 ) * flag.width/6 - flag.width/4, Math.sin( i/15 * Math.PI*2 - Math.PI/10 ) * flag.width/6, 5, 2, -rad(i/15 * 360) ) )
                     }
                 },
