@@ -1019,6 +1019,12 @@ const FlagDesign = {
         }
     }
 
+    function playSound(dir, volume) {
+        let sound = new Audio(dir)
+        sound.volume = volume
+        sound.play()
+    }
+
     document.getElementById('generate').addEventListener('click', () => {
         let rand = new Flag()
 
@@ -1070,13 +1076,22 @@ const FlagDesign = {
         rand.draw(ctx, true)
         rand.updateSaveAttributes()
         updateDownloadRes()
+
+        // kalimba
+        playSound('kalimba.ogg', 0.3)
     })
 
     document.getElementById('design_num').addEventListener('input', () => {
         document.getElementById('dlabel').innerHTML = `number of designs: ${document.getElementById('design_num').value}`
+
+        playSound('zip.ogg', 0.3)
     })
 
-    document.getElementById('resolution').addEventListener('input', () => updateDownloadRes())
+    document.getElementById('resolution').addEventListener('input', () => {
+        updateDownloadRes()
+
+        playSound('zip.ogg', 0.3)
+    })
 
     document.getElementById('download').addEventListener('click', () => {
         let save = document.createElement('canvas')
@@ -1102,5 +1117,7 @@ const FlagDesign = {
             download.setAttribute('href', url)
             download.click()
         })
+
+        playSound('boing.ogg', 0.2)
     })
 })();
