@@ -1,464 +1,14 @@
+import { Flag, FlagDesign } from '/flaggen.js'
+
 const canvas = document.getElementById('canvas')
 const ctx = canvas.getContext('2d')
 
-const sw = 600
-const sh = 400
-
-const scx = sw/2
-const scy = sh/2
-
-const saveAttributes = {
-    width: 400,
-    height: 400
-}
-
-class Flag {
-    #updateWH() {
-        this.width = this.params.size
-        this.height = this.params.size*(this.params.aspect.h/this.params.aspect.w)
-    }
-
-    constructor(pa) {
-        // default
-        this.params = {
-            color: 'red',
-    
-            size: 400,
-            aspect: { w: 4, h: 3 },
-    
-            designs: [],
-        }
-
-        this.#updateWH()
-
-        if (pa) {
-            for (let p in pa) {
-                this.params[p] = pa[p]
-            }
-        }
-    }
-
-    setSize(size) {
-        this.params.size = size
-        
-        this.#updateWH()
-    }
-    setAspectRatio(w, h) {
-        this.params.aspect.w = w
-        this.params.aspect.h = h
-        
-        this.#updateWH()
-    }
-    setColor(color) {
-        this.params.color = color
-    }
-
-    addDesign(design) {
-        design.Flag = this
-        this.params.designs.push( design )
-    }
-
-    draw(ctx, clear = false, transform = [1,0,0,1,0,0]) {
-        ctx.save()
-
-        if (clear) ctx.clearRect(0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight)
-        ctx.transform(transform[0], transform[1], transform[2], transform[3], transform[4], transform[5])
-
-        let width = this.width
-        let height = this.height
-
-        let ccx = ctx.canvas.clientWidth/2
-        let ccy = ctx.canvas.clientHeight/2
-
-        // clipping path
-        ctx.beginPath()
-
-        ctx.moveTo( ccx - width/2, ccy - height/2 )
-        ctx.lineTo( ccx + width/2, ccy - height/2 )
-        ctx.lineTo( ccx + width/2, ccy + height/2 )
-        ctx.lineTo( ccx - width/2, ccy + height/2 )
-
-        ctx.closePath()
-        ctx.clip()
-
-        ctx.fillStyle = this.params.color
-
-        ctx.fillRect( ccx - width/2, ccy - height/2, width, height)
-
-        for (let design of this.params.designs) {
-            design.draw(ctx)
-        }
-
-        ctx.restore()
-    }
-    updateSaveAttributes() {
-        saveAttributes.width = this.width
-        saveAttributes.height = this.height
-
-        saveAttributes.Flag = this
-    }
-}
-
-// maybe rewrite these to take an object as params and also extend a parent design class so you dont have to rewrite everything every time
-const FlagDesign = {
-    Stripe: class Stripe {
-        constructor(color = 'red', amount = 4, direction = 'horizontal') {
-            this.color = color
-            this.amount = amount
-            this.direction = direction
-        }
-    
-        draw(ctx) {
-            ctx.fillStyle = this.color
-
-            let width = this.Flag.width
-            let height = this.Flag.height
-
-            let scx = ctx.canvas.clientWidth/2
-            let scy = ctx.canvas.clientHeight/2
-
-            for (let i=0; i<this.amount; i++) {
-                if (this.direction === 'horizontal') {
-                    ctx.fillRect(scx - width/2 + (width / (this.amount-0.5) * i), scy - height/2, width / (this.amount-0.5)/2, height)
-                } else {
-                    ctx.fillRect(scx - width/2, scy - height/2 + (height / (this.amount-0.5) * i), width, height / (this.amount-0.5)/2)                    
-                }
-            }
-        }
-    },
-
-    Border: class Border {
-        constructor(color = 'red', thickness = 8, sides = 'ldur') {
-            this.color = color
-            this.thickness = thickness
-            this.sides = sides
-        }
-
-        draw(ctx) {
-            ctx.fillStyle = this.color
-
-            let width = this.Flag.width
-            let height = this.Flag.height
-
-            let scx = ctx.canvas.clientWidth/2
-            let scy = ctx.canvas.clientHeight/2
-
-            for (let s of this.sides) {
-                switch (s) {
-                    case 'l':
-                        ctx.fillRect(scx - width/2, scy - height/2, this.thickness, height)
-                        break
-                    case 'r':
-                        ctx.fillRect(scx + width/2 - this.thickness, scy - height/2, this.thickness, height)
-                        break
-                    case 't':
-                        ctx.fillRect(scx - width/2, scy - height/2, width, this.thickness)
-                        break
-                    case 'b':
-                        ctx.fillRect(scx - width/2, scy + height/2 - this.thickness, width, this.thickness)
-                        break
-                }
-            }
-        }
-    },
-
-    Canton: class Canton {
-        constructor(color = 'red', width=100, height=100, offsetX = 0, offsetY = 0) {
-            this.color = color
-            this.width = width
-            this.height = height
-            this.offsetX = offsetX
-            this.offsetY = offsetY
-        }
-
-        draw(ctx) {
-            ctx.fillStyle = this.color
-
-            let width = this.Flag.width
-            let height = this.Flag.height
-
-            let scx = ctx.canvas.clientWidth/2
-            let scy = ctx.canvas.clientHeight/2
-
-            ctx.fillRect(scx - width/2 + this.offsetX, scy - height/2 + this.offsetY, this.width, this.height)
-        }
-    },
-
-    Quadrant: class Quadrant {
-        constructor(color = 'red', position = 'tl') {
-            this.color = color
-            this.position = position
-        }
-
-        draw(ctx) {
-            ctx.fillStyle = this.color
-
-            let width = this.Flag.width
-            let height = this.Flag.height
-
-            let scx = ctx.canvas.clientWidth/2
-            let scy = ctx.canvas.clientHeight/2
-
-            switch (this.position) {
-                case 'tl':
-                    ctx.fillRect(scx - width/2, scy - height/2, width/2, height/2)
-                    break
-                case 'tr':
-                    ctx.fillRect(scx, scy - height/2, width/2, height/2)
-                    break
-                case 'bl':
-                    ctx.fillRect(scx - width/2, scy, width/2, height/2)
-                    break
-                case 'br':
-                    ctx.fillRect(scx, scy, width/2, height/2)
-                    break
-            }
-        }
-    },
-
-    Circle: class Circle {
-        constructor(color = 'red', diameter = 100, offsetX = 0, offsetY = 0) {
-            this.color = color
-            this.diameter = diameter
-            this.offsetX = offsetX
-            this.offsetY = offsetY
-        }
-
-        draw(ctx) {
-            ctx.fillStyle = this.color
-
-            let scx = ctx.canvas.clientWidth/2
-            let scy = ctx.canvas.clientHeight/2
-            
-            ctx.beginPath()
-            
-            ctx.arc(scx + this.offsetX, scy + this.offsetY, this.diameter/2, 0, Math.PI*2)
-
-            ctx.closePath()
-            ctx.fill()
-        }
-    },
-
-    Star: class Star {
-        constructor(color = 'red', diameter = 100, offsetX = 0, offsetY = 0, spokes = 5, turning = 2, rotation = 0) {
-            this.color = color
-            this.diameter = diameter
-            this.spokes = spokes
-            this.turning = turning
-            this.offsetX = offsetX
-            this.offsetY = offsetY
-            this.rotation = rotation
-        }
-
-        draw(ctx) {
-            ctx.fillStyle = this.color
-
-            let scx = ctx.canvas.clientWidth/2
-            let scy = ctx.canvas.clientHeight/2
-            
-            ctx.beginPath()
-            
-            let radius = [this.diameter/2, this.diameter/2 * ( Math.cos( Math.PI*this.turning / this.spokes ) / Math.cos( Math.PI * (this.turning - 1) / this.spokes ) )]
-            for (let i=0; i<this.spokes*2; i++) {
-                ctx[i===0 ? 'moveTo' : 'lineTo'](scx + Math.sin(i/this.spokes/2 * Math.PI*2 + Math.PI + this.rotation) * radius[i%2] + this.offsetX, scy + Math.cos(i/this.spokes/2 * Math.PI*2 + Math.PI + this.rotation) * radius[i%2] + this.offsetY)
-            }
-
-            ctx.closePath()
-            ctx.fill()
-        }
-    },
-
-    Cross: class Cross {
-        constructor(color = 'red', thickness = 40, offsetX = 0, offsetY = 0) {
-            this.color = color
-            this.thickness = thickness
-            this.offsetX = offsetX
-            this.offsetY = offsetY
-        }
-
-        draw(ctx) {
-            ctx.fillStyle = this.color
-
-            let scx = ctx.canvas.clientWidth/2
-            let scy = ctx.canvas.clientHeight/2
-
-            let width = this.Flag.width
-            let height = this.Flag.height
-
-            ctx.fillRect(scx - this.thickness/2 + this.offsetX, scy - height/2, this.thickness, height)
-            ctx.fillRect(scx - width/2, scy - this.thickness/2 + this.offsetY, width, this.thickness)
-        }
-    },
-
-    GreekCross: class GreekCross {
-        constructor(color = 'red', size = 100, thickness = 30, offsetX = 0, offsetY = 0, rotation = 0) {
-            this.color = color
-            this.size = size
-            this.thickness = thickness
-            this.offsetX = offsetX
-            this.offsetY = offsetY
-            this.rotation = rotation
-        }
-
-        draw(ctx) {
-            ctx.fillStyle = this.color
-
-            let scx = ctx.canvas.clientWidth/2
-            let scy = ctx.canvas.clientHeight/2
-
-            let width = this.Flag.width
-            let height = this.Flag.height
-
-            if (this.rotation) {
-                ctx.save()
-
-                let xoffset = (scx - this.size/2 + this.offsetX) + 0.5 * this.size
-                let yoffset = (scy - this.size/2 + this.offsetY) + 0.5 * this.size
-
-                ctx.translate(xoffset, yoffset)
-                ctx.rotate(this.rotation)
-                ctx.translate(-xoffset, -yoffset)
-            }
-
-            ctx.fillRect(scx - this.thickness/2 + this.offsetX, scy - this.size/2 + this.offsetY, this.thickness, this.size)
-            ctx.fillRect(scx - this.size/2 + this.offsetX, scy - this.thickness/2 + this.offsetY, this.size, this.thickness)
-
-            if (this.rotation) ctx.restore()
-        }
-    },
-
-    Chevron: class Chevron {
-        constructor(color = 'red', size = 200, mirrored = false) {
-            this.color = color
-            this.size = size
-            this.mirrored = mirrored
-        }
-        
-        draw(ctx) {
-            ctx.fillStyle = this.color
-
-            let scx = ctx.canvas.clientWidth/2
-            let scy = ctx.canvas.clientHeight/2
-
-            let width = this.Flag.width
-            let height = this.Flag.height
-
-            if (this.mirrored) {
-                ctx.save()
-                // ctx.scale(-1, 1)
-                // ctx.translate(-sw, 0)
-                ctx.translate(scx, scy)
-                ctx.rotate(Math.PI)
-                ctx.translate(-scx, -scy)
-            }
-
-            ctx.beginPath()
-
-            ctx.moveTo(scx - width/2, scy - height/2)
-            ctx.lineTo(scx - width/2, scy + height/2)
-
-            ctx.lineTo(scx - width/2 + this.size, scy)
-
-            ctx.closePath()
-            ctx.fill()
-
-            if (this.mirrored) ctx.restore()
-        }
-    },
-
-    Bend: class Bend {
-        constructor(color = 'red', thickness = 50, mirrored = false) {
-            this.color = color
-            this.thickness = thickness
-            this.mirrored = mirrored
-        }
-        
-        draw(ctx) {
-            ctx.fillStyle = this.color
-
-            let scx = ctx.canvas.clientWidth/2
-            let scy = ctx.canvas.clientHeight/2
-
-            let width = this.Flag.width
-            let height = this.Flag.height
-
-            ctx.save()
-
-            ctx.translate(scx, scy)
-            ctx.rotate(Math.atan( this.Flag.params.aspect.h/this.Flag.params.aspect.w / 1) * (this.mirrored ? -1 : 1))
-            ctx.translate(-scx, -scy)
-
-            let bwidth = width * Math.hypot(1, this.Flag.params.aspect.h/this.Flag.params.aspect.w)
-            ctx.fillRect(scx - bwidth/2, scy - this.thickness/2, bwidth, this.thickness)
-
-            ctx.restore()
-        }
-    },
-
-    RightTriangle: class RightTriangle {
-        constructor(color = 'red', position = 'tl', size = 0) {
-            this.color = color
-            this.position = position
-            this.size = size
-        }
-
-        draw(ctx) {
-            ctx.fillStyle = this.color
-
-            let scx = ctx.canvas.clientWidth/2
-            let scy = ctx.canvas.clientHeight/2
-
-            let width = this.Flag.width
-            let height = this.Flag.height
-
-            let size = this.size
-
-            ctx.beginPath()
-
-            let pl = scx - width/2
-            let pr = scx + width/2
-            let pt = scy - height/2
-            let pb = scy + height/2
-
-            switch (this.position) {
-                case 'tl':
-                    ctx.moveTo(pl, pt)
-                    ctx.lineTo(size ? pl + size : pr, pt)
-                    ctx.lineTo(pl, pb)
-
-                    break
-                case 'tr':
-                    ctx.moveTo(pr, pt)
-                    ctx.lineTo(size ? pr - size : pl, pt)
-                    ctx.lineTo(pr, pb)
-                    
-                    break
-                case 'bl':
-                    ctx.moveTo(pl, pb)
-                    ctx.lineTo(size ? pl + size : pr, pb)
-                    ctx.lineTo(pl, pt)
-
-                    break
-                case 'br':
-                    ctx.moveTo(pr, pb)
-                    ctx.lineTo(size ? pr - size : pl, pb)
-                    ctx.lineTo(pr, pt)
-
-                    break
-            }
-
-            ctx.closePath()
-            ctx.fill()
-        }
-    }
+const saveAttributes = {}
+
+// preload audio i think
+for (let audio of ['kalimba.ogg', 'zip.ogg', 'boing.ogg']) {
+    let preload = new Audio(`sound/${audio}`)
 };
-
-function preloadAudio(audio) {
-    for (let i=0; i<audio.length; i++) {
-        let preload = new Audio(`sound/${audio[i]}`)
-    }
-}
-preloadAudio(['kalimba.ogg', 'zip.ogg', 'boing.ogg']);
 
 (() => {
     function updateDownloadRes() {
@@ -467,8 +17,73 @@ preloadAudio(['kalimba.ogg', 'zip.ogg', 'boing.ogg']);
 
         rlabel.innerHTML = `download resolution: ${Math.floor(saveAttributes.Flag.width * resmult.value)}x${Math.floor(saveAttributes.Flag.height * resmult.value)} (${resmult.value}x)`
     }
+    function arrayRand(array) {
+        return array[Math.floor(Math.random() * array.length)]
+    }
+    function arrayRand_nr(array) {
+        var copy = array.slice(0)
+        return function() {
+            if (copy.length < 1) { copy = array.slice(0) }
+            var index = Math.floor(Math.random() * copy.length)
+            var item = copy[index]
+            copy.splice(index, 1)
+            return item
+        }
+    }
+    function hexToHSL(H) {
+        // Convert hex to RGB first
+        let r = 0, g = 0, b = 0;
+        if (H.length == 4) {
+            r = "0x" + H[1] + H[1];
+            g = "0x" + H[2] + H[2];
+            b = "0x" + H[3] + H[3];
+            } else if (H.length == 7) {
+            r = "0x" + H[1] + H[2];
+            g = "0x" + H[3] + H[4];
+            b = "0x" + H[5] + H[6];
+        }
+        // Then to HSL
+        r /= 255;
+        g /= 255;
+        b /= 255;
+        let cmin = Math.min(r,g,b),
+            cmax = Math.max(r,g,b),
+            delta = cmax - cmin,
+            h = 0,
+            s = 0,
+            l = 0;
 
-    // starter flag
+        if (delta == 0)
+            h = 0;
+        else if (cmax == r)
+            h = ((g - b) / delta) % 6;
+        else if (cmax == g)
+            h = (b - r) / delta + 2;
+        else
+            h = (r - g) / delta + 4;
+
+        h = Math.round(h * 60);
+
+        if (h < 0)
+            h += 360;
+
+        l = (cmax + cmin) / 2;
+        s = delta == 0 ? 0 : delta / (1 - Math.abs(2 * l - 1));
+        s = +(s * 100).toFixed(1);
+        l = +(l * 100).toFixed(1);
+
+        return [h,s,l]
+    }
+    function rad(deg) {
+        return deg * (Math.PI/180)
+    }
+    function playSound(dir, volume) {
+        let sound = new Audio(`sound/${dir}`)
+        sound.volume = volume
+        sound.play()
+    }
+
+    // -------- starter flag
     let funny = new Flag()
 
     funny.setSize(500)
@@ -661,75 +276,12 @@ preloadAudio(['kalimba.ogg', 'zip.ogg', 'boing.ogg']);
     ]
 
     arrayRand(starters)()
-    // funny.addDesign( new FlagDesign.GreekCross('blue', funny.width/2, funny.width/8, 0, 0, Math.PI/3) )
     
     funny.draw(ctx)
-    funny.updateSaveAttributes()
+    funny.updateSaveAttributes(saveAttributes)
     updateDownloadRes()
 
-    // ----------------------------------------------
-
-    function arrayRand(array) {
-        return array[Math.floor(Math.random() * array.length)]
-    }
-    function arrayRand_nr(array) {
-        var copy = array.slice(0)
-        return function() {
-            if (copy.length < 1) { copy = array.slice(0) }
-            var index = Math.floor(Math.random() * copy.length)
-            var item = copy[index]
-            copy.splice(index, 1)
-            return item
-        }
-    }
-    function hexToHSL(H) {
-        // Convert hex to RGB first
-        let r = 0, g = 0, b = 0;
-        if (H.length == 4) {
-            r = "0x" + H[1] + H[1];
-            g = "0x" + H[2] + H[2];
-            b = "0x" + H[3] + H[3];
-            } else if (H.length == 7) {
-            r = "0x" + H[1] + H[2];
-            g = "0x" + H[3] + H[4];
-            b = "0x" + H[5] + H[6];
-        }
-        // Then to HSL
-        r /= 255;
-        g /= 255;
-        b /= 255;
-        let cmin = Math.min(r,g,b),
-            cmax = Math.max(r,g,b),
-            delta = cmax - cmin,
-            h = 0,
-            s = 0,
-            l = 0;
-
-        if (delta == 0)
-            h = 0;
-        else if (cmax == r)
-            h = ((g - b) / delta) % 6;
-        else if (cmax == g)
-            h = (b - r) / delta + 2;
-        else
-            h = (r - g) / delta + 4;
-
-        h = Math.round(h * 60);
-
-        if (h < 0)
-            h += 360;
-
-        l = (cmax + cmin) / 2;
-        s = delta == 0 ? 0 : delta / (1 - Math.abs(2 * l - 1));
-        s = +(s * 100).toFixed(1);
-        l = +(l * 100).toFixed(1);
-
-        return [h,s,l]
-    }
-    function rad(deg) {
-        return deg * (Math.PI/180)
-    }
-
+    // -------- random generation code
     const FlagRandom = {
         palettes: [
             ['#FF5959', '#FFAD5A', '#4F9DA6', '#1A0841'],
@@ -1026,12 +578,6 @@ preloadAudio(['kalimba.ogg', 'zip.ogg', 'boing.ogg']);
         }
     }
 
-    function playSound(dir, volume) {
-        let sound = new Audio(`sound/${dir}`)
-        sound.volume = volume
-        sound.play()
-    }
-
     document.getElementById('generate').addEventListener('click', () => {
         let rand = new Flag()
 
@@ -1063,14 +609,12 @@ preloadAudio(['kalimba.ogg', 'zip.ogg', 'boing.ogg']);
             let randDesign = arrayRand_nr(Object.keys(FlagRandom.designs))()
             let designFunc = arrayRand(FlagRandom.designs[randDesign])
 
-            // console.log(ordering[randDesign])
             draworder[ordering[randDesign]].push( designFunc )
         }
         
-        let colorindex = 0
+        let colorindex = Math.floor(Math.random() * (101))
         for (let i=0; i<draworder.length; i++) {
             for (let d=0; d<draworder[i].length; d++) {
-                // console.log(draworder[i][d])
                 let designFunc = draworder[i][d]
                 
                 let c = hexToHSL(palette[(colorindex%(palette.length-1))+1])
@@ -1081,10 +625,9 @@ preloadAudio(['kalimba.ogg', 'zip.ogg', 'boing.ogg']);
         }
 
         rand.draw(ctx, true)
-        rand.updateSaveAttributes()
+        rand.updateSaveAttributes(saveAttributes)
         updateDownloadRes()
 
-        // kalimba
         playSound('kalimba.ogg', 0.3)
     })
 
@@ -1106,14 +649,10 @@ preloadAudio(['kalimba.ogg', 'zip.ogg', 'boing.ogg']);
 
         let resmult = document.getElementById('resolution').value
 
-        // let imgdata = ctx.getImageData(scx - saveAttributes.width/2, scy - saveAttributes.height/2, saveAttributes.width, saveAttributes.height)
-
         save.width = saveAttributes.width*resmult
         save.height = saveAttributes.height*resmult
 
         saveAttributes.Flag.draw(savectx, true, [resmult, 0, 0, resmult, save.width/2, save.height/2])
-
-        // savectx.putImageData(imgdata, 0, 0)
 
         let download = document.createElement('a')
         download.setAttribute('download', `flag-${Date.now()}.png`)
