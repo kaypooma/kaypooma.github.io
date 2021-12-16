@@ -1,4 +1,4 @@
-import { Flag, FlagDesign } from '/flaggen.js'
+import { Flag, FlagDesign } from './flaggen.js'
 
 const canvas = document.getElementById('canvas')
 const ctx = canvas.getContext('2d')
