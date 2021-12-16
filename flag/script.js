@@ -328,6 +328,8 @@ for (let audio of ['kalimba.ogg', 'zip.ogg', 'boing.ogg']) {
                 (h,s,l, flag) => {
                     flag.addDesign( new FlagDesign.Border( `hsl(${h}, ${s}%, ${l}%)`, flag.width/3, 'lr' ) )
                 },
+            ],
+            border_fore: [                
                 // border
                 (h,s,l, flag) => {
                     flag.addDesign( new FlagDesign.Border( `hsl(${h}, ${s}%, ${l}%)`, flag.width*0.02, 'lrtb' ) )
@@ -549,7 +551,7 @@ for (let audio of ['kalimba.ogg', 'zip.ogg', 'boing.ogg']) {
                     flag.addDesign( new FlagDesign.RightTriangle( `hsl(${h}, ${s}%, ${l}%)`, 'br' ) )
                 },
             ],
-            top_right: [        
+            right_fore: [        
                 // bottom left + bottom right
                 (h,s,l, flag) => {
                     flag.addDesign( new FlagDesign.RightTriangle( `hsl(${h}, ${s}%, ${l}%)`, 'bl', flag.width/2 ) )
@@ -599,7 +601,8 @@ for (let audio of ['kalimba.ogg', 'zip.ogg', 'boing.ogg']) {
 
             star: 2,
             circle: 2,
-            top_right: 2,
+            right_fore: 2,
+            border_fore: 2,
             greekcross: 2,
         }
 
