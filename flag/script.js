@@ -453,6 +453,13 @@ const FlagDesign = {
     }
 };
 
+function preloadAudio(audio) {
+    for (let i=0; i<audio.length; i++) {
+        let preload = new Audio(audio[i])
+    }
+}
+preloadAudio(['kalimba.ogg', 'zip.ogg', 'boing.ogg'])
+
 (() => {
     function updateDownloadRes() {
         let resmult = document.getElementById('resolution')
