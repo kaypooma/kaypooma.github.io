@@ -455,7 +455,7 @@ const FlagDesign = {
 
 function preloadAudio(audio) {
     for (let i=0; i<audio.length; i++) {
-        let preload = new Audio(audio[i])
+        let preload = new Audio(`sound/${audio[i]}`)
     }
 }
 preloadAudio(['kalimba.ogg', 'zip.ogg', 'boing.ogg']);
@@ -1027,7 +1027,7 @@ preloadAudio(['kalimba.ogg', 'zip.ogg', 'boing.ogg']);
     }
 
     function playSound(dir, volume) {
-        let sound = new Audio(dir)
+        let sound = new Audio(`sound/${dir}`)
         sound.volume = volume
         sound.play()
     }
