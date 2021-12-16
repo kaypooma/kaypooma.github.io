@@ -587,6 +587,13 @@ for (let audio of ['kalimba.ogg', 'zip.ogg', 'boing.ogg']) {
         rand.setAspectRatio( aspect[0], aspect[1] )
 
         let palette = arrayRand(FlagRandom.palettes)
+        if (document.getElementById('usecustompalette').checked) {
+            let custom = document.getElementById('custompalette').value.replace(/ /g, '').split(';')
+            if (custom.length > 1) palette = custom
+
+            // console.log(custom)
+        }        
+
         rand.setColor(palette[0])
 
         // 0 = background, 1 = midground, 2 = foreground
@@ -622,6 +629,8 @@ for (let audio of ['kalimba.ogg', 'zip.ogg', 'boing.ogg']) {
                 
                 let c = hexToHSL(palette[(colorindex%(palette.length-1))+1])
                 designFunc(c[0], c[1], c[2], rand)
+
+                // console.log(c[0], c[1], c[2])
 
                 colorindex++
             }
@@ -668,5 +677,50 @@ for (let audio of ['kalimba.ogg', 'zip.ogg', 'boing.ogg']) {
         })
 
         playSound('boing.ogg', 0.2)
+    })
+
+    // -------- set up navigation buttons for customization
+    const navcon = document.getElementById('navcon')
+    const navpages = Array.from(navcon.children).filter(el => el.className === 'options')
+    const pagedisplay = Array.from(document.getElementById('navpagedisplay').children)
+
+    let currentPage = 0
+
+    for (let page of navpages) {
+        page.style.display = 'none'
+    }
+
+    function showNavPage(n) {
+        for (let page of navpages) {
+            page.style.display = 'none'
+        }        
+        navpages[n % navpages.length].style.display = 'flex'
+
+        for (let d of pagedisplay) {
+            d.classList.remove('pagecurrent')
+        }
+        pagedisplay[n % pagedisplay.length].classList.add('pagecurrent')
+
+        // console.log(pagedisplay)
+    }
+
+    showNavPage(0)
+
+    document.getElementById('options_back').addEventListener('click', () => { 
+        showNavPage(--currentPage) 
+
+        playSound('zip.ogg', 0.3)
+    })
+    document.getElementById('options_next').addEventListener('click', () => { 
+        showNavPage(++currentPage)
+
+        playSound('zip.ogg', 0.3)
+    })
+
+    // custom palette
+    document.getElementById('usecustompalette').addEventListener('click', () => {
+        document.getElementById('usecustompalette').checked ? document.getElementById('custompalette').removeAttribute('disabled') : document.getElementById('custompalette').setAttribute('disabled', 'true')
+    
+        playSound('zip.ogg', 0.3)
     })
 })();

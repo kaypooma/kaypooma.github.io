@@ -62,9 +62,7 @@
                 height: 40px;
             }
 
-            #dcon {
-                padding: 5px;
-
+            #navcon {
                 position: absolute;
                 margin: auto;
                 top: 550px;
@@ -75,24 +73,40 @@
                 width: 700px;
                 height: 40px;
 
-                border: 1px solid #aaa;
-
                 display: flex;
                 align-items: center;
                 justify-content: center;
             }
 
-            #dcon label {
+            #navcon .navbutton {
+                height: 40px;
+            }
+
+            #navcon .options {
+                padding: 5px;
+
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                border: 1px solid #aaa;
+
+                min-width: 700px;
+                height: 40px;
+            }
+
+            #navcon label {
                 min-width: 150px;
                 height: fit-content;
             }
 
-            #dcon #seperator {
+            #navcon #seperator {
                 margin: 0 5px 0 5px;
             }
 
-            #dcon button {
+            #navcon button {
                 margin-left: 5px;
+                margin-right: 5px;
             }
 
             #marquee {
@@ -147,6 +161,48 @@
                 0%   { transform: scaleY(1); }
                 100% { transform: scaleY(3); }
             }
+
+            #navpagedisplay {
+                position: absolute;
+                margin: auto;
+                top: 620px;
+                bottom: 0;
+                left: 0;
+                right: 0;
+
+                width: 700px;
+                height: 15px;
+
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .pagedisplay {
+                width: 5px;
+                height: 5px;
+
+                border-radius: 100%;
+                background: rgba(0,0,0,0.5);
+
+                margin: 0 2px 0 2px;
+            }
+            .pagedisplay.pagecurrent {
+                width: 10px;
+                height: 10px;
+
+                margin: 0 2px 0 2px;
+
+                background: rgba(0,0,0,1);
+            }
+
+            #navcon input[type="textbox"] {
+                padding: 5px;
+                font-family: 'ＭＳ Ｐゴシック', sans-serif;
+                font-weight: bold;
+
+                width: 500px;
+            }
         </style>
     </head>
     <body>
@@ -154,7 +210,20 @@
 
         <canvas id="canvas" width="600" height="400"></canvas>
         <button id="generate">generate</button>
-        <div id="dcon"><input type="range" id="design_num" min="1" max="20" value="2"> <label for="design_num" id="dlabel">number of designs: 2</label> <p id="seperator">|</p> <input type="range" id="resolution" min="1" max="10" value="4"> <label for="resolution" id="rlabel">download resolution: 0</label> <button id="download">download</button></div>
+        <div id="navcon">
+            <button class="navbutton" id="options_back">&lt;</button>
+            <div class="options">
+                <input type="range" id="design_num" min="1" max="20" value="2"> <label for="design_num" id="dlabel">number of designs: 2</label> 
+                <p id="seperator">|</p> 
+                <input type="range" id="resolution" min="1" max="10" value="4"> <label for="resolution" id="rlabel">download resolution: 0</label> 
+                <button id="download">download</button>
+            </div>
+            <div class="options">
+                <input type="checkbox" id="usecustompalette"> <label for="usecustompalette" id="custompalette_label">use custom palette<br><span style="font-size: 0.75em">(minimum of 2 hex colors seperated by semicolons)</span></label> <input type="textbox" id="custompalette" value="#F00 ; #0F0 ; #00F ; #FF0" disabled>
+            </div>
+            <button class="navbutton" id="options_next">&gt;</button>
+        </div>
+        <div id="navpagedisplay"><div class="pagedisplay pagecurrent"></div><div class="pagedisplay"></div></div><div class="pagedisplay"></div></div>
 
         <div id="marquee"><div id="xscale"><div id="scale"><p>copyright &copy; kaypooma 2004</p></div></div></div>
 
