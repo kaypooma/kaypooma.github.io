@@ -458,7 +458,7 @@ function preloadAudio(audio) {
         let preload = new Audio(audio[i])
     }
 }
-preloadAudio(['kalimba.ogg', 'zip.ogg', 'boing.ogg'])
+preloadAudio(['kalimba.ogg', 'zip.ogg', 'boing.ogg']);
 
 (() => {
     function updateDownloadRes() {
