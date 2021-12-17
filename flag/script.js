@@ -682,13 +682,20 @@ for (let audio of ['kalimba.ogg', 'zip.ogg', 'boing.ogg']) {
     // -------- set up navigation buttons for customization
     const navcon = document.getElementById('navcon')
     const navpages = Array.from(navcon.children).filter(el => el.className === 'options')
-    const pagedisplay = Array.from(document.getElementById('navpagedisplay').children)
 
     let currentPage = 0
 
     for (let page of navpages) {
         page.style.display = 'none'
+
+        // append current page display
+        let dot = document.createElement('div')
+        dot.classList.add('pagedisplay')
+
+        document.getElementById('navpagedisplay').appendChild(dot)
     }
+
+    const pagedisplay = Array.from(document.getElementById('navpagedisplay').children)
 
     function showNavPage(n) {
         for (let page of navpages) {
