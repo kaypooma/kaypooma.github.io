@@ -701,12 +701,12 @@ for (let audio of ['kalimba.ogg', 'zip.ogg', 'boing.ogg']) {
         for (let page of navpages) {
             page.style.display = 'none'
         }        
-        navpages[n % navpages.length].style.display = 'flex'
+        navpages[Math.abs(n % navpages.length)].style.display = 'flex'
 
         for (let d of pagedisplay) {
             d.classList.remove('pagecurrent')
         }
-        pagedisplay[n % pagedisplay.length].classList.add('pagecurrent')
+        pagedisplay[Math.abs(n % navpages.length)].classList.add('pagecurrent')
 
         // console.log(pagedisplay)
     }
