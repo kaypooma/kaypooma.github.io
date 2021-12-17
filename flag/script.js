@@ -595,6 +595,7 @@ for (let audio of ['kalimba.ogg', 'zip.ogg', 'boing.ogg']) {
         }        
 
         rand.setColor(palette[0])
+        Sparkle.sparkleColor = palette[0]
 
         // 0 = background, 1 = midground, 2 = foreground
         let ordering = {

@@ -1,3 +1,5 @@
+'use strict';
+
 const Flag = class Flag {
     #updateWH() {
         this.width = this.params.size
