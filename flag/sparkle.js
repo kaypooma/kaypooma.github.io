@@ -14,20 +14,6 @@ Sparkle.canvas.style.left = '0'
 
 Sparkle.canvas.style.pointerEvents = 'none'
 
-Sparkle.Mouse = {
-    curX: 0, curY: 0,
-    oldX: 0, oldY: 0,
-
-    moving: false
-}
-Sparkle.Particles = []
-
-
-Sparkle.oldTimestamp = undefined
-Sparkle.delta = 0
-Sparkle.timeBuildup = 0
-Sparkle.particleTimer = 0
-
 Sparkle.sparkleColor = 'purple'
 Sparkle.canDrawSparkles = true
 
@@ -38,11 +24,16 @@ Sparkle.addElementExclusion = function(...elems) {
     }
 }
 
+Sparkle.Mouse = {
+    curX: 0, curY: 0,
+    oldX: 0, oldY: 0,
+
+    moving: false
+}
 document.addEventListener('mousemove', e => {
     Sparkle.Mouse.curX = e.clientX
     Sparkle.Mouse.curY = e.clientY
 })
-
 Sparkle.updateMouse = function() {
     let speedX = Math.abs(Sparkle.Mouse.curX - Sparkle.Mouse.oldX)
     let speedY = Math.abs(Sparkle.Mouse.curY - Sparkle.Mouse.oldY)
@@ -56,6 +47,13 @@ Sparkle.updateMouse = function() {
     Sparkle.Mouse.oldX = Sparkle.Mouse.curX
     Sparkle.Mouse.oldY = Sparkle.Mouse.curY
 }
+
+Sparkle.Particles = []
+
+Sparkle.oldTimestamp = undefined
+Sparkle.delta = 0
+Sparkle.timeBuildup = 0
+Sparkle.particleTimer = 0
 
 Sparkle.spawnParticle = function(spawnX, spawnY, spawnVelocity, spawnColor) {
     let particle = { x: spawnX, y: spawnY, velocity: spawnVelocity, color: spawnColor, lifespan: 24 }
