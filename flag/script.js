@@ -83,6 +83,8 @@ for (let audio of ['kalimba.ogg', 'zip.ogg', 'boing.ogg']) {
         sound.play()
     }
 
+    Sparkle.addElementExclusion( document.getElementById('navcon') )
+
     // -------- starter flag
     let funny = new Flag()
 

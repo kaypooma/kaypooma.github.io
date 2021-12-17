@@ -31,12 +31,11 @@ Sparkle.particleTimer = 0
 Sparkle.sparkleColor = 'purple'
 Sparkle.canDrawSparkles = true
 
-Sparkle.noSparkle = [
-    document.getElementById('navcon')
-]
-for (let el of Sparkle.noSparkle) {
-    el.addEventListener('mouseover', () => Sparkle.canDrawSparkles = false)
-    el.addEventListener('mouseout', () => Sparkle.canDrawSparkles = true)
+Sparkle.addElementExclusion = function(...elems) {
+    for (let el of elems) {
+        el.addEventListener('mouseover', () => Sparkle.canDrawSparkles = false)
+        el.addEventListener('mouseout', () => Sparkle.canDrawSparkles = true)
+    }
 }
 
 document.addEventListener('mousemove', e => {
