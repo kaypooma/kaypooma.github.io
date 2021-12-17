@@ -58,8 +58,8 @@ Sparkle.updateMouse = function() {
     Sparkle.Mouse.oldY = Sparkle.Mouse.curY
 }
 
-Sparkle.spawnParticle = function(spawnX, spawnY, spawnVelocity) {
-    let particle = { x: spawnX, y: spawnY, velocity: spawnVelocity, lifespan: 24 }
+Sparkle.spawnParticle = function(spawnX, spawnY, spawnVelocity, spawnColor) {
+    let particle = { x: spawnX, y: spawnY, velocity: spawnVelocity, color: spawnColor, lifespan: 24 }
 
     Sparkle.Particles.push(particle)
 }
@@ -76,9 +76,9 @@ Sparkle.updateParticles = function() {
     }
 }
 Sparkle.drawParticles = function(ctx) {
-    ctx.fillStyle = Sparkle.sparkleColor
-
     for (let particle of Sparkle.Particles) {
+        ctx.fillStyle = particle.color
+
         let size = Math.ceil(particle.lifespan / 6)*1.25
         ctx.fillRect( particle.x - 0.5, particle.y - size/2, 1, size )
         ctx.fillRect( particle.x - size/2, particle.y - 0.5, size, 1 )
@@ -97,7 +97,7 @@ Sparkle.update = function(timestamp) {
     if (Sparkle.timeBuildup >= 1/30 * 1000) {
         Sparkle.updateMouse()
 
-        if (Sparkle.Mouse.moving && Sparkle.canDrawSparkles) Sparkle.spawnParticle(Sparkle.Mouse.curX, Sparkle.Mouse.curY, Math.random()*2-1)
+        if (Sparkle.Mouse.moving && Sparkle.canDrawSparkles) Sparkle.spawnParticle(Sparkle.Mouse.curX, Sparkle.Mouse.curY, Math.random()*2-1, Sparkle.sparkleColor)
 
         Sparkle.particleTimer += 1
         // if (particleTimer >= 1) { spawnParticle(Mouse.curX, Mouse.curY, Math.random()*2-1) ; particleNum++ ; particleTimer = 0 }
