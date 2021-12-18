@@ -20,7 +20,7 @@ const Flag = class Flag {
     constructor(pa) {
         // default
         this.params = {
-            color: 'red',
+            color: 'blue',
     
             size: 400,
             aspect: { w: 4, h: 3 },
@@ -55,6 +55,9 @@ const Flag = class Flag {
     }
     setTransform(t1,t2,t3,t4,t5,t6) {
         this.params.transform = [t1,t2,t3,t4,t5,t6]
+    }
+    getTransform() {
+        return this.params.transform
     }
 
     addDesign(design) {

@@ -48,8 +48,11 @@ const DesignParams = {
         control.addOption(control.elem, 'amount', { type: 'range', min: 0.5, max: 100.5, step: 0.5, value: 4 }, (amount) => {
             control.FlagDesign.amount = amount
         })
-        control.addOption(control.elem, 'horizontal', { type: 'checkbox', value: false }, (checked) => {
-            control.FlagDesign.direction = checked ? 'vertical' : 'horizontal'
+        // control.addOption(control.elem, 'horizontal', { type: 'checkbox', value: false }, (checked) => {
+        //     control.FlagDesign.direction = checked ? 'vertical' : 'horizontal'
+        // })
+        control.addOption(control.elem, 'direction', { type: 'select', value: ['horizontal', 'vertical'] }, (val) => {
+            control.FlagDesign.direction = val
         })
     },
 
@@ -105,6 +108,186 @@ const DesignParams = {
             control.FlagDesign.sides = control.save.sides
         })
     },
+
+    Canton: (control) => {
+        control.addHeader(control.elem, 'Canton')
+
+        control.addOption(control.elem, 'color', { type: 'color', value: '#FF0000' }, (color) => {
+            control.FlagDesign.color = color
+        })
+
+        control.addOption(control.elem, 'width', { type: 'range', min: 0, max: 1000, step: 1, value: 100 }, (width) => {
+            control.FlagDesign.width = width
+        })
+        control.addOption(control.elem, 'height', { type: 'range', min: 0, max: 1000, step: 1, value: 100 }, (height) => {
+            control.FlagDesign.height = height
+        })
+
+        control.addOption(control.elem, 'offset.x', { type: 'range', min: -500, max: 500, step: 0.1, value: 0 }, (ox) => {
+            control.FlagDesign.offsetX = ox
+        })
+        control.addOption(control.elem, 'offset.y', { type: 'range', min: -500, max: 500, step: 0.1, value: 0 }, (oy) => {
+            control.FlagDesign.offsetY = oy
+        })
+    },
+
+    Quadrant: (control) => {
+        control.addHeader(control.elem, 'Quadrant')
+
+        control.addOption(control.elem, 'color', { type: 'color', value: '#FF0000' }, (color) => {
+            control.FlagDesign.color = color
+        })
+
+        control.addOption(control.elem, 'position', { type: 'select', value: ['top-left', 'top-right', 'bottom-left', 'bottom-right'] }, (pos) => {
+            let f = { ['top-left']: 'tl', ['top-right']: 'tr', ['bottom-left']: 'bl', ['bottom-right']: 'br' }
+            
+            control.FlagDesign.position = f[pos]
+        })
+    },
+
+    Circle: (control) => {
+        control.addHeader(control.elem, 'Circle')
+
+        control.addOption(control.elem, 'color', { type: 'color', value: '#FF0000' }, (color) => {
+            control.FlagDesign.color = color
+        })
+
+        control.addOption(control.elem, 'diameter', { type: 'range', min: 0, max: 1000, step: 1, value: 100 }, (diameter) => {
+            control.FlagDesign.diameter = diameter
+        })     
+
+        control.addOption(control.elem, 'offset.x', { type: 'range', min: -500, max: 500, step: 0.1, value: 0 }, (ox) => {
+            control.FlagDesign.offsetX = ox
+        })
+        control.addOption(control.elem, 'offset.y', { type: 'range', min: -500, max: 500, step: 0.1, value: 0 }, (oy) => {
+            control.FlagDesign.offsetY = oy
+        })   
+    },
+
+    Star: (control) => {
+        control.addHeader(control.elem, 'Star')
+
+        control.addOption(control.elem, 'color', { type: 'color', value: '#FF0000' }, (color) => {
+            control.FlagDesign.color = color
+        })
+
+        control.addOption(control.elem, 'diameter', { type: 'range', min: 0, max: 1000, step: 1, value: 100 }, (diameter) => {
+            control.FlagDesign.diameter = diameter
+        })     
+
+        control.addOption(control.elem, 'offset.x', { type: 'range', min: -500, max: 500, step: 0.1, value: 0 }, (ox) => {
+            control.FlagDesign.offsetX = ox
+        })
+        control.addOption(control.elem, 'offset.y', { type: 'range', min: -500, max: 500, step: 0.1, value: 0 }, (oy) => {
+            control.FlagDesign.offsetY = oy
+        })   
+
+        control.addOption(control.elem, 'spokes', { type: 'range', min: 3, max: 30, value: 5 }, (spokes) => {
+            control.FlagDesign.spokes = spokes
+        })
+        control.addOption(control.elem, 'turning', { type: 'range', min: 1, max: 15, value: 2 }, (turning) => {
+            control.FlagDesign.turning = turning
+        })
+
+        control.addOption(control.elem, 'rotation', { type: 'range', min: 0, max: 360, value: 0 }, (rotation) => {
+            control.FlagDesign.rotation = rotation * (Math.PI/180)
+        })
+    },
+
+    Cross: (control) => {
+        control.addHeader(control.elem, 'Cross')
+
+        control.addOption(control.elem, 'color', { type: 'color', value: '#FF0000' }, (color) => {
+            control.FlagDesign.color = color
+        })
+
+        control.addOption(control.elem, 'thickness', { type: 'range', min: 0, max: 200, value: 40 }, (thickness) => {
+            control.FlagDesign.thickness = thickness
+        })     
+
+        control.addOption(control.elem, 'offset.x', { type: 'range', min: -500, max: 500, step: 0.1, value: 0 }, (ox) => {
+            control.FlagDesign.offsetX = ox
+        })
+        control.addOption(control.elem, 'offset.y', { type: 'range', min: -500, max: 500, step: 0.1, value: 0 }, (oy) => {
+            control.FlagDesign.offsetY = oy
+        })   
+    },
+
+    GreekCross: (control) => {
+        control.addHeader(control.elem, 'GreekCross')
+
+        control.addOption(control.elem, 'color', { type: 'color', value: '#FF0000' }, (color) => {
+            control.FlagDesign.color = color
+        })
+
+        control.addOption(control.elem, 'size', { type: 'range', min: 0, max: 1000, value: 100 }, (size) => {
+            control.FlagDesign.size = size
+        })    
+        control.addOption(control.elem, 'thickness', { type: 'range', min: 0, max: 200, value: 30 }, (thickness) => {
+            control.FlagDesign.thickness = thickness
+        })     
+
+        control.addOption(control.elem, 'offset.x', { type: 'range', min: -500, max: 500, step: 0.1, value: 0 }, (ox) => {
+            control.FlagDesign.offsetX = ox
+        })
+        control.addOption(control.elem, 'offset.y', { type: 'range', min: -500, max: 500, step: 0.1, value: 0 }, (oy) => {
+            control.FlagDesign.offsetY = oy
+        })   
+
+        control.addOption(control.elem, 'rotation', { type: 'range', min: 0, max: 360, value: 0 }, (rotation) => {
+            control.FlagDesign.rotation = rotation * (Math.PI/180)
+        })
+    },
+
+    Chevron: (control) => {
+        control.addHeader(control.elem, 'Chevron')
+
+        control.addOption(control.elem, 'color', { type: 'color', value: '#FF0000' }, (color) => {
+            control.FlagDesign.color = color
+        })   
+
+        control.addOption(control.elem, 'size', { type: 'range', min: 0, max: 1000, value: 200 }, (size) => {
+            control.FlagDesign.size = size
+        })         
+
+        control.addOption(control.elem, 'mirrored', { type: 'checkbox', value: false }, (mirrored) => {
+            control.FlagDesign.mirrored = mirrored
+        })     
+    },
+
+    Bend: (control) => {
+        control.addHeader(control.elem, 'Bend')
+
+        control.addOption(control.elem, 'color', { type: 'color', value: '#FF0000' }, (color) => {
+            control.FlagDesign.color = color
+        })   
+
+        control.addOption(control.elem, 'thickness', { type: 'range', min: 0, max: 500, value: 50 }, (thickness) => {
+            control.FlagDesign.thickness = thickness
+        })        
+
+        control.addOption(control.elem, 'mirrored', { type: 'checkbox', value: false }, (mirrored) => {
+            control.FlagDesign.mirrored = mirrored
+        })      
+    },
+
+    RightTriangle: (control) => {
+        control.addHeader(control.elem, 'RightTriangle')
+
+        control.addOption(control.elem, 'color', { type: 'color', value: '#FF0000' }, (color) => {
+            control.FlagDesign.color = color
+        })   
+
+        control.addOption(control.elem, 'position', { type: 'select', value: ['top-left', 'top-right', 'bottom-left', 'bottom-right'] }, (pos) => {
+            let f = { ['top-left']: 'tl', ['top-right']: 'tr', ['bottom-left']: 'bl', ['bottom-right']: 'br' }
+            
+            control.FlagDesign.position = f[pos]
+        })
+
+        control.addOption(control.elem, 'size', { type: 'range', min: 0, max: 500, value: 0 }, (size) => {
+            control.FlagDesign.size = size
+        })         
+    },
 }
 
 const Control = class Control {
@@ -125,11 +308,11 @@ const Control = class Control {
 
         let moveup = document.createElement('button')
         moveup.classList.add('move_up')
-        moveup.innerHTML = '&#10514;'
+        moveup.innerHTML = '&#x25b3;'
 
         let movedown = document.createElement('button')
         movedown.classList.add('move_down')
-        movedown.innerHTML = '&#10515;'
+        movedown.innerHTML = '&#x25BD;'
 
         let close = document.createElement('button')
         close.classList.add('close')
@@ -253,6 +436,27 @@ const Control = class Control {
             edisplay.addEventListener('blur', () => {
                 econtrol.value = edisplay.value
                 econtrol.dispatchEvent(new Event('input'))
+            })
+
+            value.appendChild(econtrol)
+        } else if (control.type === 'select') {
+            showdisplay = false
+
+            let econtrol = document.createElement('select')
+
+            for (let i=0; i<control.value.length; i++) {
+                let option = document.createElement('option')
+
+                option.value = control.value[i]
+                option.innerHTML = control.value[i]
+
+                econtrol.appendChild(option)
+            }
+
+            econtrol.addEventListener('change', () => {
+                link(econtrol.value)
+                
+                updateAllFlags(ctx, Flags)
             })
 
             value.appendChild(econtrol)
@@ -442,7 +646,7 @@ const FlagControls = [];
         let flagControl = new FlagControl(flag)
 
         flagControl.addHeader(flagControl.elem, `Flag ${Flags.length}`)
-        flagControl.addOption(flagControl.elem, 'color', { type: 'color', value: '#FF0000' }, (color) => {
+        flagControl.addOption(flagControl.elem, 'color', { type: 'color', value: '#0000FF' }, (color) => {
             flag.setColor(color)
         })
         flagControl.addOption(flagControl.elem, 'size', { type: 'range', min: 0, max: 1000, step: 1, value: 400 }, (size) => {
@@ -484,5 +688,36 @@ const FlagControls = [];
 
         flagControl.append( document.getElementById('flag_objects') )
         updateAllFlags(ctx, Flags)
+    })
+
+    document.querySelector('label[for="resolution"]').innerHTML = `download resolution: ${canvas.width*document.getElementById('resolution').value}x${canvas.height*document.getElementById('resolution').value} (${document.getElementById('resolution').value}x)`
+    document.getElementById('resolution').addEventListener('input', () => {
+        document.querySelector('label[for="resolution"]').innerHTML = `download resolution: ${canvas.width*document.getElementById('resolution').value}x${canvas.height*document.getElementById('resolution').value} (${document.getElementById('resolution').value}x)`
+    })
+
+    document.getElementById('download').addEventListener('click', () => {
+        let save = document.createElement('canvas')
+        let savectx = save.getContext('2d')
+
+        let resmult = document.getElementById('resolution').value
+
+        save.width = canvas.width*resmult
+        save.height = canvas.height*resmult
+
+        // saveAttributes.Flag.draw(savectx, true, [resmult, 0, 0, resmult, save.width/2, save.height/2])        
+        for (let i=0; i<Flags.length; i++) {
+            let t = Flags[i].getTransform()
+            Flags[i].draw( savectx, i===0, [resmult, 0, 0, resmult, save.width/2 + t[4]*resmult, save.height/2 + t[5]*resmult] ) // clear if first flag drawn
+        }
+
+        let download = document.createElement('a')
+        download.setAttribute('download', `flag-${Date.now()}.png`)
+
+        save.toBlob(blob => {
+            let url = URL.createObjectURL(blob)
+
+            download.setAttribute('href', url)
+            download.click()
+        })
     })
 })()
