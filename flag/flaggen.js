@@ -60,9 +60,14 @@ const Flag = class Flag {
         return this.params.transform
     }
 
-    addDesign(design) {
+    addDesign(design, index) {
         design.Flag = this
-        this.params.designs.push( design )
+
+        if (index !== undefined) {
+            this.params.designs.splice(index, 0, design)
+        } else {
+            this.params.designs.push( design )
+        }
     }
     removeDesign(design) {        
         let index = this.params.designs.indexOf(design)
@@ -82,6 +87,9 @@ const Flag = class Flag {
         if (index > -1 && valid) {
             array_move(this.params.designs, index, index + amt)
         }
+    }
+    getDesigns() {
+        return this.params.designs
     }
 
     draw(ctx, clear = false, transform) {
@@ -481,7 +489,27 @@ const FlagDesign = {
             ctx.closePath()
             ctx.fill()
         }
-    }
+    },
+
+    VisualHighlight: class VisualHighlight {
+        constructor(position = [0, 0], size = [100, 100]) {
+            this.position = position
+            this.size = size
+        }
+
+        draw(ctx) {
+            ctx.save()
+
+            ctx.globalCompositeOperation = 'difference'
+            ctx.fillStyle = 'rgba(255,255,255,0.5)'
+
+            ctx.fillRect(0, 0, this.size[0], this.size[1])
+
+            ctx.globalCompositeOperation = 'source-over'
+
+            ctx.restore()
+        }
+    },
 }
 
 export { Flag, FlagDesign }

@@ -6,10 +6,6 @@ const ctx = canvas.getContext('2d')
 canvas.width = 400
 canvas.height = 300
 
-let testVar = 0
-let testVar2 = 0
-let testVar3 = 0
-
 function updateAllFlags(ctx, arr) {
     if (arr.length === 0) {
         ctx.clearRect(0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight)
@@ -23,8 +19,12 @@ function updateAllFlags(ctx, arr) {
 function updateAllControls(elem, arr) {
     elem.innerHTML = ''
 
+    // for (let i=0; i<arr.length; i++) {
+    //     arr[i].append( elem )
+    //     console.log(elem, i, arr[i])
+    // }
     for (let i=0; i<arr.length; i++) {
-        arr[i].append( elem )
+        elem.appendChild( arr[i].elem )
     }
 }
 function array_move(arr, old_index, new_index) {
@@ -297,6 +297,7 @@ const Control = class Control {
         this.elem.classList.add('box')
 
         this.save = {}
+        this.collapsed = false
     }
 
     addHeader(el, text) {
@@ -304,7 +305,11 @@ const Control = class Control {
 
         let title = document.createElement('span')
         title.setAttribute('contenteditable', 'true')
+        title.setAttribute('spellcheck', 'false')
         title.innerHTML = text
+
+        let buttoncon = document.createElement('div')
+        buttoncon.classList.add('button_container')
 
         let moveup = document.createElement('button')
         moveup.classList.add('move_up')
@@ -314,14 +319,85 @@ const Control = class Control {
         movedown.classList.add('move_down')
         movedown.innerHTML = '&#x25BD;'
 
+        // let duplicate = document.createElement('button')
+        // duplicate.classList.add('duplicate')
+        // duplicate.innerHTML = '&#10697;'
+
         let close = document.createElement('button')
         close.classList.add('close')
         close.innerHTML = '&#x2715;'
 
+        buttoncon.appendChild(moveup)
+        buttoncon.appendChild(movedown)
+        // buttoncon.appendChild(duplicate)
+        buttoncon.appendChild(close)
+
+        header.addEventListener('mouseover', (e) => {
+            if (e.target !== e.currentTarget) return
+
+            // flag highlight
+            if (this.Flag) {
+                this.canvasHighlight = new FlagDesign.VisualHighlight([0, 0], [400, 300])
+                this.Flag.addDesign(this.canvasHighlight)
+
+                // console.log(this.Flag)
+
+                updateAllFlags(ctx, Flags)
+            }
+
+            if (this.FlagDesign) {
+                this.designHighlight = new FlagDesign[this.FlagDesign.constructor.name]()
+
+                for (let prop in this.FlagDesign) {
+                    this.designHighlight[prop] = this.FlagDesign[prop]
+                }
+                this.designHighlight.color = 'rgba(255,255,255,0.75)'
+
+                this.FlagDesign.Flag.addDesign(this.designHighlight)
+                // console.log(this.FlagDesign.Flag)
+
+                updateAllFlags(ctx, Flags)
+            }
+            
+            header.classList.add('selected')
+        })
+        header.addEventListener('mouseout', (e) => {
+            if (e.target !== e.currentTarget) return
+
+            // flag highlight
+            if (this.Flag) {
+                this.Flag.removeDesign(this.canvasHighlight)
+                updateAllFlags(ctx, Flags)
+            }
+
+            if (this.FlagDesign) {
+                this.FlagDesign.Flag.removeDesign(this.designHighlight)
+                updateAllFlags(ctx, Flags)
+            }
+            
+            header.classList.remove('selected')
+        })
+        header.addEventListener('click', (e) => {
+            if (e.target !== e.currentTarget) return
+
+            // collapse
+            if (!this.collapsed) {
+                let height = this.elem.querySelector('header').offsetHeight
+
+                this.elem.classList.add('collapsed')
+                this.elem.style.height = height + 'px'
+
+                this.collapsed = true
+            } else {                
+                this.elem.classList.remove('collapsed')
+                this.elem.style.height = 'auto'
+
+                this.collapsed = false
+            }
+        })
+
         header.appendChild(title)
-        header.appendChild(moveup)
-        header.appendChild(movedown)
-        header.appendChild(close)
+        header.appendChild(buttoncon)
 
         el.appendChild(header)
     }
@@ -508,6 +584,33 @@ const DesignControl = class DesignControl extends Control {
                 updateAllControls( this.FlagControl.elem.querySelector('.designs'), this.FlagControl.DesignControls)
             }
         })
+
+        // this.elem.querySelector('header .duplicate').addEventListener('click', () => {
+        //     // console.log(this.FlagDesign.constructor.name)
+        //     let duplicate = new FlagDesign[this.FlagDesign.constructor.name]()
+
+        //     for (let prop in this.FlagDesign) {
+        //         duplicate[prop] = this.FlagDesign[prop]
+        //     }
+
+        //     let index = this.FlagDesign.Flag.getDesigns().indexOf(this.FlagDesign)
+        //     this.FlagDesign.Flag.addDesign(duplicate, index)
+
+        //     let duplicateControl = new DesignControl()
+        //     // for (let prop in this) {
+        //     //     if (prop !== 'elem') duplicateControl[prop] = this[prop]
+        //     // }
+        //     // duplicateControl.elem.querySelector('header').querySelector('span').innerHTML += '.copy'
+        //     // duplicateControl.FlagDesign = duplicate
+        //     console.log(this)
+
+        //     this.FlagControl.addDesignControl(this.FlagControl.elem, duplicateControl, index)
+
+        //     // console.log(this.FlagControl.DesignControls)
+
+        //     updateAllFlags(ctx, Flags)
+        //     updateAllControls( this.FlagControl.elem.querySelector('.designs'), this.FlagControl.DesignControls )
+        // })
         
         this.elem.querySelector('header .close').addEventListener('click', () => {
             // console.log(this.FlagDesign.Flag)
@@ -612,7 +715,7 @@ const FlagControl = class FlagControl extends Control {
         el.appendChild(parent)
     }
 
-    addDesignControl(el, control) {
+    addDesignControl(el, control, index) {
         if (!el.querySelector('.designs')) {
             let designs = document.createElement('div')
             designs.classList.add('designs')
@@ -621,8 +724,14 @@ const FlagControl = class FlagControl extends Control {
         }
         let designs = el.querySelector('.designs')
 
+        // console.log(designs)
+
+        if (index !== undefined) {            
+            this.DesignControls.splice(index, 0, control)
+        } else {
+            this.DesignControls.push(control)
+        }
         designs.appendChild(control.elem)
-        this.DesignControls.push(control)
     }
 }
 
