@@ -1,5 +1,16 @@
 'use strict';
 
+function array_move(arr, old_index, new_index) {
+    if (new_index >= arr.length) {
+        var k = new_index - arr.length + 1;
+        while (k--) {
+            arr.push(undefined);
+        }
+    }
+    arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+    return arr; // for testing
+}
+
 const Flag = class Flag {
     #updateWH() {
         this.width = this.params.size
@@ -13,6 +24,8 @@ const Flag = class Flag {
     
             size: 400,
             aspect: { w: 4, h: 3 },
+
+            transform: [1,0,0,1,0,0],
     
             designs: [],
         }
@@ -40,17 +53,44 @@ const Flag = class Flag {
     setColor(color) {
         this.params.color = color
     }
+    setTransform(t1,t2,t3,t4,t5,t6) {
+        this.params.transform = [t1,t2,t3,t4,t5,t6]
+    }
 
     addDesign(design) {
         design.Flag = this
         this.params.designs.push( design )
     }
+    removeDesign(design) {        
+        let index = this.params.designs.indexOf(design)
+        if (index > -1) {
+            this.params.designs.splice(index, 1)
+        }
+    }
+    shiftDesign(design, amt) {        
+        let index = this.params.designs.indexOf(design)
 
-    draw(ctx, clear = false, transform = [1,0,0,1,0,0]) {
+        let valid = false
+        if (index + amt >= 0 && index + amt <= this.params.designs.length-1) 
+            valid = true
+
+        // console.log(index + amt, this.params.designs.length-1, valid)
+
+        if (index > -1 && valid) {
+            array_move(this.params.designs, index, index + amt)
+        }
+    }
+
+    draw(ctx, clear = false, transform) {
         ctx.save()
 
         if (clear) ctx.clearRect(0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight)
-        ctx.transform(transform[0], transform[1], transform[2], transform[3], transform[4], transform[5])
+        if (transform) {
+            ctx.transform(transform[0], transform[1], transform[2], transform[3], transform[4], transform[5])
+        } else {
+            let t = this.params.transform
+            ctx.transform(t[0], t[1], t[2], t[3], t[4], t[5])
+        }
 
         let width = this.width
         let height = this.height
@@ -116,7 +156,7 @@ const FlagDesign = {
     },
 
     Border: class Border {
-        constructor(color = 'red', thickness = 8, sides = 'ldur') {
+        constructor(color = 'red', thickness = 8, sides = 'lrtb') {
             this.color = color
             this.thickness = thickness
             this.sides = sides
