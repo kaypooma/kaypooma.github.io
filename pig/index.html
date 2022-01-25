@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>fart</title>
+
+    <style>
+        body {
+            background-image: url('images/pig.jpg');
+            background-size: 100vw 100vh;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        // document.addEventListener('visibilitychange', e => {
+        //     if (document.visibilityState === 'visible') {
+        //         let audio = new Audio()
+        //         audio.src = 'fart.ogg'
+        //         audio.volume = 0.1
+
+        //         audio.play()
+        //     }
+        // })
+        const images = ['pig.jpg', 'motivate.png', 'unknown_1.png', 'unknown.png', 'loongdooog.png', 'IMG_20211231_161746.jpg', 'IMG_4629.jpg', 'FGRw2iHXsAQliN5.jpeg', 'FBGHIucXEAwYS3u.jpg', 'FBcSrfkUYAA9dB9t.png', 'FApHp9bXoAchoDJ.png', 'FAeY2RhXsAUrk7G.jpg', 'dg.png', '016744ce4ef01bacd35f7fd19e6343e0.png']
+        window.addEventListener('focus', e => {
+            if (document.visibilityState === 'visible') {
+                let audio = new Audio()
+                audio.src = 'fart.ogg'
+                audio.volume = 0.1
+
+                audio.play()
+
+                document.body.style.backgroundImage = `url(images/${images[Math.floor(Math.random()*images.length)]})`
+            }
+        })
+    </script>
+</body>
+</html>
