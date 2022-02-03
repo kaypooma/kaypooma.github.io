@@ -15,10 +15,28 @@
             body {
                 overflow: hidden;
             }
+
+            p {
+                position: absolute;
+
+                bottom: 2px;
+                right: 2px;
+
+                font-size: 14px;
+
+                pointer-events: none;
+
+                transition: 0.1s transform ease-in-out;
+            }
+
+            p.hidden {
+                transform: translateY(20px);
+            }
         </style>
     </head>
     <body>
         <canvas id="canvas"></canvas>
+        <p id="instructions">click to add a point to the Cool S</p>
         <script src="script.js"></script>
     </body>
 </html>

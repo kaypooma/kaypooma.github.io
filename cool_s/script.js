@@ -6,6 +6,9 @@
 
     const CoolS = {}
     CoolS.segments = []
+
+    CoolS.color = '#000'
+    CoolS.placeColor = '#aaa'
     
     CoolS.addPoint = (x, y) => {
         CoolS.segments.push( {x: x, y: y} )
@@ -19,9 +22,14 @@
         CoolS.addPoint(e.pageX, e.pageY)
     })
 
+    const instructions = document.getElementById('instructions')
     canvas.addEventListener('mousemove', e => {
         Mouse.x = e.pageX
         Mouse.y = e.pageY
+    })
+
+    document.addEventListener('keydown', e => {
+        if (e.ctrlKey && e.key === 'z') undo()
     })
 
     // -------------------------------------------------
@@ -30,10 +38,18 @@
         canvas.width = window.innerWidth
         canvas.height = window.innerHeight
 
+        if (Mouse.y > window.innerHeight-20 && !instructions.classList.contains('hidden')) {
+            instructions.classList.add('hidden')
+        } else if (Mouse.y < window.innerHeight-20 && instructions.classList.contains('hidden')) {
+            instructions.classList.remove('hidden')
+        }
+
         draw()
     }
 
     const drawSegments = () => {
+        ctx.strokeStyle = CoolS.color
+
         for (let i=0; i<CoolS.segments.length; i+=2) {
             // console.log(CoolS.segments[i], CoolS.segments[i+1] || 'none')
             ctx.beginPath()
@@ -44,12 +60,18 @@
             } else {
                 ctx.arc(CoolS.segments[i].x, CoolS.segments[i].y, 3 , 0, 2 * Math.PI)
                 
+                ctx.strokeStyle = CoolS.placeColor
+                ctx.setLineDash([4,2])
+
                 ctx.moveTo(CoolS.segments[i].x, CoolS.segments[i].y)    
                 ctx.lineTo(Mouse.x, Mouse.y)    
             }
 
             ctx.stroke()
         }
+
+        ctx.strokeStyle = CoolS.color
+        ctx.setLineDash([])
     }
 
     let drawCap = (seg1, seg2, offset) => {
@@ -83,7 +105,7 @@
     }
 
     const drawCaps = () => {
-        if (Math.floor(CoolS.segments.length/2) >= 3) {            
+        if (CoolS.segments.length>0 && CoolS.segments.length%6 === 0) {            
             drawCap(CoolS.segments[0], CoolS.segments[4], orient(CoolS.segments[0], CoolS.segments[4]))
             drawCap(CoolS.segments[CoolS.segments.length-1], CoolS.segments[CoolS.segments.length-5], orient(CoolS.segments[CoolS.segments.length-1], CoolS.segments[CoolS.segments.length-5]))
         }
@@ -107,6 +129,10 @@
                 }
             }
         }
+    }
+
+    const undo = () => {
+        if (CoolS.segments.length>0) CoolS.segments.splice(CoolS.segments.length-1, 1)
     }
 
     const draw = () => {
