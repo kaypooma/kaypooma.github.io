@@ -103,28 +103,6 @@
     })
 
     // -------------------------------------------------
-
-    const update = (timestamp) => {
-        canvas.width = window.innerWidth
-        canvas.height = window.innerHeight
-
-        if (Mouse.y > window.innerHeight-20 && !instructions.classList.contains('hidden')) {
-            instructions.classList.add('hidden')
-        } else if (Mouse.y < window.innerHeight-20 && instructions.classList.contains('hidden')) {
-            instructions.classList.remove('hidden')
-        }
-
-        if (Mouse.dragging) {
-            Mouse.drag.distX = Mouse.x - Mouse.drag.startX
-            Mouse.drag.distY = Mouse.y - Mouse.drag.startY
-
-            CoolS.translateX = CoolS.preTranslateX + Mouse.drag.distX
-            CoolS.translateY = CoolS.preTranslateY + Mouse.drag.distY
-        }
-
-        draw()
-    }
-
     const drawSegments = () => {
         ctx.strokeStyle = CoolS.color
 
@@ -216,6 +194,24 @@
         CoolS.segments = []
     }
 
+    const update = (timestamp) => {
+        canvas.width = window.innerWidth
+        canvas.height = window.innerHeight
+
+        if (Mouse.y > window.innerHeight-20 && !instructions.classList.contains('hidden')) {
+            instructions.classList.add('hidden')
+        } else if (Mouse.y < window.innerHeight-20 && instructions.classList.contains('hidden')) {
+            instructions.classList.remove('hidden')
+        }
+
+        if (Mouse.dragging) {
+            Mouse.drag.distX = Mouse.x - Mouse.drag.startX
+            Mouse.drag.distY = Mouse.y - Mouse.drag.startY
+
+            CoolS.translateX = CoolS.preTranslateX + Mouse.drag.distX
+            CoolS.translateY = CoolS.preTranslateY + Mouse.drag.distY
+        }
+    }
     const draw = () => {
         ctx.lineWidth = 2
         ctx.translate(CoolS.translateX, CoolS.translateY)
@@ -228,9 +224,14 @@
         drawSegments()
         connectSegments()
         drawCaps()
-
-        window.requestAnimationFrame(update)
     }
 
-    window.requestAnimationFrame(update)
+    const main = (timestamp) => {
+        window.requestAnimationFrame(main)
+        
+        update(timestamp)
+        draw()
+    }
+
+    window.requestAnimationFrame(main)
 })();
