@@ -11,27 +11,79 @@
 
     CoolS.color = '#000'
     CoolS.placeColor = '#aaa'
+
+    CoolS.preTranslateX = 0
+    CoolS.preTranslateY = 0
+
+    CoolS.translateX = 0
+    CoolS.translateY = 0
     
     CoolS.addPoint = (x, y) => {
         CoolS.segments.push( {x: x, y: y} )
     }
 
-    const Mouse = {x: 0, y: 0}
+    const Mouse = {x: 0, y: 0, dragging: false}
+    Mouse.drag = {}
+
+    Mouse.drag.startX = 0
+    Mouse.drag.startY = 0
+
+    Mouse.drag.distX = 0
+    Mouse.drag.distY = 0
 
     // -------------------------------------------------
+
+    const startDrag = () => {
+        Mouse.dragging = true
+
+        Mouse.drag.startX = Mouse.x
+        Mouse.drag.startY = Mouse.y
+
+        CoolS.preTranslateX = CoolS.translateX
+        CoolS.preTranslateY = CoolS.translateY
+
+        canvas.style.cursor = 'grabbing'
+    }
+    const stopDrag = () => {
+        Mouse.dragging = false
+
+        CoolS.translateX = CoolS.preTranslateX + Mouse.drag.distX
+        CoolS.translateY = CoolS.preTranslateY + Mouse.drag.distY
+
+        canvas.style.cursor = 'auto'
+    }
 
     canvas.addEventListener('mousemove', e => {
         Mouse.x = e.pageX
         Mouse.y = e.pageY
+
+        Mouse.canvasX = Mouse.x - CoolS.translateX
+        Mouse.canvasY = Mouse.y - CoolS.translateY
     })
 
     canvas.addEventListener('mousedown', e => {
-        if (e.button === 0)
-            CoolS.addPoint(Mouse.x, Mouse.y)
+        switch (e.button) {
+            case 0:
+                CoolS.addPoint(Mouse.canvasX, Mouse.canvasY)
+                break
+            case 2:
+                startDrag()
+                break
+        }
     })
     canvas.addEventListener('mouseup', e => {
-        if (e.button === 0)
-            CoolS.addPoint(Mouse.x, Mouse.y)
+        switch (e.button) {
+            case 0:
+                CoolS.addPoint(Mouse.canvasX, Mouse.canvasY)
+                break
+            case 2:
+                stopDrag()
+                break
+        }
+    })
+
+    canvas.addEventListener('contextmenu', e => {
+        e.preventDefault()
     })
 
     document.addEventListener('keydown', e => {
@@ -49,6 +101,14 @@
             instructions.classList.add('hidden')
         } else if (Mouse.y < window.innerHeight-20 && instructions.classList.contains('hidden')) {
             instructions.classList.remove('hidden')
+        }
+
+        if (Mouse.dragging) {
+            Mouse.drag.distX = Mouse.x - Mouse.drag.startX
+            Mouse.drag.distY = Mouse.y - Mouse.drag.startY
+
+            CoolS.translateX = CoolS.preTranslateX + Mouse.drag.distX
+            CoolS.translateY = CoolS.preTranslateY + Mouse.drag.distY
         }
 
         draw()
@@ -71,7 +131,7 @@
                 ctx.setLineDash([4,2])
 
                 ctx.moveTo(CoolS.segments[i].x, CoolS.segments[i].y)    
-                ctx.lineTo(Mouse.x, Mouse.y)    
+                ctx.lineTo(Mouse.canvasX, Mouse.canvasY)    
             }
 
             ctx.stroke()
@@ -147,6 +207,7 @@
 
     const draw = () => {
         ctx.lineWidth = 2
+        ctx.translate(CoolS.translateX, CoolS.translateY)
 
         drawSegments()
         connectSegments()
