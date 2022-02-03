@@ -30,6 +30,7 @@
 
     document.addEventListener('keydown', e => {
         if (e.ctrlKey && e.key === 'z') undo()
+        if (e.key === 'Delete') clear()
     })
 
     // -------------------------------------------------
@@ -133,6 +134,9 @@
 
     const undo = () => {
         if (CoolS.segments.length>0) CoolS.segments.splice(CoolS.segments.length-1, 1)
+    }
+    const clear = () => {
+        CoolS.segments = []
     }
 
     const draw = () => {
