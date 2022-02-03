@@ -136,7 +136,7 @@
     }
 
     const draw = () => {
-        ctx.lineWidth = 1
+        ctx.lineWidth = 2
 
         drawSegments()
         connectSegments()
