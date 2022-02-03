@@ -74,7 +74,7 @@
         ctx.setLineDash([])
     }
 
-    let drawCap = (seg1, seg2, offset) => {
+    const drawCap = (seg1, seg2, offset) => {
         let top = {}
 
         top.x1 = seg1.x
