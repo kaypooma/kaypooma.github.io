@@ -4,6 +4,8 @@
     const canvas = document.getElementById('canvas')
     const ctx = canvas.getContext('2d')
 
+    const instructions = document.getElementById('instructions')
+
     const CoolS = {}
     CoolS.segments = []
 
@@ -18,14 +20,18 @@
 
     // -------------------------------------------------
 
-    canvas.addEventListener('click', e => {
-        CoolS.addPoint(e.pageX, e.pageY)
-    })
-
-    const instructions = document.getElementById('instructions')
     canvas.addEventListener('mousemove', e => {
         Mouse.x = e.pageX
         Mouse.y = e.pageY
+    })
+
+    canvas.addEventListener('mousedown', e => {
+        if (e.button === 0)
+            CoolS.addPoint(Mouse.x, Mouse.y)
+    })
+    canvas.addEventListener('mouseup', e => {
+        if (e.button === 0)
+            CoolS.addPoint(Mouse.x, Mouse.y)
     })
 
     document.addEventListener('keydown', e => {
@@ -35,7 +41,7 @@
 
     // -------------------------------------------------
 
-    const update = () => {
+    const update = (timestamp) => {
         canvas.width = window.innerWidth
         canvas.height = window.innerHeight
 
@@ -133,7 +139,7 @@
     }
 
     const undo = () => {
-        if (CoolS.segments.length>0) CoolS.segments.splice(CoolS.segments.length-1, 1)
+        if (CoolS.segments.length>0) CoolS.segments.splice(CoolS.segments.length-2, 2)
     }
     const clear = () => {
         CoolS.segments = []
