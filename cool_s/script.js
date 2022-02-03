@@ -17,6 +17,8 @@
 
     CoolS.translateX = 0
     CoolS.translateY = 0
+
+    CoolS.scale = 1
     
     CoolS.addPoint = (x, y) => {
         CoolS.segments.push( {x: x, y: y} )
@@ -57,8 +59,8 @@
         Mouse.x = e.pageX
         Mouse.y = e.pageY
 
-        Mouse.canvasX = Mouse.x - CoolS.translateX
-        Mouse.canvasY = Mouse.y - CoolS.translateY
+        Mouse.canvasX = (Mouse.x - CoolS.translateX) / CoolS.scale
+        Mouse.canvasY = (Mouse.y - CoolS.translateY) / CoolS.scale
     })
 
     canvas.addEventListener('mousedown', e => {
@@ -84,6 +86,15 @@
 
     canvas.addEventListener('contextmenu', e => {
         e.preventDefault()
+    })
+
+    canvas.addEventListener('wheel', e => {
+        CoolS.scale += e.deltaY*-0.0005
+
+        CoolS.scale = Math.max(0.1, CoolS.scale)
+
+        Mouse.canvasX = (Mouse.x - CoolS.translateX) / CoolS.scale
+        Mouse.canvasY = (Mouse.y - CoolS.translateY) / CoolS.scale
     })
 
     document.addEventListener('keydown', e => {
@@ -208,6 +219,11 @@
     const draw = () => {
         ctx.lineWidth = 2
         ctx.translate(CoolS.translateX, CoolS.translateY)
+        ctx.scale(CoolS.scale, CoolS.scale)
+
+        ctx.beginPath()        
+        ctx.arc(Mouse.canvasX, Mouse.canvasY, 3, 0, 2 * Math.PI)
+        ctx.stroke()
 
         drawSegments()
         connectSegments()
