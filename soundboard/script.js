@@ -192,7 +192,7 @@ const audioContext = new window.AudioContext();
         $('main').appendChild(btn)
     }
 
-    for (sound of sounds) {
+    for (let sound of sounds) {
         if (sound === '----') {
             addSeperator()
         } else {
