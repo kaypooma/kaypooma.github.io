@@ -1,0 +1,6 @@
+<svg width="512" height="512" viewBox="0 0 135.467 135.467" xmlns="http://www.w3.org/2000/svg">
+    <clipPath id="clip">
+        <path style="fill:red;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" d="M0 24.867 24.867 0l110.997.397v135.467H.397L0 25.042"/>
+        <path style="fill:red;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" d="m10.322 33.476 22.98-22.979 102.572.367v125.185H10.689l-.367-102.41"/>
+    </clipPath>
+</svg>

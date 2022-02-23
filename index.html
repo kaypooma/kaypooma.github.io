@@ -2,175 +2,112 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>kaypooma</title>
+        
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Major+Mono+Display&family=Share+Tech+Mono&family=Trispace:wght@300;800&display=swap" rel="stylesheet">
 
-        <link rel="icon" type="image/png" href="favicon_dark.png" id="favicon_tag">
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
-        <div class="body_container">
-            <div class="section section_active" id="s_main">
-                <div id="menu_bg_transition"></div>
-                <div id="menu_divider"></div>
+        <main id="main">
+            <div class="slide" id="start">
+                <div class="parallax background" data-parallax="0.9" data-rotate="10deg"></div>
 
-                <ul id="menu">
-                    <li data-section="about">epic me</li>
-                    <li data-section="notitg">notitg</li>
-                    <li data-section="music">music</li>
-                    <li data-section="projects">projects</li>
-                </ul>
+                <div class="parallax lert start_anim" data-parallax="0.4" data-animdelay="200"></div>
+                <div class="parallax lert start_anim" data-parallax="0.2" data-animdelay="100"></div>
 
-                <div id="menu_button"></div>
-            </div>
+                <svg width="512" height="512" viewBox="0 0 135.467 135.467" xmlns="http://www.w3.org/2000/svg" class="parallax" data-parallax="0.2" id="logo">
+                    <g>
+                        <path 
+                            d="M98.334 29.066c-8.058.1-16.12-.077-24.176.116.066 2.734-.003 5.476.02 8.215-.017 4.959.028 9.928-.122 14.88-.787 3.342-4.487 5.412-7.783 4.887-2.421.056-5.165.24-7.154-1.412-2.27-1.985-3.092-5.004-4.633-7.499-2.394-4.645-5.093-9.154-7.096-13.985-.414-1.698.018-3.456-.23-5.17-1.248-.042-2.499.091-3.746-.032-.408-.01-.821-.006-1.22.086-.099 1.307.102 2.618-.023 3.927-.061 1.409-.025 2.928.841 4.113 3.689 6.968 7.613 13.813 11.162 20.85.72 1.93-.109 4-1.12 5.657-3.598 6.62-7.19 13.244-10.783 19.867-.173 2.244-.072 4.496-.052 6.743 1.66-.072 3.328.12 4.984-.051.01-2.493-.212-5.153 1.044-7.42 3.409-6.072 6.389-12.385 9.978-18.356 1.743-2.08 4.677-2.486 7.232-2.253 2.515-.146 5.406.173 7.138 2.223 1.65 1.752 1.784 4.33 1.583 6.6.002 6.427-.02 12.854.07 19.28 1.473-.094 2.944.036 4.418-.006.483.054.813-.114.676-.65-.095-2.694.013-5.391-.027-8.088.002-4.808-.019-9.62.122-14.426.84-3.376 4.593-5.454 7.934-4.928 4.474-.058 8.954.141 13.422-.175 1.977-1.05 3.144-3.062 4.833-4.466 1.853-1.964 4.072-3.658 5.515-5.96.475-2.046-.024-4.226.159-6.341-.058-2.004.271-4.089-.347-6.026-1.311-1.93-3.29-3.26-4.803-5.016-1.762-1.7-3.382-3.708-5.43-4.996-.772-.224-1.59-.203-2.386-.188zm-6.467 5.055c2.105.025 4.266 0 6.303.58 2.892 1.087 5.046 3.486 6.816 5.927 2.468 4.13 1.35 9.942-2.396 12.936-1.975 2.103-4.721 3.775-7.702 3.565-3.356.064-6.721.095-10.072-.05-2.928-.389-5.5-2.992-5.493-6.013-.101-2.156.076-4.315-.007-6.473.042-2.153-.16-4.384.465-6.468 1.146-2.744 4.262-4.31 7.162-3.978 1.64.041 3.283-.012 4.924-.026z" 
+                            transform="matrix(1.49347 0 0 1.53504 -46.758 -22.525)" 
+                            aria-label="KP" 
+                        />
+                    </g>
+                </svg>
 
-            <div class="section" id="s_about">
-                <div id="about_bg"></div>
-
-                <div id="about_box">
-                    <h1>me</h1>
-
-                    <hr>
-
-                    <p>hello i am kaypooma</p>
-                    <p>here is a list of things that i like to do</p>
-                    <ul>
-                        <li>make modded charts for notitg</li>
-                        <li>play modded charts for notitg</li>
-                        <li>make music every 6 months</li>
-                        <li>draw ?</li>
-                        <li></li>
-                        <li>eat</li>
-                    </ul>
-
-                    <!-- <a href="about_detailed.html" id="detailed_link">longer bio</a> -->
-
-                    <a href="https://youtube.com/kaypooma" target="_blank" rel="noopener noreferrer" class="about_link" id="about_yt"></a>
-                    <a href="https://twitter.com/kaypooma" target="_blank" rel="noopener noreferrer" class="about_link" id="about_tw"></a>
+                <div class="lert navcon start_anim">     
+                    <nav>                        
+                        <a href="#projects">
+                            Projects
+                            <svg>
+                                <rect x="0" y="0" width="100%" height="100%" />
+                            </svg>
+                        </a>
+                        <a href="#epic">
+                            Epic
+                            <svg>
+                                <rect x="0" y="0" width="100%" height="100%"  />
+                            </svg>
+                        </a>
+                        <a href="#wenis">
+                            Wenis
+                            <svg>
+                                <rect x="0" y="0" width="100%" height="100%"  />
+                            </svg>
+                        </a>
+                        <a href="#moment">
+                            Moment
+                            <svg>
+                                <rect x="0" y="0" width="100%" height="100%" />
+                            </svg>
+                        </a>
+                        <a href="#timothy">
+                            TiMoThY
+                            <svg>
+                                <rect x="0" y="0" width="100%" height="100%" />
+                            </svg>
+                        </a>
+                    </nav>
                 </div>
-
-                <div class="back_to_main">⇧</div>
             </div>
+            <div class="slide" id="projects">                
+                <div class="parallax background" data-parallax="0.9" data-animdelay="100"></div>
 
-            <div class="section" id="s_about_long">
-                <div class="about_long_box">
-                    <p>test</p>
-                    <p>test</p>
-                    <p>test</p>
-                    <p>test</p>
-                    <p>test</p>
-                </div>
+                <!-- <svg width="1280" height="720" viewBox="0 0 338.667 190.5" xmlns="http://www.w3.org/2000/svg" id="vertlines" class="parallax" data-parallax="0.8">
+                    <path style="fill:none;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" d="M47.632-17.512V221.7"/>
+                    <path style="fill:none;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" d="M57.632-17.512V221.7"/>
+                </svg> -->
+                <svg width="1280" height="720" viewBox="0 0 338.667 190.5" xmlns="http://www.w3.org/2000/svg" id="vertlines" class="parallax" data-parallax="0.85">
+                    <path style="fill:none;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" d="m-2.361 10.99 58.118 58.118v87.033l25.13 25.13h35.537l25.18-25.179h255.458"/>
+                    <path style="fill:none;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" d="M156.333 240.877V129.775l-25.131-25.13V69.107l25.129-25.13v-81.955h228.276M131.202 69.108H-9.106"/>
+                </svg>
 
-                <div class="back_to_main">⇧</div>
+                <svg width="1280" height="720" viewBox="0 0 338.667 190.5" xmlns="http://www.w3.org/2000/svg" id="pcircle" class="parallax" data-parallax="0.65">
+                    <circle style="stroke-linecap:round;stroke-linejoin:bevel" cx="170.138" cy="92.375" r="61.171"/>
+                </svg>
+                <svg width="1280" height="720" viewBox="0 0 338.667 190.5" xmlns="http://www.w3.org/2000/svg" id="pcircle_2" class="parallax" data-parallax="0.65">
+                    <circle style="stroke-linecap:round;stroke-linejoin:bevel" cx="170.138" cy="92.375" r="58.171"/>
+                </svg>
+
+                <svg width="1280" height="720" viewBox="0 0 338.667 190.5" xmlns="http://www.w3.org/2000/svg" id="lines" class="parallax" data-parallax="0.5">
+                    <!-- <path style="fill:none;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" d="M-14.364 129.275h224.87l54.484-54.483h83.707"/>
+                    <path style="fill:none;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" d="M-14.364 134.621h227.10l54.484-54.484h83.707"/> -->
+
+                    <path style="fill:none;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" d="M-14.364 129.275h224.87l54.484-54.483h83.707"/>
+                    <path style="fill:none;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" d="M-14.364 135.621h227.3l54.884-54.484h83.707"/>
+                    <path style="fill:none;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" d="M-12.776 142.000h228.2l55.184-54.484h83.707"/>                
+                </svg>
+
+                <div class="title">projects</div>
+
+                <div id="project_list" class="parallax" data-parallax="0.2" data-parallax-offset="20%"></div>
+                <div id="project_list_overlay" class="parallax" data-parallax="0.2" data-parallax-offset="20%">
+                    <div id="ruler"></div>
+                    <div id="squares"></div>
+                    <div id="squares_small"></div>
+                </div> 
             </div>
+            <div class="slide" id="epic">epic</div>
+            <div class="slide" id="wenis">wenis</div>
+            <div class="slide" id="moment">moment</div>
+        </main>
 
-            <div class="section" id="s_notitg">
-                <!-- <div id="files_arrow"></div> -->
-
-                <div id="files_box">
-                    <div id="files_div"></div>        
-                    
-                    <ul id="files_list">
-                        <!-- <li data-file="finorza"></li>
-                        <li data-file="clear"></li>
-                        <li data-file="setmefree"></li>
-                        <li data-file="frobenioid"></li>
-                        <li data-file="primitive"></li>
-                        <li data-file="sss"></li>
-                        <li data-file="flamingo"></li>
-                        <li data-file="senpai"></li>
-                        <li data-file="reend"></li>
-                        <li data-file="haunted"></li>
-                        <li data-file="adularia"></li>
-                        <li data-file="oshama"></li>
-                        <li data-file="orville"></li>
-                        <li data-file="veiled"></li>
-                        <li data-file="meu"></li>
-                        <li data-file="viscracked"></li>
-                        <li data-file="nulctrl"></li>
-                        <li data-file="furry"></li>
-                        <li data-file="universe"></li>
-                        <li data-file="perfect"></li>
-                        <li data-file="wonderland"></li>
-                        <li data-file="nhelv"></li>
-                        <li data-file="backburn"></li>
-                        <li data-file="aleph"></li>
-                        <li data-file="graduating"></li>
-                        <li data-file="asgore"></li>
-                        <li data-file="umbrelloid"></li> -->
-                    </ul>
-
-                    <div id="files_data">
-                        <div id="file_bg"></div>
-
-                        <h1 id="file_title">Title</h1>
-                        <h2 id="file_artist">Artist</h2>
-                        <h2 id="file_difficulty">10</h2>
-
-                        <hr>
-
-                        <p id="file_description">t</p>  
-                        
-                        <div id="file_buttons">
-                            <a target="_blank" rel="noopener noreferrer" class="file_button" id="file_youtube">Lineout</a>
-                            <a target="_blank" rel="noopener noreferrer" class="file_button" id="file_download">Download</a>
-                        </div>
-
-                        <p id="file_date">2020-10-09</p>
-                    </div>
-                </div>
-
-                <div class="back_to_main">⇧</div>
-            </div>
-            
-            <div class="section" id="s_music">
-                <div id="music_box">
-                    <h2>ztochei</h2>
-                    <p class="desc">originally supposed to be a ~4 week thing where i made 1 song per day<br>but then i didn't do that and now i just make them when i feel like it</p>
-                    
-                    <hr></hr>
-
-                    <ul id="ztochei_list">
-                        <!-- <a href="https://google.com"><li><div class="ztochei_cover">α</div> test <span>2020-01-01</span></li></a> -->
-                    </ul>
-                </div>
-
-                <div class="back_to_main">⇧</div>
-            </div>
-
-            <div class="section" id="s_projects">
-                <div id="projects_box">
-                    <h1>projects</h1>
-
-                    <hr>
-
-                    <p>here is where i will put stuff that doesn't go in the other three sections</p>
-
-                    <hr>
-
-                    <ul id="projects_list">
-                        <li><a style="background-image:url('img/projects/nocontext.png')" href="nocontext.html" data-title="no context" data-desc="questionable message collection"></a></li>
-                        <li><a style="background-image:url('img/projects/taco.png')" href="taco" data-title="taco from bfb spin" data-desc="new hit experience"></a></li>
-                        <li><a style="background-image:url('img/projects/error.png')" href="error" data-title="error" data-desc="windows simulator"></a></li>
-                        <li><a style="background-image:url('img/projects/flag.png')" href="flag" data-title="flag generator" data-desc="slightly more developed now"></a></li>
-                        <li><a style="background-image:url('img/projects/for.png')" href="for" data-title="for" data-desc="click the colors"></a></li>
-                        <li><a style="background-image:url('img/projects/trails.png')" href="trails" data-title="trails" data-desc="leaving a mark"></a></li>
-                        <li><a style="background-image:url('img/projects/wiggle.png')" href="wiggle" data-title="wiggle" data-desc="shake it"></a></li>
-                        <li><a style="background-image:url('img/projects/awedd.png')" href="awedd" data-title="awedd" data-desc="recreation of a stagecast creator game"></a></li>
-                        <li><a style="background-image:url('img/projects/fart.png')" href="fart" data-title="fart" data-desc="web development"></a></li>
-                        <li><a style="background-image:url('img/projects/colorgraph.png')" href="colorgraph" data-title="color graph" data-desc="graph of colors along a line"></a></li>
-                        <li><a style="background-image:url('img/projects/spunch.png')" href="spunch" data-title="spunch" data-desc="make the funny gif"></a></li>
-                        <li><a style="background-image:url('img/projects/cool_s.png')" href="cool_s" data-title="cool s" data-desc="cool s generator"></a></li>
-                    </ul>
-
-                    <p style="color:rgba(255,255,255,0.5);text-align: center;font-size: 10px;">more coming soon maybe</p>
-                </div>
-
-                <div class="back_to_main">⇧</div>
-            </div>
-        </div>
-
-        <script src="jquery.js"></script>
-        <script src="script.js"></script>
+        <script defer src="script/projects.js"></script>
+        <script defer src="script/main.js"></script>
     </body>
 </html>
