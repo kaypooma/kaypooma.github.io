@@ -26,10 +26,11 @@
         <textarea id="text"></textarea>
         <audio id="output" controls></audio>
         <hr>
-        <input type="file" id="audioupload">
+        <input type="file" id="audioupload" accept="audio/wav">
         <p>each character takes <input type="number" id="samplesPerCharacter"> samples or <input type="number" step="0.1" id="secondsPerCharacter"> seconds in the audio file</p>
         <!-- <p>silent characters: <input type="text" id="silent"></p> -->
         <button id="generate">generate</button>
+        <p>*i think this only works with 44100 hz sample rate stereo wave files</p>
 
         <script src="wavefile.js"></script>
         <script src="script.js"></script>
