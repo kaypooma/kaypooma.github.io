@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>blipgen</title>
+
+        <style>
+            body {
+                font-family: monospace;
+            }
+
+            textarea {
+                width: 400px;
+                height: 300px;
+            }
+
+            input[type="number"] {
+                width: 100px;
+                font-family: inherit;
+            }
+        </style>
+    </head>
+    <body>
+        <textarea id="text"></textarea>
+        <audio id="output" controls></audio>
+        <hr>
+        <input type="file" id="audioupload">
+        <p>each character takes <input type="number" id="samplesPerCharacter"> samples or <input type="number" step="0.1" id="secondsPerCharacter"> seconds in the audio file</p>
+        <!-- <p>silent characters: <input type="text" id="silent"></p> -->
+        <button id="generate">generate</button>
+
+        <script src="wavefile.js"></script>
+        <script src="script.js"></script>
+    </body>
+</html>
