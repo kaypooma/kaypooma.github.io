@@ -54,6 +54,8 @@ const generateSound = e => {
     let originalBuffer = Array.from(sound.original.data.samples)
     let slice = originalBuffer.slice(0, settings.samplesPerCharacter*2 > originalBuffer.length ? originalBuffer.length-1 : settings.samplesPerCharacter*2-1)
 
+    declick(slice)
+
     let processedBuffer = []
     let text = document.getElementById('text').value.slice('')
     for (let i=0; i<text.length; i++) {
@@ -72,6 +74,13 @@ const generateSound = e => {
     sound.processed.fromScratch(2, 44100, '8', processedBuffer)
 
     document.getElementById('output').src = sound.processed.toDataURI()
+}
+const declick = buffer => {
+    for (let i=buffer.length-1; i>=buffer.length-100; i--) {
+        let strength = (100-(i - buffer.length+101))/100
+        buffer[i] = Math.floor((buffer[i] - 128) * strength) + 128
+        // console.log(strength)
+    }
 }
 
 document.getElementById('samplesPerCharacter').addEventListener('change', () =>
