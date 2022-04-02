@@ -7,54 +7,18 @@
         <title>audio data generator</title>
 
         <style>
-            #upload_container {
-                border: 1px dotted #000;
-                padding: 10px;
-
-                position: relative;
-
-                max-width: 400px;
-            }
-
-            #upload {
-                width: 100%;
-            }
-
-            #preview_range {
-                width: 90%;
-            }
-
-            canvas {
-                border: 1px dotted #000;
+            #visualizer {
+                border: 1px solid #aaa;
             }
         </style>
     </head>
     <body>
-        <div id="upload_container">
-            <input type="file" id="upload" accept="audio/*" />
-        </div>
-
-        <select id="buffer_length">
-            <option>128</option>
-            <option>256</option>
-            <option>512</option>
-            <option selected>1024</option>
-            <option>2048</option>
-        </select> 
-        <label for="buffer_length">buffer length: 1024</label> <button id="generate">generate</button>
-
+        <input type="file" id="audio_upload" accept="audio/*" />
         <hr>
-
         <audio id="preview_audio" controls></audio>
-
         <hr>
+        <canvas id="visualizer" width="800" height="200"></canvas>
 
-        <!--<input type="range" id="preview_range" step="1" /> <label for="preview_range">0</label>-->
-        <br>
-        <canvas width="400" height="200" id="canvas"></canvas>
-        <canvas width="400" height="200" id="fftcanvas"></canvas>
-
-        <script src="fft.js"></script>
-        <script type="module" src="script.js"></script>
+        <script src="script.js"></script>
     </body>
 </html>

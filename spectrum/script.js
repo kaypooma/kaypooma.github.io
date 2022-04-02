@@ -1,23 +1,7 @@
 'use strict';
 
-import * as fftlib from './fft.js';
-
 (() => {
     const $ = (selector) => document.querySelector(selector)
-
-    const audioContext = new window.AudioContext()
-    let audioData = {}
-    let animationFrame
-
-    const canvas = $('#canvas')
-    const ctx = canvas.getContext('2d')
-
-    const fftcanvas = $('#fftcanvas')
-    const ftx = fftcanvas.getContext('2d')
-    // const analyzer = audioContext.createAnalyser()
-
-    // analyzer.fftSize = 256
-    // const bufferLength = analyzer.frequencyBinCount
 
     const handleFiles = (files) => {
         let audio
@@ -29,155 +13,171 @@ import * as fftlib from './fft.js';
             }
         }
 
-        handleAudio(audio, parseInt($('#buffer_length').value))
+        handleAudio(audio)
     }
 
-    const handleAudio = (audio, bufferLength = 1024) => {
+    let frequencyData = []
+    let weightedFrequencyData = []
+    const analyze = (step = 1/30, audioBuffer, offlineContext, analyzer, nextTime, source) => {        
+        offlineContext.suspend(nextTime).then(() => {
+            let test = new Uint8Array(analyzer.frequencyBinCount)
+
+            analyzer.getByteFrequencyData(test)
+            frequencyData.push( [offlineContext.currentTime, test] )
+
+            nextTime += step
+
+            offlineContext.resume()
+            
+            if (nextTime < audioBuffer.duration) return analyze(step, audioBuffer, offlineContext, analyzer, nextTime, source)
+        }).catch((error) => {
+            nextTime = offlineContext.currentTime + step*2
+            return analyze(step, audioBuffer, offlineContext, analyzer, nextTime, source)
+        })
+    }
+
+    const handleAudio = (audio) => {
+        let audioContext = new AudioContext()
         audio.arrayBuffer()
             .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer))
             .then(audioBuffer => {
-                let channelData = audioBuffer.getChannelData(0)
-                let slices = []
-                
-                let index = 0
-                while (index < channelData.length) {
-                    let data = []
-                    for (let i=index; i<index+bufferLength; i++) {
-                        data.push(channelData[i] === undefined ? 0 : channelData[i])
-                    }
+                console.log(audioBuffer)
 
-                    slices.push( data )
+                let offlineContext = new OfflineAudioContext(audioBuffer.numberOfChannels, audioBuffer.length, audioBuffer.sampleRate)
 
-                    index += bufferLength
-                }
-                
-                updateData(slices, bufferLength, audioBuffer.sampleRate)
-                $('#preview_audio').src = URL.createObjectURL(audio)
+                let analyzer = offlineContext.createAnalyser()
+                analyzer.fftSize = 256
+                analyzer.smoothingTimeConstant = 0.7
+                analyzer.connect(offlineContext.destination)
+
+                let source = offlineContext.createBufferSource()
+                source.buffer = audioBuffer
+                source.connect(analyzer)
+
+                source.start()  
+                offlineContext.startRendering().then(() => {
+                    frequencyData.sampleRate = audioBuffer.sampleRate
+                    applyAWeightingToFrequencyData(frequencyData, audio)
+                })
+
+                let nextTime = 0
+                frequencyData = []
+                analyze(1/24, audioBuffer, offlineContext, analyzer, nextTime, source)
             })
     }
 
-    // const test = (n) => {
-    //     return Math.floor(Math.pow(n, 2) * 512)
-    // }
-    // for (let i=0; i<1; i+=1/16) console.log(test(i))
+    let aWeightFrequency = [
+        10, 12.5, 16, 20, 
+        25, 31.5, 40, 50, 
+        63, 80, 100, 125, 
+        160, 200, 250, 315, 
+        400, 500, 630, 800, 
+        1000, 1250, 1600, 2000, 
+        2500, 3150, 4000, 5000,
+        6300, 8000, 10000, 12500, 
+        16000, 20000 
+    ]        
+    let aWeightDecibels = [
+        -70.4, -63.4, -56.7, -50.5, 
+        -44.7, -39.4, -34.6, -30.2, 
+        -26.2, -22.5, -19.1, -16.1, 
+        -13.4, -10.9, -8.6, -6.6, 
+        -4.8, -3.2, -1.9, -0.8, 
+        0.0, 0.6, 1.0, 1.2, 
+        1.3, 1.2, 1.0, 0.5, 
+        -0.1, -1.1, -2.5, -4.3, 
+        -6.6, -9.3 
+    ]
+    const linterp = (x, y, xx) => {      
+        let result = 0.0
+        let found = false
 
-    const generateSpectrum = (slices, bins=16) => {
-        audioData.rawSpectrum = []
-        audioData.spectrum = []
+        if (x[0] > xx) {
+            result = y[0]
+            found = true
+        }
 
-        for (let slice=0; slice<slices.length; slice++) {
-            let test = fftjs.fft(slices[slice])
-            
-            let frequencies = fftjs.util.fftFreq(test, audioData.sampleRate)
-            let magnitudes = fftjs.util.fftMag(test)
-        
-            let both = frequencies.map(function (f, ix) {
-                return {frequency: Math.floor(f), magnitude: magnitudes[ix]}
-            })
-
-            // if (slice==0) console.log(both)
-
-            audioData.rawSpectrum[slice] = both
-
-            let funny = []
-            for (let i=0; i<1; i+=1/64) funny.push( Math.floor(Math.pow(i, 2) * 512) )
-    
-            audioData.spectrum[slice] = []
-            
-            for (let i=0; i<funny.length; i++) {
-                let min = funny[i]
-                let max = funny[i+1] || 512
-    
-                let average = []
-    
-                for (let r=min; r<max; r++) {
-                    average.push( audioData.rawSpectrum[slice][r].magnitude )
+        if (!found) {
+            for (let i = 1; i < x.length; i++) {
+                if (x[i] > xx) {
+                    result = y[i-1] + ((xx - x[i-1]) / (x[i] - x[i-1])) * (y[i] - y[i-1]);
+                    found = true
+                    break
                 }
-     
-                let magAverage = average.reduce((a, b) => a + b) / average.length
-
-                audioData.spectrum[slice].push(magAverage)
             }
         }
+
+        if (!found) {
+            result = y[y.length-1]
+        }
+
+        return result
+    }
+    const calculateAWeightingDBAtFrequency = (frequency) => {
+        return 50**(linterp(aWeightFrequency, aWeightDecibels, frequency)/50)
     }
 
-    const updateData = (data, bufferLength, sampleRate) => {
-        audioData.slices = data
-        audioData.bufferLength = bufferLength
-        audioData.sampleRate = sampleRate
+    const applyAWeightingToFrequencyData = (frequencyData, audio) => {
+        weightedFrequencyData = []
+        for (let i=0; i<frequencyData.length; i++) {
+            let data = frequencyData[i]
+            let ff = [ data[0], [] ]
+            for (let f=0; f<data[1].length; f++) {
+                let frequency = (f+1)/data[1].length * frequencyData.sampleRate/2
+                let weighted = data[1][f]
+                // if (i===0) {
+                //     console.log(weighted, data[1][f])
+                //     console.log(frequency)
+                // }
 
-        generateSpectrum(audioData.slices)
-
-        // $('#preview_range').setAttribute('max', audioData.slices.length-1)
+                if (frequency<=20000) ff[1].push( weighted )
+            }
+            weightedFrequencyData.push( ff )
+        }
+        console.log(weightedFrequencyData, frequencyData)
+        handleVisualizer(audio)
     }
 
-    $('#upload').addEventListener('change', () => {
-        handleFiles( $('#upload').files )
-    })
+    const handleVisualizer = (audio) => {
+        $('#preview_audio').src = URL.createObjectURL(audio)
+    }
 
-    const previewAudio = $('#preview_audio')
+    const ctx = $('#visualizer').getContext('2d')
+
+    let canvasAnimationFrame
+    let drawFrame = null
     const updateCanvas = () => {
-        let time = previewAudio.currentTime
-        let position = Math.floor(time * audioData.sampleRate / audioData.bufferLength)
+        let time = $('#preview_audio').currentTime
+        // let frame = frequencyData[Math.floor(time*30)]
+        // let frame = null
+        // let framei = 0
+        // while (time < frequencyData[framei][0]) {
+        //     console.log(frequencyData[framei][0], time)
 
-        drawWaveform(audioData.slices[position])
-        drawSpectrum(audioData.spectrum[position])
-
-        if (!previewAudio.paused) window.requestAnimationFrame(updateCanvas)
-    }
-
-    previewAudio.addEventListener('play', () => {
-        animationFrame = window.requestAnimationFrame(updateCanvas)
-    })
-
-    const drawWaveform = (slice) => {
-        ctx.clearRect(0, 0, 400, 200)
-        
-        ctx.lineWidth = 2
-        ctx.strokeStyle = 'rgb(0, 0, 0)'
-        ctx.beginPath()
-
-        for (let i=0; i<audioData.bufferLength; i++) {
-            ctx[i==0 ? 'moveTo' : 'lineTo'](i/audioData.bufferLength * 400, 100 + slice[i]*100)
+        //     drawFrame = frequencyData[framei]
+        //     framei++
+        // }
+        for (let i=0; i<weightedFrequencyData.length; i++) {
+            if (time < weightedFrequencyData[i][0]) break
+            drawFrame = weightedFrequencyData[i]
         }
 
-        ctx.stroke()
-    }
+        ctx.clearRect(0,0,800,200)
+        for (let i=0; i<drawFrame[1].length; i++) {
+            let height = drawFrame[1][i] / 256 * 200
+            let x = Math.pow(i/drawFrame[1].length,1/2)*(800)
+            ctx.fillRect(x, 200-height, 1, height)
 
-    const drawSpectrum = (slice) => {
-        let length = slice.length
 
-        ftx.clearRect(0, 0, 400, 200)
-        
-        ftx.lineWidth = 2
-        ftx.fillStyle = 'rgb(0, 0, 0)'
-
-        // console.log(slice)
-
-        for (let i=0; i<length; i++) {
-            ftx.fillRect(i/length * 400, 100, 5, slice[i]*5)
         }
 
+        if (!$('#preview_audio').paused) window.requestAnimationFrame(updateCanvas)
     }
-
-    // $('#preview_range').addEventListener('input', () => {
-    //     let position = $('#preview_range').value
-    //     let currentSlice = audioData.slices[position]
-
-    //     $('label[for="preview_range"]').innerText = `${position} / ${(position * audioData.bufferLength / audioData.sampleRate).toFixed(2)}s`
-
-    //     // ------------------------------------------------------------
-
-    //     drawWaveform(currentSlice)
-    // })
-
-    $('#buffer_length').addEventListener('input', () => {
-        $('label[for="buffer_length"]').innerText = `buffer length: ${$('#buffer_length').value}`
-    })
-    $('#generate').addEventListener('click', () => {
-        handleFiles( $('#upload').files )
+    $('#preview_audio').addEventListener('play', () => {
+        canvasAnimationFrame = window.requestAnimationFrame(updateCanvas)
     })
 
-
-
+    $('#audio_upload').addEventListener('change', e => {
+        handleFiles( $('#audio_upload').files )
+    })
 })();
