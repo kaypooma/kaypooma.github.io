@@ -1,7 +1,7 @@
 // const sounds = ['21', 'airhorn', 'amogus_scream', 'amogus', 'aou', 'bonk', 'bruh', 'crowd_laughing', 'deez_nuts', 'dialup', 'ding', 'dubstep', 'eas_one', 'eas_two', 'epic_fail', 'fl_studio_render', 'flight_cry', 'flight_scream', 'fnaf_ambience', 'fnaf_jumpscare', 'geometry_dash', 'glass', 'grandma', 'jack_black', 'mammot', 'mouse_click', 'no_i_not', 'oh_my_god', 'porch', 'ps2_startup', 'pussy', 'ragdoll_sounds', 'reverb_fart', 'role_reveal', 'samsung_notification', 'squeak', 'suspense_1', 'suspense_2', 'suspense_3', 'suspense_4', 'suspense_5', 'suspense_6', 'swoosh', 'vine_boom', 'wet_fart', 'what_da_dog_doin', 'whip', 'wii_freeze', 'windows_95', 'windows_xp', 'wrong', 'you_stupid'];
 const sounds = [
     // speech
-    'you_stupid', 'no_i_not', '21', 'amogus_scream', 'amogus', 'aou', 'boyfriend', 'bruh', 'deez_nuts', 'flight_cry', 'flight_scream', 'grandma', 'jack_black', 'mammot', 'oh_my_god', 'porch', 'pussy', 'scream2', 'timallen', 'what_da_dog_doin', 'whip',
+    'you_stupid', 'no_i_not', '21', 'amogus_scream', 'amogus', 'aou', 'boyfriend', 'bruh', 'deez_nuts', 'flight_cry', 'flight_scream', 'grandma', 'jack_black', 'mammot', 'oh_my_god', 'porch', 'pussy', 'scream2', 'timallen', 'wocky_slush', 'what_da_dog_doin', 'whip',
     '----',
     // misc
     'airhorn', 'bfdi_cheering', 'crowd_laughing', 'dialup', 'dubstep', 'eas_one', 'eas_two', 'epic_fail', 'fl_studio_render', 'fnaf_ambience', 'fnaf_jumpscare', 'geometry_dash', 'krabs', 'ps2_startup', 'ragdoll_sounds', 'role_reveal', 'samsung_notification', 'taco_bell', 'wii_freeze', 'windows_95', 'windows_xp',
@@ -68,9 +68,33 @@ const audioContext = new window.AudioContext();
         audioQueue[tag] = audio
         audio.addEventListener('ended', () => { removeSound(tag) })
     }
-    const playSoundReverse = name => {
-        let tag = `${name}.${Date.now()}`
+    const playSoundPitched = name => {
+        if (!overlap) stopAllSound()
 
+        fetch(`sounds/${name}.ogg`)
+            .then(response => response.arrayBuffer())
+            .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer))
+            .then(audioBuffer => {
+                let tag = `${name}.${Date.now()}`
+
+                const soundSource = audioContext.createBufferSource()
+
+                const gainNode = audioContext.createGain()
+                gainNode.gain.value = 0.2 * volume
+                gainNode.connect(audioContext.destination)
+
+                soundSource.playbackRate.value = speed
+
+                soundSource.buffer = audioBuffer
+                soundSource.connect(gainNode)
+
+                soundSource.start()
+
+                audioQueue[tag] = soundSource
+                soundSource.addEventListener('ended', () => { removeSound(tag) })
+            })
+    }
+    const playSoundReverse = name => {
         if (!overlap) stopAllSound()
 
         fetch(`sounds/${name}.ogg`)
@@ -185,7 +209,7 @@ const audioContext = new window.AudioContext();
             if (reverse) {
                 playSoundReverse(name)
             } else {
-                playSound(name) 
+                document.getElementById('pitch').checked ? playSoundPitched(name) : playSound(name) 
             }
         })
 
