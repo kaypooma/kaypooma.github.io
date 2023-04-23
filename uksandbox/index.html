@@ -36,6 +36,9 @@
 
                 background: rgba(255, 255, 255, 0.25);
 
+                width: 260px;
+                height: 24px;
+
                 padding: 10px;
                 border: 1px outset #222;
             }
@@ -127,8 +130,96 @@
             .hidden {
                 display: none;
             }
+
+            #help {
+                font-family: 'VCR OSD Mono', monospace;
+
+                font-size: 21px;
+
+                background: rgba(255, 255, 255, 0.25);
+                color: #ddd;
+
+                position: absolute;
+
+                width: 45px;
+                height: 45px;
+
+                padding: 10px;
+
+                top: 5px;
+                left: 290px;
+            }
+
+            #help_dialog {
+                width: 450px;
+                height: fit-content;
+
+                position: absolute;
+                margin: auto;
+
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+
+                background: #404040;
+                border: 1px outset #222;
+
+                padding: 20px;
+
+                text-shadow: 0 2px 0 #000;
+                
+                display: none;
+                flex-direction: column;
+            }
+            #help_dialog p {
+                margin: 5px;
+            }
+            /* #help_dialog p:first-child {
+                margin-top: 0;
+            }
+            #help_dialog p:last-child {
+                margin-bottom: 0;
+            } */
+
+            #help_dialog button {                
+                font-family: 'VCR OSD Mono', monospace;
+                font-size: 21px;
+                padding: 5px;
+                
+                width: 100px;
+
+                background: #222;
+                color: #ddd;
+            }
+
+            #help_dialog div {
+                display: flex;
+                justify-content: right;
+
+                margin-top: 20px;
+            }
+
+            .delete_selected_object {
+                width: 30px;
+                height: 30px;
+                position: absolute;
+
+                right: 10px;
+                top: 6px;     
+
+                font-family: 'VCR OSD Mono', monospace;
+                font-size: 21px;
+
+                background: red;
+                border: 2px outset red;
+                color: #ddd;
+            }
+            .delete_selected_object:active {
+                border: 2px inset red;
+            }
         </style>
-      <script type="module" crossorigin src="assets/index-881ec2f7.js"></script>
+      <script type="module" crossorigin src="assets/index-955f25af.js"></script>
     </head>
     <body>
         <div id="file_input_container">
@@ -138,8 +229,20 @@
             <button id="save">save</button>
         </div>
 
+        <button id="help">?</button>
+        <div id="help_dialog">
+            <p>wasd to move</p>
+            <p>q to descend, e to ascend</p>
+            <p>shift to increase movement speed</p>
+            <p>left click to rotate view</p>
+            <p>right click to select objects</p>
+
+            <div><button id="close_help_dialog">close</button></div>
+        </div>
+
         <div class="object_data_container hidden" id="block_data">
             <p id="block_type">object</p>
+            <button class="delete_selected_object"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path fill="currentColor" d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"/></svg></button>
             <hr>
             <div class="control">
                 <p>position</p>
@@ -187,6 +290,7 @@
         </div>
         <div class="object_data_container hidden" id="prop_data">
             <p id="prop_type">object</p>
+            <button class="delete_selected_object"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path fill="currentColor" d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"/></svg></button>
             <hr>
             <div class="control">
                 <p>position</p>
