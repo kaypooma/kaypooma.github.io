@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        body {
+            margin: 0;
+        }
+
+        video {
+            height: 100vh;
+            margin: 0;
+            
+            animation: hue 5s linear infinite;
+        }
+
+        @keyframes hue {
+            from { filter: hue-rotate(0deg) }
+            to { filter: hue-rotate(360deg) }
+        }
+    </style>
+</head>
+<body>
+    <video src="animals-rabbit.mp4" type="video/mp4" id="video"></video>
+
+    <script>
+        const video = document.getElementById('video')
+        let trigger = false
+        
+        document.addEventListener('mousemove', e => {
+            let p = e.pageX / window.innerWidth
+
+            video.currentTime = video.duration * p
+            console.log(p)
+            
+            if (p > 0.3 && !trigger) {
+                let audio = new Audio('short_fart.ogg')
+                audio.volume = 0.1
+
+                audio.play()
+
+                trigger = true
+            } 
+            
+            if (p < 0.3) {
+                trigger = false
+            }
+        })
+    </script>
+</body>
+</html>
