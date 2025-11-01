@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        
+        <style>
+            * {
+                margin: 0;
+            }
+
+            body {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                height: 100vh;
+
+                flex-direction: column;
+            }
+
+            #chroma {
+                width: 500px;
+            }
+            #chroma_label {
+                font-size: 30px;
+            }
+
+            #dark_container {
+                position: absolute;
+                right: 10px;
+                bottom: 10px;
+            }
+
+            #album {
+                margin: 10px;
+            }
+
+            small {
+                font-size: 0.75em;
+            }
+        </style>
+    </head>
+    <body>
+        <img src="j.jpg" id="album">
+        
+        <input type="range" min="0" max="13" step="0.01" id="chroma"><label for="chroma" id="chroma_label">1 Chroma</label>
+
+        <div id="dark_container"><input type="checkbox" id="dark"> <label for="dark">Dark mode</label></div>
+
+        <script>
+            const c = document.getElementById('chroma')
+            const label = document.getElementById('chroma_label')
+
+            const dark = document.getElementById('dark')
+
+            function parseChromaValue(v) {
+                let plus = ''
+                if (c.value >= 7 && c.value%1 >= 0.7) plus = '+'
+
+                return Math.floor(c.value) + plus + ' <small>(CC: ' + (parseFloat(c.value)).toFixed(1) + ')</small>' + ' <small>(' + Math.round(c.value / 12 * 100) + '%)</small>' + ' Chroma <small>(黒魔)</small>'
+            }
+
+            function setDark() {
+                if (dark.checked) {
+                    document.body.style.background = '#222'
+                    document.body.style.color = '#eee'
+                } else {
+                    document.body.style.background = '#fff'
+                    document.body.style.color = '#000'
+                }
+
+                localStorage.setItem('chromaDark', dark.checked)
+            }
+
+            if (localStorage.getItem('chromaValue')) c.value = localStorage.getItem('chromaValue')
+            label.innerHTML = parseChromaValue(c.value)
+
+            c.addEventListener('input', () => {
+                label.innerHTML = parseChromaValue(c.value)
+
+                localStorage.setItem('chromaValue', c.value)
+            })
+
+            dark.checked = localStorage.getItem('chromaDark') == 'true' ? true : false
+
+            setDark()
+            dark.addEventListener('click', () => {
+                setDark()
+            })
+        </script>
+    </body>
+</html>
