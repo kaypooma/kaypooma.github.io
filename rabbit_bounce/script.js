@@ -1,14 +1,21 @@
+(function() {   
+
 function clamp(n, min, max) {
     return Math.min(Math.max(n, min), max)
 }
 function getRandomArbitrary(min, max) {
     return Math.random() * (max - min) + min;
 }
+function getRandomInt(min, max) {
+    const minCeiled = Math.ceil(min);
+    const maxFloored = Math.floor(max);
+    return Math.floor(Math.random() * (maxFloored - minCeiled) + minCeiled); // The maximum is exclusive and the minimum is inclusive
+}
 
 const window_width = window.innerWidth
 const window_height = window.innerHeight
 
-const bounce_elements = document.querySelectorAll('main img')
+const bounce_elements = document.querySelectorAll('main img, main video')
 
 let old_time = 0
 let delta_time = 0
@@ -21,6 +28,14 @@ let loss_f = 0.2
 let mouse = {x: 0, y: 0, velX: 0, velY: 0}
 
 let drag_vel = {oldX: 0, oldY: 0, velX: 0, velY: 0}
+let audio_threshold = 0.3
+
+function clack(vel) {
+    let audio = new Audio(`air${getRandomInt(1,5)}.ogg`)
+    audio.volume = clamp(vel, 0, 1)*0.5
+    audio.play()
+
+}
 
 function update(timestamp) {
     if (timestamp-old_time < 1/30*1000) {
@@ -48,19 +63,35 @@ function update(timestamp) {
             y += velY * delta_time
 
             if (x <= 0) {
+                if (velX>audio_threshold) {
+                    clack(velX)
+                }
+
                 x = 0
                 velX = -velX * 0.75
             }
             if (x >= window_width-width) {
+                if (velX>audio_threshold) {
+                    clack(velX)
+                }
+
                 x = window_width-width
                 velX = -velX * 0.75
             }
 
             if (y <= 0) {
+                if (velY>audio_threshold) {
+                    clack(velY)
+                }
+
                 y = 0
                 velY = -velY * 0.75
             }
             if (y >= window_height-height) {
+                if (velY>audio_threshold) {
+                    clack(velY)
+                }
+
                 y = window_height-height
                 velY = -velY * 0.75
             }
@@ -75,8 +106,8 @@ function update(timestamp) {
 
             el.style.transform = `translate(${x}px, ${y}px)`
         } else {
-            drag_vel.velX = parseFloat(el.dataset.x) - drag_vel.oldX
-            drag_vel.velY = parseFloat(el.dataset.y) - drag_vel.oldY
+            drag_vel.velX = (drag_vel.velX + (parseFloat(el.dataset.x) - drag_vel.oldX)) / 2
+            drag_vel.velY = (drag_vel.velY + (parseFloat(el.dataset.y) - drag_vel.oldY)) / 2
 
             drag_vel.oldX = parseFloat(el.dataset.x)
             drag_vel.oldY = parseFloat(el.dataset.y)
@@ -129,6 +160,7 @@ document.addEventListener('mouseup', e => {
 
 for (let el of bounce_elements) {
     el.style.width = `${getRandomArbitrary(150,300)}px`
+    // el.style.filter = `hue-rotate(${getRandomArbitrary(0,360)}deg)`
 
     let rect = el.getBoundingClientRect()
 
@@ -153,3 +185,5 @@ for (let el of bounce_elements) {
 }
 
 requestAnimationFrame(update)
+
+})();
