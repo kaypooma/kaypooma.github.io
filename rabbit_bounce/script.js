@@ -61,6 +61,14 @@ let touch = {x: 0, y: 0}
 let dragVelocity = {oldX: 0, oldY: 0, velX: 0, velY: 0}
 let audioThreshold = 0.3
 
+// acceleration
+let deviceAcceleration = {x: 0, y: 0}
+if (window.DeviceMotionEvent) {
+    window.addEventListener('devicemotion', e => {
+        deviceAcceleration.x = e.acceleration.x
+        deviceAcceleration.y = e.acceleration.y
+    })
+}
 // rotation
 let deviceRotation = 0
 let screenOrientation = 0
@@ -109,12 +117,13 @@ function update(timestamp) {
 
     let rotationAmount = (deviceRotation - screenOrientation) * (Math.PI/180)
 
-    document.getElementById('arrow').style.transform = `rotateZ(${Math.PI*0.5 + rotationAmount}rad)`
+    // document.getElementById('arrow').style.transform = `rotateZ(${Math.PI*0.5 + rotationAmount}rad)`
 
+    // accurate(?)
     let xGravityMult = -Math.sin(rotationAmount)
     let yGravityMult = Math.cos(rotationAmount)
 
-    if (document.getElementById('rotation')) document.getElementById('rotation').innerHTML = `${deviceRotation}<br>${xGravityMult}, ${yGravityMult}<br>${screenOrientation}`
+    if (document.getElementById('rotation')) document.getElementById('rotation').innerHTML = `${deviceAcceleration.x}, ${deviceAcceleration.y}`
 
     for (let el of bounceElements) {
         if (el.dataset.updating === 'true') {
