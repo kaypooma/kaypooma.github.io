@@ -130,14 +130,16 @@ function update(timestamp) {
             let [x,y,width,height,velX,velY,mass,massInfluence] = [parseFloat(el.dataset.x), parseFloat(el.dataset.y), parseFloat(el.dataset.width), parseFloat(el.dataset.height), parseFloat(el.dataset.velX), parseFloat(el.dataset.velY), parseFloat(el.dataset.mass), parseFloat(el.dataset.massInfluence)]
             
             velX += gravityAccel*massInfluence*xGravityMult * deltaTime
+            velX += deviceAcceleration.x*0.002 * deltaTime
             velX += (-dragValue * velX**2) * deltaTime
 
             velY += gravityAccel*massInfluence*yGravityMult * deltaTime
+            velY += deviceAcceleration.y*0.002 * deltaTime
             velY += (-dragValue * velY**2) * deltaTime
             // velX += (-0.001 * velX) * deltaTime
 
-            x += (velX + deviceAcceleration.x) * deltaTime
-            y += (velY + deviceAcceleration.y) * deltaTime
+            x += velX * deltaTime
+            y += velY * deltaTime
 
             if (x <= 0) {
                 if (velX>audioThreshold) {
@@ -230,6 +232,9 @@ function releaseDraggingElement(el) {
 }
 
 document.addEventListener('mousemove', e => {
+    // deviceAcceleration.x = (e.clientX - mouse.x)/50
+    // deviceAcceleration.y = (e.clientY - mouse.y)/50
+
     mouse.x = e.clientX
     mouse.y = e.clientY
     
