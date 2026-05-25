@@ -61,14 +61,6 @@ let touch = {x: 0, y: 0}
 let dragVelocity = {oldX: 0, oldY: 0, velX: 0, velY: 0}
 let audioThreshold = 0.3
 
-// acceleration
-let deviceAcceleration = {x: 0, y: 0}
-if (window.DeviceMotionEvent) {
-    window.addEventListener('devicemotion', e => {
-        deviceAcceleration.x = e.acceleration.x
-        deviceAcceleration.y = e.acceleration.y
-    })
-}
 // rotation
 let deviceRotation = 0
 let screenOrientation = 0
@@ -80,6 +72,26 @@ if (window.DeviceOrientationEvent) {
 screen.orientation.addEventListener('change', e => {
     screenOrientation = e.target.angle
 })
+// acceleration
+let deviceAcceleration = {x: 0, y: 0}
+if (window.DeviceMotionEvent) {
+    window.addEventListener('devicemotion', e => {
+
+        if (screenOrientation===0) {
+            deviceAcceleration.x = e.acceleration.x
+            deviceAcceleration.y = e.acceleration.y
+        } else if (screenOrientation===90) {
+            deviceAcceleration.x = e.acceleration.y
+            deviceAcceleration.y = e.acceleration.x
+        } else if (screenOrientation===180) {
+            deviceAcceleration.x = -e.acceleration.x
+            deviceAcceleration.y = -e.acceleration.y            
+        } else if (screenOrientation===270) {
+            deviceAcceleration.x = -e.acceleration.y
+            deviceAcceleration.y = -e.acceleration.x            
+        }
+    })
+}
 // document.getElementById('rot_test').addEventListener('input', e => {
 //     deviceRotation = e.target.value * (Math.PI/180)
 // })
