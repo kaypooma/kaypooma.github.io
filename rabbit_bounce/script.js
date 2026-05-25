@@ -66,7 +66,7 @@ let deviceRotation = 0
 if (window.DeviceOrientationEvent) {
     window.addEventListener('deviceorientation', e => {
         deviceRotation = e.alpha
-        document.getElementById('#rotation').innerText = deviceRotation
+        document.getElementById('rotation').innerText = deviceRotation
     })
 }
 // document.getElementById('rot_test').addEventListener('input', e => {
@@ -104,7 +104,7 @@ function update(timestamp) {
 
     oldTime = timestamp
 
-    if (document.getElementById('#rotation')) document.getElementById('#rotation').innerText = deviceRotation || 'none'
+    if (document.getElementById('rotation')) document.getElementById('rotation').innerText = deviceRotation
 
     let xGravityMult = Math.sin(deviceRotation)
     let yGravityMult = Math.cos(deviceRotation)
