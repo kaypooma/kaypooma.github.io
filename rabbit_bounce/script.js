@@ -66,8 +66,7 @@ let deviceRotation = 0
 let screenOrientation = 0
 if (window.DeviceOrientationEvent) {
     window.addEventListener('deviceorientation', e => {
-        deviceRotation = e.alpha
-        document.getElementById('rotation').innerText = deviceRotation * (Math.PI/180)
+        deviceRotation = e.alpha * (Math.PI/180)
     })
 }
 screen.orientation.addEventListener('change', e => {
