@@ -156,7 +156,7 @@ function update(timestamp) {
             x += velX * deltaTime
             y += velY * deltaTime
 
-            let lossMult = 0.05 + (0.005 * massInfluence)
+            // let lossMult = 1 + (0.005 * massInfluence)
 
             if (x <= 0) {
                 if (Math.abs(velX)>audioThreshold) {
@@ -164,8 +164,7 @@ function update(timestamp) {
                 }
 
                 x = 0
-                velX = -velX
-                velX -= (velX*energyLoss*lossMult)*deltaTime
+                velX = -velX * energyLoss
             }
             if (x >= windowWidth-width) {
                 if (Math.abs(velX)>audioThreshold) {
@@ -173,8 +172,7 @@ function update(timestamp) {
                 }
 
                 x = windowWidth-width
-                velX = -velX
-                velX -= (velX*energyLoss*lossMult)*deltaTime
+                velX = -velX * energyLoss
             }
 
             if (y <= 0) {
@@ -183,9 +181,8 @@ function update(timestamp) {
                 }
 
                 y = 0
-                velY = -velY
-                velY -= (velY*energyLoss*lossMult)*deltaTime
-                velX -= (velX*frictionLoss*lossMult)*deltaTime
+                velY = -velY * energyLoss
+                velX = velX * frictionLoss
             }
             if (y >= windowHeight-height) {
                 if (Math.abs(velY)>audioThreshold) {
@@ -193,9 +190,8 @@ function update(timestamp) {
                 }
 
                 y = windowHeight-height
-                velY = -velY
-                velY -= (velY*energyLoss*lossMult)*deltaTime
-                velX -= (velX*frictionLoss*lossMult)*deltaTime
+                velY = -velY * energyLoss
+                velX = velX * frictionLoss
             }
 
             // update positions and stuff
