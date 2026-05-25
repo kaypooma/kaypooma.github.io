@@ -66,7 +66,7 @@ let deviceRotation = 0
 let screenOrientation = 0
 if (window.DeviceOrientationEvent) {
     window.addEventListener('deviceorientation', e => {
-        deviceRotation = e.alpha * (Math.PI/180)
+        deviceRotation = e.alpha
     })
 }
 screen.orientation.addEventListener('change', e => {
@@ -107,8 +107,10 @@ function update(timestamp) {
 
     oldTime = timestamp
 
-    let xGravityMult = Math.sin(deviceRotation)
-    let yGravityMult = Math.cos(deviceRotation)
+    let rotationAmount = (deviceRotation + screenOrientation) * (Math.PI/180)
+
+    let xGravityMult = -Math.sin(rotationAmount)
+    let yGravityMult = Math.cos(rotationAmount)
 
     if (document.getElementById('rotation')) document.getElementById('rotation').innerHTML = `${deviceRotation}<br>${xGravityMult}, ${yGravityMult}<br>${screenOrientation}`
 
