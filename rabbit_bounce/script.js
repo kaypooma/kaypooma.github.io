@@ -63,12 +63,16 @@ let audioThreshold = 0.3
 
 // rotation
 let deviceRotation = 0
+let screenOrientation = 0
 if (window.DeviceOrientationEvent) {
     window.addEventListener('deviceorientation', e => {
         deviceRotation = e.alpha
-        document.getElementById('rotation').innerText = deviceRotation
+        document.getElementById('rotation').innerText = deviceRotation * (Math.PI/180)
     })
 }
+screen.orientation.addEventListener('change', e => {
+    screenOrientation = e.target.angle
+})
 // document.getElementById('rot_test').addEventListener('input', e => {
 //     deviceRotation = e.target.value * (Math.PI/180)
 // })
@@ -104,10 +108,10 @@ function update(timestamp) {
 
     oldTime = timestamp
 
-    if (document.getElementById('rotation')) document.getElementById('rotation').innerText = deviceRotation
-
     let xGravityMult = Math.sin(deviceRotation)
     let yGravityMult = Math.cos(deviceRotation)
+
+    if (document.getElementById('rotation')) document.getElementById('rotation').innerHTML = `${deviceRotation}<br>${xGravityMult}, ${yGravityMult}<br>${screenOrientation}`
 
     for (let el of bounceElements) {
         if (el.dataset.updating === 'true') {
