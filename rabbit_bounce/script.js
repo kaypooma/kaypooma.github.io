@@ -128,12 +128,14 @@ function update(timestamp) {
     for (let el of bounceElements) {
         if (el.dataset.updating === 'true') {
             let [x,y,width,height,velX,velY,mass,massInfluence] = [parseFloat(el.dataset.x), parseFloat(el.dataset.y), parseFloat(el.dataset.width), parseFloat(el.dataset.height), parseFloat(el.dataset.velX), parseFloat(el.dataset.velY), parseFloat(el.dataset.mass), parseFloat(el.dataset.massInfluence)]
-
-            velY += gravityAccel*massInfluence*yGravityMult * deltaTime
-            velY += (-dragValue * velY**2) * deltaTime
             
             velX += gravityAccel*massInfluence*xGravityMult * deltaTime
             velX += (-dragValue * velX**2) * deltaTime
+            velX += deviceAcceleration.x * deltaTime
+
+            velY += gravityAccel*massInfluence*yGravityMult * deltaTime
+            velY += (-dragValue * velY**2) * deltaTime
+            velY += deviceAcceleration.y * deltaTime
             // velX += (-0.001 * velX) * deltaTime
 
             x += velX * deltaTime
