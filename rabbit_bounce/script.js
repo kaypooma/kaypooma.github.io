@@ -60,6 +60,17 @@ let touch = {x: 0, y: 0}
 let dragVelocity = {oldX: 0, oldY: 0, velX: 0, velY: 0}
 let audioThreshold = 0.3
 
+// rotation
+let deviceRotation = 0
+if (window.DeviceOrientationEvent) {
+    window.addEventListener('deviceorientation', e => {
+        deviceRotation = e.alpha || 0
+    })
+}
+// document.getElementById('rot_test').addEventListener('input', e => {
+//     deviceRotation = e.target.value * (Math.PI/180)
+// })
+
 function clack(vel, mass) {
     if (navigator.userActivation.hasBeenActive) {
         let volume = Math.abs(clamp(vel*0.5, 0, 1))
@@ -91,14 +102,19 @@ function update(timestamp) {
 
     oldTime = timestamp
 
+    let xGravityMult = Math.sin(deviceRotation)
+    let yGravityMult = Math.cos(deviceRotation)
+
     for (let el of bounceElements) {
         if (el.dataset.updating === 'true') {
             let [x,y,width,height,velX,velY,mass,massInfluence] = [parseFloat(el.dataset.x), parseFloat(el.dataset.y), parseFloat(el.dataset.width), parseFloat(el.dataset.height), parseFloat(el.dataset.velX), parseFloat(el.dataset.velY), parseFloat(el.dataset.mass), parseFloat(el.dataset.massInfluence)]
 
-            velY += gravityAccel*massInfluence * deltaTime
+            velY += gravityAccel*massInfluence*yGravityMult * deltaTime
             velY += (-dragValue * velY**2) * deltaTime
-
-            velX += (-0.001 * velX) * deltaTime
+            
+            velX += gravityAccel*massInfluence*xGravityMult * deltaTime
+            velX += (-dragValue * velX**2) * deltaTime
+            // velX += (-0.001 * velX) * deltaTime
 
             x += velX * deltaTime
             y += velY * deltaTime
