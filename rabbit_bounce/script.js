@@ -18,8 +18,8 @@ const audioContext = new AudioContext()
 let bounceElements
 
 // preload
-const preloadImagePaths = ['bg'] 
-// const preloadImagePaths = ['bg', 'booboo', 'bububunny-bubu', 'bunny-bunny-eating', 'bunny-cute (1)', 'bunny-cute', 'bunny-sleepy (1)', 'bunny-sleepy', 'bunny-surprised', 'bunny', 'HATA_D-XYAA6TCb'] 
+// const preloadImagePaths = ['bg'] 
+const preloadImagePaths = ['bg', 'booboo', 'bububunny-bubu', 'bunny-bunny-eating', 'bunny-cute (1)', 'bunny-cute', 'bunny-sleepy (1)', 'bunny-sleepy', 'bunny-surprised', 'bunny', 'HATA_D-XYAA6TCb'] 
 const images = preloadImagePaths.map(path => new Image())
 images.forEach((img, i) => img.src = `${preloadImagePaths[i]}.gif`)
 
@@ -46,20 +46,6 @@ window.onresize = function() {
     windowWidth = window.innerWidth
     windowHeight = window.innerHeight
 }
-
-let oldTime = 0
-let deltaTime = 0
-let lastGoodDeltaTime = 0
-
-let gravityAccel = 0.002
-let dragValue = 0.0001
-let energyLoss = 0.75
-
-let mouse = {x: 0, y: 0}
-let touch = {x: 0, y: 0}
-
-let dragVelocity = {oldX: 0, oldY: 0, velX: 0, velY: 0}
-let audioThreshold = 0.3
 
 // rotation
 let deviceRotation = 0
@@ -92,13 +78,29 @@ if (window.DeviceMotionEvent) {
         }
     })
 }
-// document.getElementById('rot_test').addEventListener('input', e => {
-//     deviceRotation = e.target.value * (Math.PI/180)
-// })
+
+let oldTime = 0
+let deltaTime = 0
+let lastGoodDeltaTime = 0
+
+let gravityAccel = 0.002
+let dragValue = 0.0001
+let energyLoss = 0.75
+let frictionLoss = 0.99
+
+let mouse = {x: 0, y: 0}
+let touch = {x: 0, y: 0}
+
+let dragVelocity = {oldX: 0, oldY: 0, velX: 0, velY: 0}
+let audioThreshold = 0.3
 
 function clack(vel, mass) {
+    console.log(vel)
     if (navigator.userActivation.hasBeenActive) {
-        let volume = Math.abs(clamp(vel*0.5, 0, 1))
+        let volume = clamp(Math.abs(vel)*0.5, 0, 1)
+
+        console.log(volume)
+
         let sizeInfluence = (3-mass) * 75
         let which = getRandomInt(0,4)
 
@@ -135,7 +137,8 @@ function update(timestamp) {
     let xGravityMult = -Math.sin(rotationAmount)
     let yGravityMult = Math.cos(rotationAmount)
 
-    if (document.getElementById('rotation')) document.getElementById('rotation').innerHTML = `${deviceAcceleration.x}, ${deviceAcceleration.y}`
+    // if (document.getElementById('rotation')) document.getElementById('rotation').innerHTML = `${deviceAcceleration.x}, ${deviceAcceleration.y}`
+    // deltaTime = 1/160*1000
 
     for (let el of bounceElements) {
         if (el.dataset.updating === 'true') {
@@ -154,37 +157,45 @@ function update(timestamp) {
             y += velY * deltaTime
 
             if (x <= 0) {
-                if (velX>audioThreshold) {
+                if (Math.abs(velX)>audioThreshold) {
                     clack(velX, mass)
                 }
 
                 x = 0
-                velX = -velX * energyLoss
+                velX = -velX
+                velX -= (velX*energyLoss*0.05)*deltaTime
+                velY -= (velY*frictionLoss*0.05)*deltaTime
             }
             if (x >= windowWidth-width) {
-                if (velX>audioThreshold) {
+                if (Math.abs(velX)>audioThreshold) {
                     clack(velX, mass)
                 }
 
                 x = windowWidth-width
-                velX = -velX * energyLoss
+                velX = -velX
+                velX -= (velX*energyLoss*0.05)*deltaTime
+                velY -= (velY*frictionLoss*0.05)*deltaTime
             }
 
             if (y <= 0) {
-                if (velY>audioThreshold) {
+                if (Math.abs(velY)>audioThreshold) {
                     clack(velY, mass)
                 }
 
                 y = 0
-                velY = -velY * energyLoss
+                velY = -velY
+                velY -= (velY*energyLoss*0.05)*deltaTime
+                velX -= (velX*frictionLoss*0.05)*deltaTime
             }
             if (y >= windowHeight-height) {
-                if (velY>audioThreshold) {
+                if (Math.abs(velY)>audioThreshold) {
                     clack(velY, mass)
                 }
 
                 y = windowHeight-height
-                velY = -velY * energyLoss
+                velY = -velY
+                velY -= (velY*energyLoss*0.05)*deltaTime
+                velX -= (velX*frictionLoss*0.05)*deltaTime
             }
 
             // update positions and stuff
@@ -292,12 +303,14 @@ function init(n) {
 
         let rect = el.getBoundingClientRect()
 
+        // el.dataset.x = 0
         el.dataset.x = getRandomArbitrary(0, windowWidth-rect.width)
         el.dataset.y = rect.y
 
         el.dataset.width = rect.width
         el.dataset.height = rect.height
 
+        // el.dataset.velX = 3
         el.dataset.velX = 0
         el.dataset.velY = 0
 
