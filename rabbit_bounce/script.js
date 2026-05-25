@@ -131,15 +131,13 @@ function update(timestamp) {
             
             velX += gravityAccel*massInfluence*xGravityMult * deltaTime
             velX += (-dragValue * velX**2) * deltaTime
-            velX += deviceAcceleration.x * deltaTime
 
             velY += gravityAccel*massInfluence*yGravityMult * deltaTime
             velY += (-dragValue * velY**2) * deltaTime
-            velY += deviceAcceleration.y * deltaTime
             // velX += (-0.001 * velX) * deltaTime
 
-            x += velX * deltaTime
-            y += velY * deltaTime
+            x += (velX + deviceAcceleration.x) * deltaTime
+            y += (velY + deviceAcceleration.y) * deltaTime
 
             if (x <= 0) {
                 if (velX>audioThreshold) {
