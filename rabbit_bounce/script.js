@@ -1,5 +1,3 @@
-(function() {   
-
 function clamp(n, min, max) {
     return Math.min(Math.max(n, min), max)
 }
@@ -11,89 +9,131 @@ function getRandomInt(min, max) {
     const maxFloored = Math.floor(max);
     return Math.floor(Math.random() * (maxFloored - minCeiled) + minCeiled); // The maximum is exclusive and the minimum is inclusive
 }
+function lerp(x, y, a) {
+    return x * (1 - a) + y * a
+}
 
-const window_width = window.innerWidth
-const window_height = window.innerHeight
+const audioContext = new AudioContext()
 
-const bounce_elements = document.querySelectorAll('main img, main video')
+let bounceElements
 
-let old_time = 0
-let delta_time = 0
-let last_good_delta_time = 0
+// preload
+const preloadImagePaths = ['bg', 'booboo', 'bububunny-bubu', 'bunny-bunny-eating', 'bunny-cute (1)', 'bunny-cute', 'bunny-sleepy (1)', 'bunny-sleepy', 'bunny-surprised', 'bunny', 'HATA_D-XYAA6TCb'] 
+const images = preloadImagePaths.map(path => new Image())
+images.forEach((img, i) => img.src = `${preloadImagePaths[i]}.gif`)
 
-let g_accel = 0.002
-let p_drag = 0.0001
-let loss_f = 0.2
+const preloadImagePromises = images.map(img => new Promise(res => img.onload = () => res([img.width, img.height])))
+
+const preloadAudioPaths = ['air1', 'air2', 'air3', 'air4']
+const preloadAudioPromises = []
+const audioBuffers = []
+
+preloadAudioPaths.forEach((path, i) => {
+    preloadAudioPromises[i] = fetch(`${path}.ogg`)
+        .then(resp => resp.arrayBuffer())
+        .then(buf => audioContext.decodeAudioData(buf))
+        .then(audioBuf => {
+            audioBuffers[i] = audioBuf
+            return Promise.resolve(path)
+        })    
+})
+
+let windowWidth = window.innerWidth
+let windowHeight = window.innerHeight
+
+window.onresize = function() {
+    windowWidth = window.innerWidth
+    windowHeight = window.innerHeight
+}
+
+let oldTime = 0
+let deltaTime = 0
+let lastGoodDeltaTime = 0
+
+let gravityAccel = 0.002
+let dragValue = 0.0001
+let energyLoss = 0.75
 
 let mouse = {x: 0, y: 0, velX: 0, velY: 0}
 
-let drag_vel = {oldX: 0, oldY: 0, velX: 0, velY: 0}
-let audio_threshold = 0.3
+let dragVelocity = {oldX: 0, oldY: 0, velX: 0, velY: 0}
+let audioThreshold = 0.3
 
-function clack(vel) {
-    let audio = new Audio(`air${getRandomInt(1,5)}.ogg`)
-    audio.volume = clamp(vel, 0, 1)*0.5
-    audio.play()
+function clack(vel, mass) {
+    if (navigator.userActivation.hasBeenActive) {
+        let volume = Math.abs(clamp(vel*0.5, 0, 1))
+        let sizeInfluence = (3-mass) * 75
+        let which = getRandomInt(0,4)
 
+        const gain = audioContext.createGain()
+        gain.gain.value = volume*0.75
+        gain.connect(audioContext.destination)
+
+        const source = audioContext.createBufferSource()
+        source.buffer = audioBuffers[which]
+        source.connect(gain)
+
+        source.detune.value = sizeInfluence + getRandomInt(-100,100)
+
+        source.start(0)
+    }
 }
 
 function update(timestamp) {
-    if (timestamp-old_time < 1/30*1000) {
-        delta_time = timestamp-old_time
-        last_good_delta_time = delta_time
+    if (timestamp-oldTime < 1/30*1000) {
+        deltaTime = timestamp-oldTime
+        lastGoodDeltaTime = deltaTime
     } else {
         console.log('oops')
-        delta_time = last_good_delta_time
+        deltaTime = lastGoodDeltaTime
     }
 
-    // delta_time = 2
+    oldTime = timestamp
 
-    old_time = timestamp
-
-    for (let el of bounce_elements) {
+    for (let el of bounceElements) {
         if (el.dataset.updating === 'true') {
-            let [x,y,width,height,velX,velY,mass] = [parseFloat(el.dataset.x), parseFloat(el.dataset.y), parseFloat(el.dataset.width), parseFloat(el.dataset.height), parseFloat(el.dataset.velX), parseFloat(el.dataset.velY), parseFloat(el.dataset.mass)]
+            let [x,y,width,height,velX,velY,mass,massInfluence] = [parseFloat(el.dataset.x), parseFloat(el.dataset.y), parseFloat(el.dataset.width), parseFloat(el.dataset.height), parseFloat(el.dataset.velX), parseFloat(el.dataset.velY), parseFloat(el.dataset.mass), parseFloat(el.dataset.massInfluence)]
 
-            velY += g_accel*mass * delta_time
-            velY += (-p_drag * velY**2) * delta_time
+            velY += gravityAccel*massInfluence * deltaTime
+            velY += (-dragValue * velY**2) * deltaTime
 
-            velX += (-0.001 * velX) * delta_time
+            velX += (-0.001 * velX) * deltaTime
 
-            x += velX * delta_time
-            y += velY * delta_time
+            x += velX * deltaTime
+            y += velY * deltaTime
 
             if (x <= 0) {
-                if (velX>audio_threshold) {
-                    clack(velX)
+                if (velX>audioThreshold) {
+                    clack(velX, mass)
                 }
 
                 x = 0
-                velX = -velX * 0.75
+                velX = -velX * energyLoss
             }
-            if (x >= window_width-width) {
-                if (velX>audio_threshold) {
-                    clack(velX)
+            if (x >= windowWidth-width) {
+                if (velX>audioThreshold) {
+                    clack(velX, mass)
                 }
 
-                x = window_width-width
-                velX = -velX * 0.75
+                x = windowWidth-width
+                velX = -velX * energyLoss
             }
 
             if (y <= 0) {
-                if (velY>audio_threshold) {
-                    clack(velY)
+                if (velY>audioThreshold) {
+                    clack(velY, mass)
                 }
 
                 y = 0
-                velY = -velY * 0.75
+                velY = -velY * energyLoss
             }
-            if (y >= window_height-height) {
-                if (velY>audio_threshold) {
-                    clack(velY)
+            if (y >= windowHeight-height) {
+                if (velY>audioThreshold) {
+                    clack(velY, mass)
                 }
 
-                y = window_height-height
-                velY = -velY * 0.75
+                y = windowHeight-height
+                velY = -velY * energyLoss
             }
 
             // update positions and stuff
@@ -106,84 +146,107 @@ function update(timestamp) {
 
             el.style.transform = `translate(${x}px, ${y}px)`
         } else {
-            drag_vel.velX = (drag_vel.velX + (parseFloat(el.dataset.x) - drag_vel.oldX)) / 2
-            drag_vel.velY = (drag_vel.velY + (parseFloat(el.dataset.y) - drag_vel.oldY)) / 2
+            dragVelocity.velX = (dragVelocity.velX + (parseFloat(el.dataset.x) - dragVelocity.oldX)) / 2
+            dragVelocity.velY = (dragVelocity.velY + (parseFloat(el.dataset.y) - dragVelocity.oldY)) / 2
 
-            drag_vel.oldX = parseFloat(el.dataset.x)
-            drag_vel.oldY = parseFloat(el.dataset.y)
+            dragVelocity.oldX = parseFloat(el.dataset.x)
+            dragVelocity.oldY = parseFloat(el.dataset.y)
 
-            el.dataset.velX = drag_vel.velX*0.1
-            el.dataset.velY = drag_vel.velY*0.1
+            el.dataset.velX = dragVelocity.velX*0.1
+            el.dataset.velY = dragVelocity.velY*0.1
         }
     }
 
     requestAnimationFrame(update)
 }
 
-let dragging_element = null
-let drag_pos = {startX: 0, startY: 0, elStartX: 0, elStartY: 0}
+// dragging logic
+let currentlyDraggingElement = null
+let dragInitPositions = {startX: 0, startY: 0, elStartX: 0, elStartY: 0}
 
-function start_dragging(el) {
-    dragging_element = el
+function startDragging(el) {
+    currentlyDraggingElement = el
 
-    dragging_element.dataset.updating = 'false'
+    currentlyDraggingElement.dataset.updating = 'false'
 
-    drag_pos.startX = mouse.x
-    drag_pos.startY = mouse.y
+    dragInitPositions.startX = mouse.x
+    dragInitPositions.startY = mouse.y
 
-    drag_pos.elStartX = parseFloat(el.dataset.x)
-    drag_pos.elStartY = parseFloat(el.dataset.y)
+    dragInitPositions.elStartX = parseFloat(el.dataset.x)
+    dragInitPositions.elStartY = parseFloat(el.dataset.y)
 
-    drag_vel.oldX = parseFloat(el.dataset.x)
-    drag_vel.oldY = parseFloat(el.dataset.y)
+    dragVelocity.oldX = parseFloat(el.dataset.x)
+    dragVelocity.oldY = parseFloat(el.dataset.y)
 }
 
 document.addEventListener('mousemove', e => {
     mouse.x = e.clientX
     mouse.y = e.clientY
     
-    if (dragging_element) {
-        let dest_x = drag_pos.elStartX + (mouse.x - drag_pos.startX)
-        let dest_y = drag_pos.elStartY + (mouse.y - drag_pos.startY)
+    if (currentlyDraggingElement) {
+        let dest_x = dragInitPositions.elStartX + (mouse.x - dragInitPositions.startX)
+        let dest_y = dragInitPositions.elStartY + (mouse.y - dragInitPositions.startY)
 
-        dragging_element.dataset.x = dest_x
-        dragging_element.dataset.y = dest_y
+        currentlyDraggingElement.dataset.x = dest_x
+        currentlyDraggingElement.dataset.y = dest_y
 
-        dragging_element.style.transform = `translate(${dest_x}px, ${dest_y}px)`
+        currentlyDraggingElement.style.transform = `translate(${dest_x}px, ${dest_y}px)`
     }
 })
 document.addEventListener('mouseup', e => {
-    dragging_element.dataset.updating = 'true'
-
-    dragging_element = null
+    if (currentlyDraggingElement) { 
+        currentlyDraggingElement.dataset.updating = 'true'
+        currentlyDraggingElement = null
+    }
 })
 
-for (let el of bounce_elements) {
-    el.style.width = `${getRandomArbitrary(150,300)}px`
-    // el.style.filter = `hue-rotate(${getRandomArbitrary(0,360)}deg)`
+// init func
+function init(n) {
+    document.querySelector('main').innerHTML = ''
+    for (let i=0; i<n; i++) {
+        document.querySelector('main').appendChild(images[i%images.length].cloneNode())
+    }
 
-    let rect = el.getBoundingClientRect()
+    bounceElements = document.querySelectorAll('main img')
 
-    el.dataset.x = getRandomArbitrary(0, window_width-rect.width)
-    el.dataset.y = rect.y
+    for (let el of bounceElements) {
+        el.style.width = `${getRandomArbitrary(75,300)}px`
+        // el.style.filter = `hue-rotate(${getRandomArbitrary(0,360)}deg)`
 
-    el.dataset.width = rect.width
-    el.dataset.height = rect.height
+        let rect = el.getBoundingClientRect()
 
-    el.dataset.velX = 0
-    el.dataset.velY = 0
+        el.dataset.x = getRandomArbitrary(0, windowWidth-rect.width)
+        el.dataset.y = rect.y
 
-    el.dataset.mass = rect.width*rect.height / 16000
+        el.dataset.width = rect.width
+        el.dataset.height = rect.height
 
-    el.dataset.updating = 'true'
+        el.dataset.velX = 0
+        el.dataset.velY = 0
 
-    el.setAttribute('draggable', 'false')
+        el.dataset.mass = rect.width*rect.height / 16000
+        el.dataset.massInfluence = lerp(1, parseFloat(el.dataset.mass), 0.5)
 
-    el.addEventListener('mousedown', e => {
-        start_dragging(el)
-    })
+        el.dataset.updating = 'true'
+
+        el.setAttribute('draggable', 'false')
+
+        el.addEventListener('mousedown', e => {
+            startDragging(el)
+        })
+    }
+
+    requestAnimationFrame(update)
 }
+// explode
+document.addEventListener('contextmenu', e => {
+    e.preventDefault()
+    for (let el of bounceElements) {
+        el.dataset.velX = parseFloat(el.dataset.velX) + getRandomArbitrary(-3, 3)
+        el.dataset.velY = parseFloat(el.dataset.velY) + getRandomArbitrary(-3, 3)
+    }
+})
 
-requestAnimationFrame(update)
-
-})();
+Promise.all([...preloadImagePromises, ...preloadAudioPromises]).then(d => {
+    init(32)
+})
