@@ -104,6 +104,8 @@ function update(timestamp) {
 
     oldTime = timestamp
 
+    if (document.getElementById('#rotation')) document.getElementById('#rotation').innerText = deviceRotation || 'none'
+
     let xGravityMult = Math.sin(deviceRotation)
     let yGravityMult = Math.cos(deviceRotation)
 
