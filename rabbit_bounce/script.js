@@ -18,7 +18,8 @@ const audioContext = new AudioContext()
 let bounceElements
 
 // preload
-const preloadImagePaths = ['bg', 'booboo', 'bububunny-bubu', 'bunny-bunny-eating', 'bunny-cute (1)', 'bunny-cute', 'bunny-sleepy (1)', 'bunny-sleepy', 'bunny-surprised', 'bunny', 'HATA_D-XYAA6TCb'] 
+const preloadImagePaths = ['bg'] 
+// const preloadImagePaths = ['bg', 'booboo', 'bububunny-bubu', 'bunny-bunny-eating', 'bunny-cute (1)', 'bunny-cute', 'bunny-sleepy (1)', 'bunny-sleepy', 'bunny-surprised', 'bunny', 'HATA_D-XYAA6TCb'] 
 const images = preloadImagePaths.map(path => new Image())
 images.forEach((img, i) => img.src = `${preloadImagePaths[i]}.gif`)
 
@@ -64,7 +65,8 @@ let audioThreshold = 0.3
 let deviceRotation = 0
 if (window.DeviceOrientationEvent) {
     window.addEventListener('deviceorientation', e => {
-        deviceRotation = e.alpha || 0
+        deviceRotation = e.alpha
+        document.getElementById('#rotation').innerText = deviceRotation
     })
 }
 // document.getElementById('rot_test').addEventListener('input', e => {
