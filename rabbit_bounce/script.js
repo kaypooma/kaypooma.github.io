@@ -166,7 +166,6 @@ function update(timestamp) {
                 x = 0
                 velX = -velX
                 velX -= (velX*energyLoss*lossMult)*deltaTime
-                velY -= (velY*frictionLoss*lossMult)*deltaTime
             }
             if (x >= windowWidth-width) {
                 if (Math.abs(velX)>audioThreshold) {
@@ -176,7 +175,6 @@ function update(timestamp) {
                 x = windowWidth-width
                 velX = -velX
                 velX -= (velX*energyLoss*lossMult)*deltaTime
-                velY -= (velY*frictionLoss*lossMult)*deltaTime
             }
 
             if (y <= 0) {
