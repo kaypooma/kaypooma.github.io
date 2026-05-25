@@ -85,8 +85,8 @@ let lastGoodDeltaTime = 0
 
 let gravityAccel = 0.002
 let dragValue = 0.0001
-let energyLoss = 0.75
-let frictionLoss = 0.99
+// let energyLoss = 0.75
+// let frictionLoss = 0.98
 
 let mouse = {x: 0, y: 0}
 let touch = {x: 0, y: 0}
@@ -95,11 +95,11 @@ let dragVelocity = {oldX: 0, oldY: 0, velX: 0, velY: 0}
 let audioThreshold = 0.3
 
 function clack(vel, mass) {
-    console.log(vel)
+    // console.log(vel)
     if (navigator.userActivation.hasBeenActive) {
         let volume = clamp(Math.abs(vel)*0.5, 0, 1)
 
-        console.log(volume)
+        // console.log(volume)
 
         let sizeInfluence = (3-mass) * 75
         let which = getRandomInt(0,4)
@@ -142,7 +142,7 @@ function update(timestamp) {
 
     for (let el of bounceElements) {
         if (el.dataset.updating === 'true') {
-            let [x,y,width,height,velX,velY,mass,massInfluence] = [parseFloat(el.dataset.x), parseFloat(el.dataset.y), parseFloat(el.dataset.width), parseFloat(el.dataset.height), parseFloat(el.dataset.velX), parseFloat(el.dataset.velY), parseFloat(el.dataset.mass), parseFloat(el.dataset.massInfluence)]
+            let [x,y,width,height,velX,velY,mass,massInfluence,energyLoss,frictionLoss] = [parseFloat(el.dataset.x), parseFloat(el.dataset.y), parseFloat(el.dataset.width), parseFloat(el.dataset.height), parseFloat(el.dataset.velX), parseFloat(el.dataset.velY), parseFloat(el.dataset.mass), parseFloat(el.dataset.massInfluence), parseFloat(el.dataset.energyLoss), parseFloat(el.dataset.frictionLoss)]
             
             velX += gravityAccel*massInfluence*xGravityMult * deltaTime
             velX += deviceAcceleration.x*0.002 * deltaTime
@@ -156,7 +156,7 @@ function update(timestamp) {
             x += velX * deltaTime
             y += velY * deltaTime
 
-            // let lossMult = 1 + (0.005 * massInfluence)
+            // console.log(energyLoss)
 
             if (x <= 0) {
                 if (Math.abs(velX)>audioThreshold) {
@@ -295,6 +295,7 @@ function init(n) {
 
     for (let el of bounceElements) {
         el.style.width = `${getRandomArbitrary(75,300)}px`
+        // el.style.width = `${300}px`
         // el.style.filter = `hue-rotate(${getRandomArbitrary(0,360)}deg)`
 
         let rect = el.getBoundingClientRect()
@@ -314,6 +315,9 @@ function init(n) {
         el.dataset.massInfluence = lerp(1, parseFloat(el.dataset.mass), 0.5)
 
         el.dataset.updating = 'true'
+
+        el.dataset.energyLoss = lerp(0.75, 0.55, 0.4 * parseFloat(el.dataset.massInfluence))
+        el.dataset.frictionLoss = lerp(0.98, 0.97, 0.4 * parseFloat(el.dataset.massInfluence))
 
         el.setAttribute('draggable', 'false')
 
