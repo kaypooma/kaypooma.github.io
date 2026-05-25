@@ -208,6 +208,8 @@ document.addEventListener('mouseup', e => {
 })
 
 document.addEventListener('touchmove', e => {
+    e.preventDefault()
+
     touch.x = e.targetTouches[0].clientX
     touch.y = e.targetTouches[0].clientY
 
@@ -216,6 +218,7 @@ document.addEventListener('touchmove', e => {
     }
 })
 document.addEventListener('touchend', e => {
+    e.preventDefault()
     if (currentlyDraggingElement) {
         releaseDraggingElement(currentlyDraggingElement)
     }
@@ -256,6 +259,7 @@ function init(n) {
             startDragging(el, mouse.x, mouse.y)
         })
         el.addEventListener('touchstart', e => {
+            e.preventDefault()
             startDragging(el, e.targetTouches[0].clientX, e.targetTouches[0].clientY)
         })
     }
