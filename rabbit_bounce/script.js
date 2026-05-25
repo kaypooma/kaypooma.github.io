@@ -54,7 +54,8 @@ let gravityAccel = 0.002
 let dragValue = 0.0001
 let energyLoss = 0.75
 
-let mouse = {x: 0, y: 0, velX: 0, velY: 0}
+let mouse = {x: 0, y: 0}
+let touch = {x: 0, y: 0}
 
 let dragVelocity = {oldX: 0, oldY: 0, velX: 0, velY: 0}
 let audioThreshold = 0.3
@@ -164,13 +165,13 @@ function update(timestamp) {
 let currentlyDraggingElement = null
 let dragInitPositions = {startX: 0, startY: 0, elStartX: 0, elStartY: 0}
 
-function startDragging(el) {
+function startDragging(el, x, y) {
     currentlyDraggingElement = el
 
     currentlyDraggingElement.dataset.updating = 'false'
 
-    dragInitPositions.startX = mouse.x
-    dragInitPositions.startY = mouse.y
+    dragInitPositions.startX = x
+    dragInitPositions.startY = y
 
     dragInitPositions.elStartX = parseFloat(el.dataset.x)
     dragInitPositions.elStartY = parseFloat(el.dataset.y)
@@ -178,25 +179,45 @@ function startDragging(el) {
     dragVelocity.oldX = parseFloat(el.dataset.x)
     dragVelocity.oldY = parseFloat(el.dataset.y)
 }
+function updateDraggingElement(el, x, y) {
+    let dest_x = dragInitPositions.elStartX + (x - dragInitPositions.startX)
+    let dest_y = dragInitPositions.elStartY + (y - dragInitPositions.startY)
+
+    currentlyDraggingElement.dataset.x = dest_x
+    currentlyDraggingElement.dataset.y = dest_y
+
+    currentlyDraggingElement.style.transform = `translate(${dest_x}px, ${dest_y}px)`
+}
+function releaseDraggingElement(el) {
+    el.dataset.updating = 'true'
+    currentlyDraggingElement = null
+}
 
 document.addEventListener('mousemove', e => {
     mouse.x = e.clientX
     mouse.y = e.clientY
     
     if (currentlyDraggingElement) {
-        let dest_x = dragInitPositions.elStartX + (mouse.x - dragInitPositions.startX)
-        let dest_y = dragInitPositions.elStartY + (mouse.y - dragInitPositions.startY)
-
-        currentlyDraggingElement.dataset.x = dest_x
-        currentlyDraggingElement.dataset.y = dest_y
-
-        currentlyDraggingElement.style.transform = `translate(${dest_x}px, ${dest_y}px)`
+        updateDraggingElement(currentlyDraggingElement, mouse.x, mouse.y)
     }
 })
 document.addEventListener('mouseup', e => {
     if (currentlyDraggingElement) { 
-        currentlyDraggingElement.dataset.updating = 'true'
-        currentlyDraggingElement = null
+        releaseDraggingElement(currentlyDraggingElement)
+    }
+})
+
+document.addEventListener('touchmove', e => {
+    touch.x = e.targetTouches[0].clientX
+    touch.y = e.targetTouches[0].clientY
+
+    if (currentlyDraggingElement) {
+        updateDraggingElement(currentlyDraggingElement, touch.x, touch.y)
+    }
+})
+document.addEventListener('touchend', e => {
+    if (currentlyDraggingElement) {
+        releaseDraggingElement(currentlyDraggingElement)
     }
 })
 
@@ -232,7 +253,10 @@ function init(n) {
         el.setAttribute('draggable', 'false')
 
         el.addEventListener('mousedown', e => {
-            startDragging(el)
+            startDragging(el, mouse.x, mouse.y)
+        })
+        el.addEventListener('touchstart', e => {
+            startDragging(el, e.targetTouches[0].clientX, e.targetTouches[0].clientY)
         })
     }
 
