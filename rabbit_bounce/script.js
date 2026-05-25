@@ -107,7 +107,7 @@ function update(timestamp) {
 
     oldTime = timestamp
 
-    let rotationAmount = (deviceRotation + screenOrientation) * (Math.PI/180)
+    let rotationAmount = (deviceRotation - screenOrientation) * (Math.PI/180)
 
     let xGravityMult = -Math.sin(rotationAmount)
     let yGravityMult = Math.cos(rotationAmount)
