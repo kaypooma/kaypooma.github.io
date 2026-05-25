@@ -109,6 +109,8 @@ function update(timestamp) {
 
     let rotationAmount = (deviceRotation - screenOrientation) * (Math.PI/180)
 
+    document.getElementById('arrow').style.transform = `rotateZ(${Math.PI*0.5 + rotationAmount}rad)`
+
     let xGravityMult = -Math.sin(rotationAmount)
     let yGravityMult = Math.cos(rotationAmount)
 
